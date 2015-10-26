@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--<color name="text_color1">#135059</color>-->
+    <!--<color name="text_color2">#1d7b8a</color>-->
+
+    <color name="primary_dark">#003c3e</color>
+    <color name="primary">#006064</color>
+    <color name="primary_light">#b685b2bb</color>
+    <color name="splash_background">#06686c</color>
+    <color name="accent">#ff998a</color>
+    <color name="lesson_name">#FFFFFF</color>
+</resources>

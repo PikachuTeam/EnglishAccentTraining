@@ -1,0 +1,70 @@
+<resources>
+    <!-- Default screen margins. per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">24dp</dimen>
+    <dimen name="activity_vertical_margin">15dp</dimen>
+
+    <dimen name="ads_height">90dp</dimen>
+
+    <!--button-->
+    <dimen name="button_small_size">45dp</dimen>
+    <dimen name="button_super_small_size">37.5dp</dimen>
+    <dimen name="button_big_size">67.5dp</dimen>
+
+
+    <!--view pager-->
+    <dimen name="view_pager_width">480dp</dimen>
+    <dimen name="view_pager_height">585dp</dimen>
+
+    <dimen name="small_view_layout_width">48dp</dimen>
+    <dimen name="small_view_width">37.5dp</dimen>
+    <dimen name="small_view_height">18dp</dimen>
+
+    <!--seekbar-->
+    <dimen name="seekbar_height">75dp</dimen>
+    <dimen name="seekbar_custom_height">150dp</dimen>
+    <dimen name="layout_duration_width">120dp</dimen>
+    <dimen name="layout_textview_duration_height">45dp</dimen>
+    <!--padding-->
+    <dimen name="padding_pager">75dp</dimen>
+    <dimen name="padding_listview">30dp</dimen>
+    <dimen name="padding_listview_left">45dp</dimen>
+    <dimen name="padding_small_view_layout">7.5dp</dimen>
+
+    <!--margin-->
+    <dimen name="margin_listview">30dp</dimen>
+    <dimen name="margin_button">37.5dp</dimen>
+    <dimen name="margin_view_1">15dp</dimen>
+    <dimen name="margin_text_page_name">15dp</dimen>
+    <dimen name="margin_view_pager">105dp</dimen>
+    <dimen name="margin_small_view_layout">120dp</dimen>
+    <dimen name="margin_pager">60dp</dimen>
+    <!--text size-->
+    <dimen name="text_size_1">52.5sp</dimen>
+    <dimen name="text_size_2">36sp</dimen>
+    <dimen name="text_size_3">52.5sp</dimen>
+    <dimen name="text_size_item">60sp</dimen>
+    <dimen name="app_name_size">67.5sp</dimen>
+
+    <!--cardview-->
+    <dimen name="card_view_elevation">6dp</dimen>
+    <dimen name="card_view_conner_radius">4.5dp</dimen>
+
+    <!--row item listview-->
+    <dimen name="row_item_height">45dp</dimen>
+
+    <!--scroll bar width-->
+    <dimen name="scroll_bar_width">6dp</dimen>
+
+    <!--list_item_margin-->
+    <dimen name="list_item_margin_bot">22.5dp</dimen>
+
+    <!--list_item_-->
+    <dimen name="play_icon_in_item_size">28.5dp</dimen>
+    <dimen name="margin_name_lesson_left">37.5dp</dimen>
+    <dimen name="margin_item">15dp</dimen>
+    <!--player-->
+    <dimen name="padding_left_right">22.5dp</dimen>
+
+    <dimen name="lesson_name_width">300dp</dimen>
+
+</resources>

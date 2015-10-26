@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tvTrans"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_text_page_name"
+        android:gravity="center"
+        android:text="@string/title_transcription"
+        android:textColor="@color/primary_dark"
+        android:textSize="@dimen/text_size_3"
+        android:textStyle="bold"
+        android:layout_marginTop="@dimen/margin_pager"/>
+        <ScrollView
+            android:scrollbarThumbVertical="@color/primary_dark"
+            android:scrollbarSize="@dimen/scroll_bar_width"
+            android:id="@+id/scrTranscription"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="@dimen/padding_listview"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/padding_pager"
+                android:paddingRight="@dimen/padding_pager">
+
+                <TextView
+                    android:id="@+id/tvTranscription"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/primary_dark"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/text_size_1" />
+            </LinearLayout>
+        </ScrollView>
+</LinearLayout>

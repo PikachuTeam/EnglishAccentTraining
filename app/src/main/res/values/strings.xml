@@ -1,0 +1,12 @@
+<resources>
+    <string name="banner_ad_unit_id">ca-app-pub-4338754459250860/7088239230</string>
+    <string name="app_name">English Accent Training</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="title_lesson">Lessons</string>
+    <string name="title_transcription">Transcription</string>
+    <string name="title_reduced_speech">Reduced Speech</string>
+    <string name="title_activity_splash">SplashActivity</string>
+</resources>

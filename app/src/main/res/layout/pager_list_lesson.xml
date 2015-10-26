@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_pager">
+
+        <TextView
+            android:id="@+id/tvLessonTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_text_page_name"
+            android:gravity="center"
+
+            android:text="@string/title_lesson"
+            android:textColor="@color/primary_dark"
+            android:textSize="@dimen/text_size_3"
+            android:textStyle="bold" />
+
+        <ListView
+            android:id="@+id/listLesson"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/tvLessonTitle"
+            android:divider="@null"
+            android:paddingBottom="@dimen/padding_listview"
+            android:paddingLeft="@dimen/padding_listview_left"
+            android:scrollbarThumbVertical="@color/primary"
+            android:scrollbarSize="@dimen/scroll_bar_width"></ListView>
+    </RelativeLayout>
+</LinearLayout>
