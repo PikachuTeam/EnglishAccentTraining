@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="dialog_text_color">#000000</color>
-    <color name="drawable_flat_effect">#a6012e30</color>
+    <color name="drawable_flat_effect">#3996edf1</color>
 
     <color name="drawable_ripple_effect">#dab1acad</color>
 
