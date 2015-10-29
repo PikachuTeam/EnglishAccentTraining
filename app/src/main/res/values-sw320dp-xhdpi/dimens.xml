@@ -39,7 +39,7 @@
     <dimen name="margin_small_view_layout">80dp</dimen>
     <dimen name="margin_pager">40dp</dimen>
     <!--text size-->
-    <dimen name="text_size_1">35sp</dimen>
+    <dimen name="text_size_1">33.3sp</dimen>
     <dimen name="text_size_2">24sp</dimen>
     <dimen name="text_size_3">35sp</dimen>
     <dimen name="text_size_item">40sp</dimen>

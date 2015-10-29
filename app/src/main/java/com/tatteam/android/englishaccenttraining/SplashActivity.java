@@ -7,6 +7,8 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import tatteam.com.app_common.AppCommon;
+
 public class SplashActivity extends AppCompatActivity {
     private static final long SPLASH_DURATION = 2000;
     private Handler handler;
@@ -20,6 +22,8 @@ public class SplashActivity extends AppCompatActivity {
         DataSource.getInstance().init(getApplicationContext());
 
         importDatabase();
+        initAppCommon();
+
         handler = new Handler(new Handler.Callback() {
             @Override
             public boolean handleMessage(Message msg) {
@@ -35,6 +39,10 @@ public class SplashActivity extends AppCompatActivity {
         handler.sendEmptyMessageDelayed(0, SPLASH_DURATION);
     }
 
+    private void initAppCommon(){
+        AppCommon.getInstance().initIfNeeded(getApplicationContext());
+        AppCommon.getInstance().increaseLaunchTime();
+    }
     private void importDatabase() {
         AsyncTask task = new AsyncTask() {
             @Override

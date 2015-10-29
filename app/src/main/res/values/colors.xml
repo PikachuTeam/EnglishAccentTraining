@@ -9,4 +9,5 @@
     <color name="splash_background">#06686c</color>
     <color name="accent">#ff998a</color>
     <color name="lesson_name">#FFFFFF</color>
+    <color name="ripple_color">#f1e1e2</color>
 </resources>

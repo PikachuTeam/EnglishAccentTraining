@@ -17,10 +17,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -30,11 +32,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
+import tatteam.com.app_common.AppCommon;
+import tatteam.com.app_common.util.CloseAppHandler;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, AdapterView.OnItemClickListener, ViewPager.OnPageChangeListener, CustomSeekBar.OnSeekbarChangeListener {
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, AdapterView.OnItemClickListener, ViewPager.OnPageChangeListener, CustomSeekBar.OnSeekbarChangeListener, CloseAppHandler.OnCloseAppListener {
 
     private static final boolean ADS_ENABLE = true;
-
+    private CloseAppHandler closeAppHandler;
+    private Button btnMore;
     private ImageButton btnPlayPause, btnNext, btnPrevious;
     private ImageButton btnReplay, btnShuffle;
     private TextView tvLesson, tvCurrentDuration, tvDuration, tvAppName;
@@ -110,6 +116,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnPrevious = (ImageButton) this.findViewById(R.id.btnPrevious);
         btnReplay = (ImageButton) this.findViewById(R.id.btnReplay);
         btnShuffle = (ImageButton) this.findViewById(R.id.btnShuffle);
+        btnMore = (Button) this.findViewById(R.id.btnMoreApp);
 
         tvAppName = (TextView) this.findViewById(R.id.tvAppName);
         tvLesson = (TextView) this.findViewById(R.id.tvLesson);
@@ -151,12 +158,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnPrevious.setOnClickListener(this);
         btnReplay.setOnClickListener(this);
         btnShuffle.setOnClickListener(this);
+        btnMore.setOnClickListener(this);
 
         pager.setOnPageChangeListener(this);
 
         player.setOnPreparedListener(this);
         player.setOnCompletionListener(this);
 
+        //close app
+        closeAppHandler = new CloseAppHandler(this);
+        closeAppHandler.setListener(this);
     }
 
     private void incomingCall() {
@@ -255,10 +266,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             case R.id.btnNext:
-                playNextAround();
+                if (isShuffle) {
+                    playShuffle();
+                    playSound(soundPlaying);
+                } else {
+                    playNextAround();
+                }
                 break;
             case R.id.btnPrevious:
-                playPrev();
+                if (isShuffle) {
+                    playShuffle();
+                    playSound(soundPlaying);
+                } else {
+                    playPrev();
+                }
                 break;
             case R.id.btnReplay:
                 if (isRepeat == 0) {
@@ -280,6 +301,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     isShuffle = true;
                     btnShuffle.setBackgroundResource(R.drawable.shuffer_on);
                 }
+                break;
+            case R.id.btnMoreApp:
+                AppCommon.getInstance().openMoreAppDialog(this);
                 break;
         }
     }
@@ -464,6 +488,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (player != null && player.isPlaying()) {
             player.seekTo((int) (player.getDuration() * percent));
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        closeAppHandler.handlerKeyBack(this);
+    }
+
+    @Override
+    public void onRateAppDialogClose() {
+        finish();
+    }
+
+    @Override
+    public void onTryToCloseApp() {
+        Toast.makeText(this,"Press once again to exit!",Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onReallyWantToCloseApp() {
+        finish();
     }
 
     //adapter listview
