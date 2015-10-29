@@ -22,6 +22,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,10 +43,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private static final boolean ADS_ENABLE = true;
     private CloseAppHandler closeAppHandler;
+    private LinearLayout layout_MoreApp;
     private ImageView btnMore;
     private ImageButton btnPlayPause, btnNext, btnPrevious;
     private ImageButton btnReplay, btnShuffle;
-    private TextView tvLesson, tvCurrentDuration, tvDuration, tvAppName;
+    private TextView tvLesson, tvCurrentDuration, tvDuration, tvAppName,tvMoreApp;
 
     private View viewPage1, viewPage2, viewPage3;
     ArrayList<View> listSmallView = new ArrayList<>();
@@ -120,11 +122,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnShuffle = (ImageButton) this.findViewById(R.id.btnShuffle);
         btnMore = (ImageView) this.findViewById(R.id.btnMoreApp);
         btnMore.getBackground().setColorFilter(Color.parseColor("#006064"), PorterDuff.Mode.MULTIPLY);
+        layout_MoreApp = (LinearLayout) this.findViewById(R.id.layout_MoreApp);
+
+        tvMoreApp = (TextView) this.findViewById(R.id.tvMoreApp);
         tvAppName = (TextView) this.findViewById(R.id.tvAppName);
         tvLesson = (TextView) this.findViewById(R.id.tvLesson);
         tvCurrentDuration = (TextView) this.findViewById(R.id.tvCurrentDuration);
         tvDuration = (TextView) this.findViewById(R.id.tvDuration);
         Typeface face = Typeface.createFromAsset(getAssets(), "Mathlete_Bulky.otf");
+        tvMoreApp.setTypeface(face);
         tvLesson.setTypeface(face);
         tvLesson.setSelected(true);
         tvCurrentDuration.setTypeface(face);
@@ -160,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnPrevious.setOnClickListener(this);
         btnReplay.setOnClickListener(this);
         btnShuffle.setOnClickListener(this);
-        btnMore.setOnClickListener(this);
+        layout_MoreApp.setOnClickListener(this);
 
         pager.setOnPageChangeListener(this);
 
@@ -304,7 +310,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     btnShuffle.setBackgroundResource(R.drawable.shuffer_on);
                 }
                 break;
-            case R.id.btnMoreApp:
+            case R.id.layout_MoreApp:
                 AppCommon.getInstance().openMoreAppDialog(this);
                 break;
         }

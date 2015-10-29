@@ -10,4 +10,5 @@
     <string name="title_reduced_speech">Reduced Speech</string>
     <string name="title_activity_splash">SplashActivity</string>
     <string name="message_exit">Press once again to exit!</string>
+    <string name="more_app">More apps</string>
 </resources>
