@@ -115,18 +115,39 @@
             </RelativeLayout>
 
             <LinearLayout
+                android:id="@+id/layout_MoreApp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="@dimen/ads_height"
+                android:layout_marginRight="@dimen/margin_listview"
                 android:layout_marginTop="@dimen/margin_small_view_layout"
-                android:gravity="center">
-
+                android:gravity="center"
+                android:orientation="horizontal">
                 <ImageView
                     android:id="@+id/btnMoreApp"
-                    android:layout_width="@dimen/small_view_layout_width"
-                    android:layout_height="@dimen/small_view_layout_width"
+                    android:layout_width="@dimen/button_super_small_size"
+                    android:layout_height="@dimen/button_super_small_size"
                     android:background="@drawable/moreapp" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/tvMoreApp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/more_app"
+                        android:layout_marginLeft="@dimen/padding_small_view_layout"
+                        android:textColor="@color/primary"
+                        android:textSize="@dimen/text_size_2" />
+                    <View
+                        android:layout_width="@dimen/ads_height"
+                        android:layout_height="1dp"
+                        android:background="@color/primary"
+                        android:layout_marginLeft="@dimen/padding_small_view_layout"/>
+                </LinearLayout>
+
+
             </LinearLayout>
 
             <LinearLayout
