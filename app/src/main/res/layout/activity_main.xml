@@ -118,21 +118,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="@dimen/padding_small_view_layout"
-                android:layout_marginTop="@dimen/seekbar_height"
-                android:background="@color/primary"
+                android:layout_marginRight="@dimen/ads_height"
+                android:layout_marginTop="@dimen/margin_small_view_layout"
                 android:gravity="center">
 
-                <tatteam.com.app_common.ui.drawable.RippleEffectDrawable
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <Button
-                        android:id="@+id/btnMoreApp"
-                        android:layout_width="@dimen/button_small_size"
-                        android:layout_height="@dimen/button_small_size"
-                        android:background="@drawable/moreapp" />
-                </tatteam.com.app_common.ui.drawable.RippleEffectDrawable>
+                <ImageView
+                    android:id="@+id/btnMoreApp"
+                    android:layout_width="@dimen/small_view_layout_width"
+                    android:layout_height="@dimen/small_view_layout_width"
+                    android:background="@drawable/moreapp" />
             </LinearLayout>
 
             <LinearLayout

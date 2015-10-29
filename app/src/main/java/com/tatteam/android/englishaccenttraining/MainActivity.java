@@ -1,6 +1,8 @@
 package com.tatteam.android.englishaccenttraining;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -40,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private static final boolean ADS_ENABLE = true;
     private CloseAppHandler closeAppHandler;
-    private Button btnMore;
+    private ImageView btnMore;
     private ImageButton btnPlayPause, btnNext, btnPrevious;
     private ImageButton btnReplay, btnShuffle;
     private TextView tvLesson, tvCurrentDuration, tvDuration, tvAppName;
@@ -116,8 +118,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnPrevious = (ImageButton) this.findViewById(R.id.btnPrevious);
         btnReplay = (ImageButton) this.findViewById(R.id.btnReplay);
         btnShuffle = (ImageButton) this.findViewById(R.id.btnShuffle);
-        btnMore = (Button) this.findViewById(R.id.btnMoreApp);
-
+        btnMore = (ImageView) this.findViewById(R.id.btnMoreApp);
+        btnMore.getBackground().setColorFilter(Color.parseColor("#006064"), PorterDuff.Mode.MULTIPLY);
         tvAppName = (TextView) this.findViewById(R.id.tvAppName);
         tvLesson = (TextView) this.findViewById(R.id.tvLesson);
         tvCurrentDuration = (TextView) this.findViewById(R.id.tvCurrentDuration);
