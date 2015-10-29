@@ -115,8 +115,25 @@
             </RelativeLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/ads_height"
+                android:layout_marginTop="@dimen/margin_small_view_layout"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/btnMoreApp"
+                    android:layout_width="@dimen/small_view_layout_width"
+                    android:layout_height="@dimen/small_view_layout_width"
+                    android:background="@drawable/moreapp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layoutViewPager"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/margin_small_view_layout"
                 android:gravity="center"
                 android:padding="@dimen/padding_small_view_layout">
@@ -161,8 +178,9 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/margin_small_view_layout"
                 android:gravity="center"
                 android:padding="@dimen/padding_small_view_layout">
@@ -222,18 +240,23 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="50">
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/button_big_size">
+                    <tatteam.com.app_common.ui.drawable.RippleEffectDrawable
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
 
-                        <ImageButton
-                            android:id="@+id/btnShuffle"
-                            android:layout_width="@dimen/button_super_small_size"
-                            android:layout_height="@dimen/button_super_small_size"
-                            android:layout_centerInParent="true"
-                            android:layout_marginLeft="@dimen/margin_button"
-                            android:background="@drawable/shuffer_off"></ImageButton>
-                    </RelativeLayout>
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/button_big_size">
+
+                            <ImageButton
+                                android:id="@+id/btnShuffle"
+                                android:layout_width="@dimen/button_super_small_size"
+                                android:layout_height="@dimen/button_super_small_size"
+                                android:layout_centerInParent="true"
+                                android:layout_marginLeft="@dimen/margin_button"
+                                android:background="@drawable/shuffer_off"></ImageButton>
+                        </RelativeLayout>
+                    </tatteam.com.app_common.ui.drawable.RippleEffectDrawable>
                 </LinearLayout>
 
                 <LinearLayout
@@ -241,33 +264,49 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="50">
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/button_big_size">
+                    <tatteam.com.app_common.ui.drawable.RippleEffectDrawable
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
 
-                        <ImageButton
-                            android:id="@+id/btnPrevious"
-                            android:layout_width="@dimen/button_small_size"
-                            android:layout_height="@dimen/button_small_size"
-                            android:layout_centerInParent="true"
-                            android:layout_marginLeft="@dimen/margin_button"
-                            android:background="@drawable/pre"></ImageButton>
-                    </RelativeLayout>
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/button_big_size">
+
+
+                            <ImageButton
+                                android:id="@+id/btnPrevious"
+                                android:layout_width="@dimen/button_small_size"
+                                android:layout_height="@dimen/button_small_size"
+                                android:layout_centerInParent="true"
+                                android:layout_marginLeft="@dimen/margin_button"
+                                android:background="@drawable/pre"></ImageButton>
+
+                        </RelativeLayout>
+                    </tatteam.com.app_common.ui.drawable.RippleEffectDrawable>
                 </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="30"
-                android:gravity="center">
+                android:layout_weight="30">
 
-                <ImageButton
-                    android:id="@+id/btnPlayPause"
-                    android:layout_width="@dimen/button_big_size"
-                    android:layout_height="@dimen/button_big_size"
-                    android:background="@drawable/play" />
+                <tatteam.com.app_common.ui.drawable.RippleEffectDrawable
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center">
+
+                        <ImageButton
+                            android:id="@+id/btnPlayPause"
+                            android:layout_width="@dimen/button_big_size"
+                            android:layout_height="@dimen/button_big_size"
+                            android:background="@drawable/play" />
+                    </RelativeLayout>
+                </tatteam.com.app_common.ui.drawable.RippleEffectDrawable>
             </LinearLayout>
 
             <LinearLayout
@@ -281,18 +320,24 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="50">
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/button_big_size">
+                    <tatteam.com.app_common.ui.drawable.RippleEffectDrawable
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
 
-                        <ImageButton
-                            android:id="@+id/btnNext"
-                            android:layout_width="@dimen/button_small_size"
-                            android:layout_height="@dimen/button_small_size"
-                            android:layout_centerInParent="true"
-                            android:layout_marginLeft="@dimen/margin_button"
-                            android:background="@drawable/next"></ImageButton>
-                    </RelativeLayout>
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/button_big_size">
+
+                            <ImageButton
+                                android:id="@+id/btnNext"
+                                android:layout_width="@dimen/button_small_size"
+                                android:layout_height="@dimen/button_small_size"
+                                android:layout_centerInParent="true"
+                                android:layout_marginLeft="@dimen/margin_button"
+                                android:background="@drawable/next"></ImageButton>
+
+                        </RelativeLayout>
+                    </tatteam.com.app_common.ui.drawable.RippleEffectDrawable>
                 </LinearLayout>
 
                 <LinearLayout
@@ -300,18 +345,23 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="50">
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/button_big_size">
+                    <tatteam.com.app_common.ui.drawable.RippleEffectDrawable
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
 
-                        <ImageButton
-                            android:id="@+id/btnReplay"
-                            android:layout_width="@dimen/button_super_small_size"
-                            android:layout_height="@dimen/button_super_small_size"
-                            android:layout_centerInParent="true"
-                            android:layout_marginLeft="@dimen/margin_button"
-                            android:background="@drawable/replay_off"></ImageButton>
-                    </RelativeLayout>
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/button_big_size">
+
+                            <ImageButton
+                                android:id="@+id/btnReplay"
+                                android:layout_width="@dimen/button_super_small_size"
+                                android:layout_height="@dimen/button_super_small_size"
+                                android:layout_centerInParent="true"
+                                android:layout_marginLeft="@dimen/margin_button"
+                                android:background="@drawable/replay_off"></ImageButton>
+                        </RelativeLayout>
+                    </tatteam.com.app_common.ui.drawable.RippleEffectDrawable>
                 </LinearLayout>
 
             </LinearLayout>

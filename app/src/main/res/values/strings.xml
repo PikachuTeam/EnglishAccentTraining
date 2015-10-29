@@ -9,4 +9,5 @@
     <string name="title_transcription">Transcription</string>
     <string name="title_reduced_speech">Reduced Speech</string>
     <string name="title_activity_splash">SplashActivity</string>
+    <string name="message_exit">Press once again to exit!</string>
 </resources>

@@ -1,0 +1,23 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">24dp</dimen>
+    <dimen name="activity_vertical_margin">24dp</dimen>
+
+    <dimen name="line_1">1.5dp</dimen>
+    <dimen name="text_more_app_tab_size">27sp</dimen>
+    <dimen name="dialog_more_app_width">450dp</dimen>
+    <dimen name="dialog_more_app_height">675dp</dimen>
+    <dimen name="dialog_more_app_progress_bar_width">120dp</dimen>
+    <dimen name="dialog_more_app_text_loading_size">30sp</dimen>
+    <dimen name="dialog_more_app_text_loading_margin">3dp</dimen>
+
+    <dimen name="item_more_app_height">150dp</dimen>
+    <dimen name="item_more_app_margin_1">6dp</dimen>
+    <dimen name="item_more_app_margin_2">15dp</dimen>
+    <dimen name="item_more_app_conner_radius">7.5dp</dimen>
+    <dimen name="item_more_app_padding">7.5dp</dimen>
+    <dimen name="image_more_app_width">112.5dp</dimen>
+    <dimen name="text_more_app_margin">12dp</dimen>
+    <dimen name="text_more_app_size_1">30sp</dimen>
+    <dimen name="text_more_app_size_2">19.5sp</dimen>
+</resources>
