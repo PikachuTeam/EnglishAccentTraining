@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -27,15 +28,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
+
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
 import tatteam.com.app_common.AppCommon;
+import tatteam.com.app_common.ads.AdsSmallBannerHandler;
 import tatteam.com.app_common.util.CloseAppHandler;
 
 
@@ -76,8 +76,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private final int REPEAT_ONE = 1;
     private final int REPEAT_ALL = 2;
 
-    private AdView mAdView;
-
+    //
+    private AdsSmallBannerHandler adsSmallBannerHandler;
+    private FrameLayout adsContainer;
     //incoming call
     private PhoneStateListener phoneStateListener;
     TelephonyManager mgr;
@@ -87,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        setupAds();
+
 
         player = new MediaPlayer();
         LoadData();
@@ -176,49 +177,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //close app
         closeAppHandler = new CloseAppHandler(this);
         closeAppHandler.setListener(this);
+
+        //ads
+        adsContainer = (FrameLayout) this.findViewById(R.id.ads_container);
+        adsSmallBannerHandler = new AdsSmallBannerHandler(this,adsContainer);
+        adsSmallBannerHandler.setup();
     }
 
     private void incomingCall() {
 
     }
 
-    private void setupAds() {
-        mAdView = (AdView) findViewById(R.id.adView);
-        if (ADS_ENABLE) {
-            AdRequest adRequest = new AdRequest.Builder().build();
-            mAdView.loadAd(adRequest);
-            mAdView.setAdListener(new AdListener() {
-                @Override
-                public void onAdClosed() {
-                    super.onAdClosed();
-                }
 
-                @Override
-                public void onAdFailedToLoad(int errorCode) {
-                    super.onAdFailedToLoad(errorCode);
-                    mAdView.setVisibility(View.GONE);
-                }
-
-                @Override
-                public void onAdLeftApplication() {
-                    super.onAdLeftApplication();
-                }
-
-                @Override
-                public void onAdOpened() {
-                    super.onAdOpened();
-                }
-
-                @Override
-                public void onAdLoaded() {
-                    super.onAdLoaded();
-                    mAdView.setVisibility(View.VISIBLE);
-                }
-            });
-        } else {
-            mAdView.setVisibility(View.GONE);
-        }
-    }
 
     private void updateSeekBar() {
         if (runnable == null) {

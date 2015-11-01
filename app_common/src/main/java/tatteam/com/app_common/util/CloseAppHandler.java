@@ -3,10 +3,8 @@ package tatteam.com.app_common.util;
 import android.app.Activity;
 import android.content.Context;
 
-
 import hotchemi.android.rate.AppRate;
 import hotchemi.android.rate.OnClickButtonListener;
-import tatteam.com.app_common.util.AppLocalSharedPreferences;
 
 /**
  * Created by ThanhNH on 10/8/2015.
@@ -18,7 +16,7 @@ public class CloseAppHandler {
     private AppRate appRate;
     private OnCloseAppListener listener;
 
-    private int rateAppOverLaunchTime = 2;
+    private int rateAppOverLaunchTime = 3;
     private int rateAppOverDate = 1;
     private long backPressedPeriod;
 
@@ -57,9 +55,10 @@ public class CloseAppHandler {
     }
 
     private boolean showDialogIfNeeded(Activity activity) {
-        if (!AppLocalSharedPreferences.getInstance().isRateApp() &&
+        if (!AppLocalSharedPreferences.getInstance().isRatedApp() &&
                 AppLocalSharedPreferences.getInstance().isRateAppOverLaunchTime(rateAppOverLaunchTime) &&
-                AppLocalSharedPreferences.getInstance().isRateAppOverDate(rateAppOverDate)) {
+                (AppLocalSharedPreferences.getInstance().isRateAppOverDate(rateAppOverDate) ||
+                        AppLocalSharedPreferences.getInstance().getAppLaunchTime() % rateAppOverLaunchTime == 0)) {
             appRate.showRateDialogIfMeetsConditions(activity);
             return true;
         }

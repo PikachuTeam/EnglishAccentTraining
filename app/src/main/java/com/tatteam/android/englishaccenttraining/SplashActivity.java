@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import tatteam.com.app_common.AppCommon;
+import tatteam.com.app_common.util.AppConstant;
 
 public class SplashActivity extends AppCompatActivity {
     private static final long SPLASH_DURATION = 2000;
@@ -42,6 +43,7 @@ public class SplashActivity extends AppCompatActivity {
     private void initAppCommon(){
         AppCommon.getInstance().initIfNeeded(getApplicationContext());
         AppCommon.getInstance().increaseLaunchTime();
+        AppCommon.getInstance().syncAdsSmallBannerIfNeeded(AppConstant.AdsType.SMALL_BANNER_LANGUAGE_LEARNING);
     }
     private void importDatabase() {
         AsyncTask task = new AsyncTask() {
