@@ -179,9 +179,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         closeAppHandler.setListener(this);
 
         //ads
-        adsContainer = (FrameLayout) this.findViewById(R.id.ads_container);
-        adsSmallBannerHandler = new AdsSmallBannerHandler(this,adsContainer);
-        adsSmallBannerHandler.setup();
+        if(ADS_ENABLE) {
+            adsContainer = (FrameLayout) this.findViewById(R.id.ads_container);
+            adsSmallBannerHandler = new AdsSmallBannerHandler(this, adsContainer);
+            adsSmallBannerHandler.setup();
+        }
     }
 
     private void incomingCall() {
