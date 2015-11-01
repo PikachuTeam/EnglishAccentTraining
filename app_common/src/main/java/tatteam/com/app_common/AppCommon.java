@@ -8,6 +8,7 @@ import com.koushikdutta.ion.Ion;
 
 import tatteam.com.app_common.entity.AppConfigEntity;
 import tatteam.com.app_common.ui.dialog.MoreAppsDialog;
+import tatteam.com.app_common.util.AppConstant;
 import tatteam.com.app_common.util.AppLocalSharedPreferences;
 import tatteam.com.app_common.util.AppLog;
 import tatteam.com.app_common.util.AppParseUtil;
@@ -16,10 +17,7 @@ import tatteam.com.app_common.util.AppParseUtil;
 /**
  * Created by ThanhNH-Mac on 10/4/15.
  */
-public class AppCommon {
-
-    private static final int DAY_INTERVAL_RE_SYNC = 3;
-
+public class AppCommon implements AppConstant {
     private static AppCommon instance;
     private Context context;
     private AppConfigEntity appLocalConfig;
@@ -57,7 +55,7 @@ public class AppCommon {
 
     public void syncNewConfigAppIfNeeded(String url) {
         if (context != null) {
-            if (AppLocalSharedPreferences.getInstance().shouldSyncAppConfig(DAY_INTERVAL_RE_SYNC)) {
+            if (AppLocalSharedPreferences.getInstance().shouldSyncAppConfig(RE_SYNC_INTERVAL)) {
                 AppLog.i(">>>> AppCommon # syncNewConfigApp");
                 Ion.with(context)
                         .load(url)
@@ -101,10 +99,35 @@ public class AppCommon {
         thread.start();
     }
 
-    public MoreAppsDialog openMoreAppDialog(Context activity){
+    public MoreAppsDialog openMoreAppDialog(Context activity) {
         MoreAppsDialog moreAppsDialog = new MoreAppsDialog(activity);
         moreAppsDialog.show();
         return moreAppsDialog;
+    }
+
+    public void syncAdsSmallBannerIfNeeded(final AdsType adsType) {
+        if (AppLocalSharedPreferences.getInstance().shouldSyncAds(RE_SYNC_INTERVAL)) {
+            Ion.with(context)
+                    .load(DEFAULT_ADS_URL)
+                    .asJsonObject()
+                    .setCallback(new FutureCallback<JsonObject>() {
+                        @Override
+                        public void onCompleted(Exception e, JsonObject result) {
+                            try {
+                                if (result != null) {
+                                    String adsUnitId = result.get(adsType.getType()).getAsString();
+                                    if (adsUnitId != null && !adsUnitId.trim().isEmpty()) {
+                                        AppLocalSharedPreferences.getInstance().setAdsIdSmallBanner(adsUnitId);
+                                    }
+                                } else {
+                                    AppLocalSharedPreferences.getInstance().removeAdsIdSmallBanner();
+                                }
+                            } catch (Exception ex) {
+                                AppLocalSharedPreferences.getInstance().removeAdsIdSmallBanner();
+                            }
+                        }
+                    });
+        }
     }
 
     public void destroy() {

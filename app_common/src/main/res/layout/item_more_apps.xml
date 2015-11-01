@@ -9,13 +9,14 @@
     <android.support.v7.widget.CardView
         android:id="@+id/card_view"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/item_more_app_height"
+        android:layout_height="@dimen/common_size_100"
         android:layout_gravity="center"
-        android:layout_marginBottom="@dimen/item_more_app_margin_1"
-        android:layout_marginLeft="@dimen/item_more_app_margin_2"
-        android:layout_marginRight="@dimen/item_more_app_margin_2"
-        android:layout_marginTop="@dimen/item_more_app_margin_1"
-        card_view:cardCornerRadius="@dimen/item_more_app_conner_radius">
+        android:layout_marginBottom="@dimen/common_size_4"
+        android:layout_marginLeft="@dimen/common_size_10"
+        android:layout_marginRight="@dimen/common_size_10"
+        android:layout_marginTop="@dimen/common_size_4"
+        card_view:cardUseCompatPadding="true"
+        card_view:cardCornerRadius="@dimen/common_size_5">
 
         <tatteam.com.app_common.ui.drawable.FlatEffectDrawable
             android:layout_width="wrap_content"
@@ -28,18 +29,18 @@
                 android:clickable="true"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:padding="@dimen/item_more_app_padding">
+                android:padding="@dimen/common_size_5">
 
                 <ImageView
                     android:id="@+id/img_app_icon"
-                    android:layout_width="@dimen/image_more_app_width"
-                    android:layout_height="@dimen/image_more_app_width"
+                    android:layout_width="@dimen/common_size_75"
+                    android:layout_height="@dimen/common_size_75"
                     android:src="@drawable/more_app_default_icon" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/text_more_app_margin"
+                    android:layout_marginLeft="@dimen/common_size_8"
                     android:orientation="vertical">
 
                     <TextView
@@ -54,10 +55,10 @@
                         android:marqueeRepeatLimit="marquee_forever"
                         android:scrollHorizontally="true"
                         android:textColor="@color/dialog_text_color"
-                        android:textSize="@dimen/text_more_app_size_1" />
+                        android:textSize="@dimen/common_text_size_20" />
 
                     <TextView
-                        android:layout_marginTop="@dimen/dialog_more_app_text_loading_margin"
+                        android:layout_marginTop="@dimen/common_size_2"
                         android:id="@+id/txt_app_description"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -66,7 +67,7 @@
                         android:ellipsize="end"
                         android:textColor="@color/dialog_text_color"
                         android:text="Pop The Camera is a simple game however it is interesting and colorful."
-                        android:textSize="@dimen/text_more_app_size_2" />
+                        android:textSize="@dimen/common_text_size_13" />
                 </LinearLayout>
             </LinearLayout>
         </tatteam.com.app_common.ui.drawable.FlatEffectDrawable>

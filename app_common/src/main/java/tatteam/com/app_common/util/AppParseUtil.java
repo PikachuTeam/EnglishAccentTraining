@@ -92,6 +92,8 @@ public class AppParseUtil {
         if (jsonObj != null) {
             try {
                 extraApps = new MyExtraAppsEntity();
+                extraApps.myPubName = jsonObj.get("my_pub_name").getAsString();
+
                 JsonArray my_apps = jsonObj.getAsJsonArray("my_apps");
                 for (int i = 0; i < my_apps.size(); i++) {
                     JsonObject extra_app = my_apps.get(i).getAsJsonObject();

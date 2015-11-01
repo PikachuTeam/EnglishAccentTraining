@@ -24,6 +24,7 @@ import java.util.List;
 import tatteam.com.app_common.R;
 import tatteam.com.app_common.entity.MyAppEntity;
 import tatteam.com.app_common.entity.MyExtraAppsEntity;
+import tatteam.com.app_common.util.AppConstant;
 import tatteam.com.app_common.util.AppLocalSharedPreferences;
 import tatteam.com.app_common.util.AppLog;
 import tatteam.com.app_common.util.AppParseUtil;
@@ -32,8 +33,8 @@ import tatteam.com.app_common.util.CommonUtil;
 /**
  * Created by ThanhNH on 10/11/2015.
  */
-public class MoreAppsDialog extends Dialog implements View.OnClickListener {
-    private static final String DEFAULT_URL = "https://www.dropbox.com/s/faa5s1wzl0izcg1/my_extra_apps.txt?dl=1";
+public class MoreAppsDialog extends Dialog implements AppConstant, View.OnClickListener {
+
     private static final int TAB_MODE_APPS = 1;
     private static final int TAB_MODE_GAMES = 2;
 
@@ -41,6 +42,7 @@ public class MoreAppsDialog extends Dialog implements View.OnClickListener {
     private TextView txtGames;
     private RecyclerView recyclerView;
     private TextView txtClose;
+    private TextView txtVisitStore;
     private TextView txtLoading;
     private View layoutLoading;
     private ProgressBar progressBar;
@@ -72,7 +74,7 @@ public class MoreAppsDialog extends Dialog implements View.OnClickListener {
 //        AppConfigEntity appConfigEntity = AppCommon.getInstance().getAppLocalConfig();
 //        if (appConfigEntity != null) {
         AppLog.i(">>>> MoreAppsDialog # downloadData");
-        String url = DEFAULT_URL;//appConfigEntity.myExtraApps.download;
+        String url = DEFAULT_EXTRA_APP_URL;//appConfigEntity.myExtraApps.download;
         getExtraAppFuture = Ion.with(getContext())
                 .load(url)
                 .asJsonObject()
@@ -136,10 +138,12 @@ public class MoreAppsDialog extends Dialog implements View.OnClickListener {
         txtApps = (TextView) findViewById(R.id.txt_apps);
         txtGames = (TextView) findViewById(R.id.txt_games);
         txtClose = (TextView) findViewById(R.id.txt_close);
+        txtVisitStore = (TextView) findViewById(R.id.txt_visit_store);
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
         txtApps.setOnClickListener(this);
         txtGames.setOnClickListener(this);
         txtClose.setOnClickListener(this);
+        txtVisitStore.setOnClickListener(this);
     }
 
     private void setupRecycleView() {
@@ -162,6 +166,11 @@ public class MoreAppsDialog extends Dialog implements View.OnClickListener {
             }
         } else if (v == txtClose) {
             dismiss();
+        } else if (v == txtVisitStore) {
+            if (myExtraApps != null) {
+                CommonUtil.openDeveloperPageOnGooglePlay(getContext(), myExtraApps.myPubName);
+                dismiss();
+            }
         }
     }
 
@@ -189,11 +198,7 @@ public class MoreAppsDialog extends Dialog implements View.OnClickListener {
                     @Override
                     public void onClick(View v) {
                         MyAppEntity myAppEntity = myApps.get(getAdapterPosition());
-                        try {
-                            CommonUtil.openGooglePlay(activity, myAppEntity.packageName);
-                        } catch (Exception e) {
-//                            e.printStackTrace();
-                        }
+                        CommonUtil.openApplicationOnGooglePlay(activity, myAppEntity.packageName);
                     }
                 });
 
