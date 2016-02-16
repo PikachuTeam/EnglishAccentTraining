@@ -19,7 +19,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -28,26 +27,29 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
 import tatteam.com.app_common.AppCommon;
+import tatteam.com.app_common.ads.AdsBigBannerHandler;
 import tatteam.com.app_common.ads.AdsSmallBannerHandler;
+import tatteam.com.app_common.util.AppConstant;
 import tatteam.com.app_common.util.CloseAppHandler;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, AdapterView.OnItemClickListener, ViewPager.OnPageChangeListener, CustomSeekBar.OnSeekbarChangeListener, CloseAppHandler.OnCloseAppListener {
 
     private static final boolean ADS_ENABLE = true;
+    private static final int BIG_ADS_SHOWING_INTERVAL = 3;
+    private static int BIG_ADS_SHOWING_COUNTER = 1;
+
     private CloseAppHandler closeAppHandler;
     private LinearLayout layout_MoreApp;
     private ImageView btnMore;
     private ImageButton btnPlayPause, btnNext, btnPrevious;
     private ImageButton btnReplay, btnShuffle;
-    private TextView tvLesson, tvCurrentDuration, tvDuration, tvAppName,tvMoreApp;
+    private TextView tvLesson, tvCurrentDuration, tvDuration, tvAppName, tvMoreApp;
 
     private View viewPage1, viewPage2, viewPage3;
     ArrayList<View> listSmallView = new ArrayList<>();
@@ -78,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //
     private AdsSmallBannerHandler adsSmallBannerHandler;
+    private AdsBigBannerHandler adsBigBannerHandler;
     private FrameLayout adsContainer;
     //incoming call
     private PhoneStateListener phoneStateListener;
@@ -87,7 +90,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
 
         player = new MediaPlayer();
@@ -179,17 +181,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         closeAppHandler.setListener(this);
 
         //ads
-        if(ADS_ENABLE) {
+        if (ADS_ENABLE) {
             adsContainer = (FrameLayout) this.findViewById(R.id.ads_container);
-            adsSmallBannerHandler = new AdsSmallBannerHandler(this, adsContainer);
+            adsSmallBannerHandler = new AdsSmallBannerHandler(this, adsContainer, AppConstant.AdsType.SMALL_BANNER_LANGUAGE_LEARNING);
             adsSmallBannerHandler.setup();
+
+            adsBigBannerHandler = new AdsBigBannerHandler(this, AppConstant.AdsType.BIG_BANNER_LANGUAGE_LEARNING);
+            adsBigBannerHandler.setup();
+        }
+    }
+
+    private void showBigAdsIfNeeded() {
+        if (ADS_ENABLE && adsBigBannerHandler != null) {
+            if (BIG_ADS_SHOWING_COUNTER % BIG_ADS_SHOWING_INTERVAL == 0) {
+                try {
+                    adsBigBannerHandler.show();
+                } catch (Exception ex) {
+                }
+            }
+            BIG_ADS_SHOWING_COUNTER++;
         }
     }
 
     private void incomingCall() {
 
     }
-
 
 
     private void updateSeekBar() {
@@ -218,6 +234,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        DataSource.getInstance().destroy();
         if (mgr != null) {
             mgr.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
+        }
+        if (adsSmallBannerHandler != null) {
+            adsSmallBannerHandler.destroy();
+        }
+        if (adsBigBannerHandler != null) {
+            adsBigBannerHandler.destroy();
         }
         super.onDestroy();
     }
@@ -426,6 +448,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        showBigAdsIfNeeded();
+
         for (int i = 0; i < lessonArrayList.size(); i++) {
             lessonArrayList.get(i).setIsPlay(false);
         }
@@ -472,7 +496,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onBackPressed() {
-        closeAppHandler.handlerKeyBack(this);
+        closeAppHandler.setKeyBackPress(this);
     }
 
     @Override
@@ -482,7 +506,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onTryToCloseApp() {
-        Toast.makeText(this,"Press once again to exit!",Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Press once again to exit!", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -596,7 +620,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 TextView tvSpeech = (TextView) layout.findViewById(R.id.tvSpeech);
                 TextView tvReducedSpeech = (TextView) layout.findViewById(R.id.tvReducedSpeech);
                 tvSpeech.setTypeface(listType);
-                tvReducedSpeech.setTypeface(textType);
+//                tvReducedSpeech.setTypeface(textType);
                 tvReducedSpeech.setText(Html.fromHtml(lessonArrayList.get(soundPlaying).getReducedSpeech() + ""));
             }
             collection.addView(layout);

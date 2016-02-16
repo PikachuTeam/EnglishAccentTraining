@@ -43,7 +43,7 @@ public class SplashActivity extends AppCompatActivity {
     private void initAppCommon(){
         AppCommon.getInstance().initIfNeeded(getApplicationContext());
         AppCommon.getInstance().increaseLaunchTime();
-        AppCommon.getInstance().syncAdsSmallBannerIfNeeded(AppConstant.AdsType.SMALL_BANNER_LANGUAGE_LEARNING);
+        AppCommon.getInstance().syncAdsIfNeeded(AppConstant.AdsType.SMALL_BANNER_LANGUAGE_LEARNING, AppConstant.AdsType.BIG_BANNER_LANGUAGE_LEARNING);
     }
     private void importDatabase() {
         AsyncTask task = new AsyncTask() {

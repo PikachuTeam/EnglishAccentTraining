@@ -5,6 +5,7 @@ import android.content.Context;
 
 import hotchemi.android.rate.AppRate;
 import hotchemi.android.rate.OnClickButtonListener;
+import tatteam.com.app_common.R;
 
 /**
  * Created by ThanhNH on 10/8/2015.
@@ -48,18 +49,21 @@ public class CloseAppHandler {
                 });
     }
 
-    public void handlerKeyBack(Activity activity) {
+    public void setKeyBackPress(Activity activity) {
         if (!showDialogIfNeeded(activity)) {
             handleDoubleBackToExit();
         }
     }
 
     private boolean showDialogIfNeeded(Activity activity) {
-        if (!AppLocalSharedPreferences.getInstance().isRatedApp() &&
-                AppLocalSharedPreferences.getInstance().isRateAppOverLaunchTime(rateAppOverLaunchTime) &&
-                (AppLocalSharedPreferences.getInstance().isRateAppOverDate(rateAppOverDate) ||
-                        AppLocalSharedPreferences.getInstance().getAppLaunchTime() % rateAppOverLaunchTime == 0)) {
+        boolean isSkipRating = AppLocalSharedPreferences.getInstance().isSkipRating();
+        boolean isRateAlready = AppLocalSharedPreferences.getInstance().isRatedApp();
+        boolean isRateOverLaunchTime = AppLocalSharedPreferences.getInstance().isRateAppOverLaunchTime(rateAppOverLaunchTime);
+        boolean isRateOverDate = (AppLocalSharedPreferences.getInstance().isRateAppOverDate(rateAppOverDate)
+                || AppLocalSharedPreferences.getInstance().getAppLaunchTime() % rateAppOverLaunchTime == 0);
+        if (!isRateAlready && !isSkipRating && isRateOverLaunchTime && isRateOverDate) {
             appRate.showRateDialogIfMeetsConditions(activity);
+            AppLocalSharedPreferences.getInstance().setSkipRating(true);
             return true;
         }
         return false;
@@ -76,6 +80,10 @@ public class CloseAppHandler {
                 listener.onTryToCloseApp();
             }
         }
+    }
+
+    public String getDefaultExitMessage() {
+        return context.getString(R.string.message_exit);
     }
 
     public int getRateAppOverDate() {

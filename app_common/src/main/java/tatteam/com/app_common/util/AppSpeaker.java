@@ -11,7 +11,6 @@ import java.util.Locale;
  */
 public class AppSpeaker {
 
-    private static final float SPEECH_RATE = 0.8f;
     private static AppSpeaker instance;
 
     private TextToSpeech textToSpeech;
@@ -40,7 +39,7 @@ public class AppSpeaker {
                                     if (status != TextToSpeech.ERROR) {
                                         try {
                                             textToSpeech.setLanguage(loc);
-                                            textToSpeech.setSpeechRate(SPEECH_RATE);
+                                            textToSpeech.setSpeechRate(AppConstant.TEXT_TO_SPEECH_RATE);
                                         } catch (Exception e) {
                                             e.printStackTrace();
                                         }

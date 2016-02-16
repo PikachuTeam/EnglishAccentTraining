@@ -7,4 +7,6 @@
     <color name="dialog_line">#b6b6b6</color>
     <color name="tab_selected">#8dbef2</color>
     <color name="tab_normal">#00ffffff</color>
+
+    <color name="rippelColor">#FFFFFF</color>
 </resources>

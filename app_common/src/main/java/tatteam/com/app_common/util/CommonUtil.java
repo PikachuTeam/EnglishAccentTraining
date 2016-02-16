@@ -2,6 +2,7 @@ package tatteam.com.app_common.util;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 
 /**
@@ -26,6 +27,15 @@ public class CommonUtil {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
 
+    public static boolean isPackageInstalled(String packageName, Context context) {
+        PackageManager pm = context.getPackageManager();
+        try {
+            pm.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES);
+            return true;
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        }
     }
 }
