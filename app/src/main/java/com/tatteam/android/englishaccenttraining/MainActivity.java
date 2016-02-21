@@ -41,7 +41,7 @@ import tatteam.com.app_common.util.CloseAppHandler;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, AdapterView.OnItemClickListener, ViewPager.OnPageChangeListener, CustomSeekBar.OnSeekbarChangeListener, CloseAppHandler.OnCloseAppListener {
 
     private static final boolean ADS_ENABLE = true;
-    private static final int BIG_ADS_SHOWING_INTERVAL = 3;
+    private static final int BIG_ADS_SHOWING_INTERVAL = 5;
     private static int BIG_ADS_SHOWING_COUNTER = 1;
 
     private CloseAppHandler closeAppHandler;
@@ -274,6 +274,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 } else {
                     playNextAround();
                 }
+                showBigAdsIfNeeded();
                 break;
             case R.id.btnPrevious:
                 if (isShuffle) {
@@ -282,6 +283,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 } else {
                     playPrev();
                 }
+                showBigAdsIfNeeded();
                 break;
             case R.id.btnReplay:
                 if (isRepeat == 0) {
