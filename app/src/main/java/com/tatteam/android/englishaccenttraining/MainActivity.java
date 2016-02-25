@@ -443,9 +443,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void LoadData() {
-        DataSource.getInstance().init(getApplicationContext());
-        DataSource.getInstance().createDatabaseIfNeed();
-        lessonArrayList = DataSource.getInstance().getListLesson();
+        lessonArrayList = DataSource.getListLesson();
     }
 
     @Override
