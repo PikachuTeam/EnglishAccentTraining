@@ -3,6 +3,8 @@
     package="com.tatteam.android.englishaccenttraining">
 
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <application
         android:name="com.tatteam.android.englishaccenttraining.ClientApp"
         android:allowBackup="true"

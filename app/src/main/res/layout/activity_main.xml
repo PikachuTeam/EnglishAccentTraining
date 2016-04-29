@@ -1,5 +1,4 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -9,6 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true">
+
         <FrameLayout
             android:id="@+id/ads_container"
             android:layout_width="match_parent"
@@ -31,372 +31,416 @@
             android:orientation="vertical"
             android:paddingBottom="@dimen/activity_vertical_margin">
 
-        <com.tatteam.android.englishaccenttraining.CustomSeekBar
-            android:id="@+id/seekBar_Custom"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/seekbar_height"
-            android:layout_marginBottom="@dimen/margin_view_1"
-            android:background="@drawable/seekbar_background_1"></com.tatteam.android.englishaccenttraining.CustomSeekBar>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/seekbar_height"
-            android:layout_marginBottom="@dimen/margin_view_1"
-            android:gravity="center">
-
-            <TextView
-                android:id="@+id/tvLesson"
-                android:layout_width="@dimen/lesson_name_width"
-                android:layout_height="@dimen/seekbar_height"
-                android:ellipsize="marquee"
-                android:gravity="center"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:singleLine="true"
-                android:textColor="@color/lesson_name"
-                android:textSize="@dimen/text_size_item" />
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/tvAppName"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/seekbar_height"
-            android:gravity="center"
-            android:text="@string/app_name"
-            android:textColor="@color/lesson_name"
-            android:textSize="@dimen/app_name_size" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/seekbar_height"
-            android:layout_marginLeft="@dimen/margin_view_1"
-            android:gravity="center">
-
-            <TextView
-                android:id="@+id/tvCurrentDuration"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:textColor="@color/lesson_name"
-                android:textSize="@dimen/text_size_2" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/seekbar_height"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/margin_view_1"
-            android:gravity="center">
-
-            <TextView
-                android:id="@+id/tvDuration"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:textColor="@color/lesson_name"
-                android:textSize="@dimen/text_size_2" />
-        </LinearLayout>
-
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_view_1"
-            android:layout_marginRight="@dimen/margin_view_1"
-            android:layout_marginTop="@dimen/margin_view_pager"
-            android:background="@drawable/page_background"
-            android:gravity="center">
-
-            <android.support.v4.view.ViewPager
-                android:id="@+id/pager"
+            <com.tatteam.android.englishaccenttraining.CustomSeekBar
+                android:id="@+id/seekBar_Custom"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"></android.support.v4.view.ViewPager>
-        </RelativeLayout>
+                android:layout_height="@dimen/seekbar_height"
+                android:layout_marginBottom="@dimen/margin_view_1"
+                android:background="@drawable/seekbar_background_1"></com.tatteam.android.englishaccenttraining.CustomSeekBar>
 
-
-        <LinearLayout
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/margin_listview"
-            android:layout_marginTop="@dimen/margin_small_view_layout"
-            android:gravity="center"
-            android:orientation="horizontal">
-            <tatteam.com.app_common.ui.drawable.FlatEffectDrawable
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
             <LinearLayout
-                android:id="@+id/layout_MoreApp"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/seekbar_height"
+                android:layout_marginBottom="@dimen/margin_view_1"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/tvLesson"
+                    android:layout_width="@dimen/lesson_name_width"
+                    android:layout_height="@dimen/seekbar_height"
+                    android:ellipsize="marquee"
+                    android:gravity="center"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:singleLine="true"
+                    android:textColor="@color/lesson_name"
+                    android:textSize="@dimen/text_size_item" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvAppName"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/seekbar_height"
+                android:gravity="center"
+                android:text="@string/app_name"
+                android:textColor="@color/lesson_name"
+                android:textSize="@dimen/app_name_size" />
+
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="@dimen/seekbar_height"
+                android:layout_marginLeft="@dimen/margin_view_1"
+                android:gravity="center">
 
-                <ImageView
-                    android:id="@+id/btnMoreApp"
-                    android:layout_width="@dimen/button_super_small_size"
-                    android:layout_height="@dimen/button_super_small_size"
-                    android:background="@drawable/moreapp" />
-
-                <LinearLayout
+                <TextView
+                    android:id="@+id/tvCurrentDuration"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:text=""
+                    android:textColor="@color/lesson_name"
+                    android:textSize="@dimen/text_size_2" />
+            </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/tvMoreApp"
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/seekbar_height"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/margin_view_1"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/tvDuration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="@color/lesson_name"
+                    android:textSize="@dimen/text_size_2" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_view_1"
+                android:layout_marginRight="@dimen/margin_view_1"
+                android:layout_marginTop="@dimen/margin_view_pager"
+                android:background="@drawable/page_background"
+                android:gravity="center">
+
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"></android.support.v4.view.ViewPager>
+            </RelativeLayout>
+
+
+            <LinearLayout
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/margin_listview"
+                android:layout_marginTop="@dimen/margin_small_view_layout"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <tatteam.com.app_common.ui.drawable.FlatEffectDrawable
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:id="@+id/layout_MoreApp"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/padding_small_view_layout"
-                        android:text="@string/more_app"
-                        android:textColor="@color/primary"
-                        android:textSize="@dimen/text_size_2" />
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/btnMoreApp"
+                            android:layout_width="@dimen/button_super_small_size"
+                            android:layout_height="@dimen/button_super_small_size"
+                            android:background="@drawable/moreapp" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tvMoreApp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/padding_small_view_layout"
+                                android:text="@string/more_app"
+                                android:textColor="@color/primary"
+                                android:textSize="@dimen/text_size_2" />
+
+                            <View
+                                android:layout_width="@dimen/ads_height"
+                                android:layout_height="1dp"
+                                android:layout_marginLeft="@dimen/padding_small_view_layout"
+                                android:background="@color/primary" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </tatteam.com.app_common.ui.drawable.FlatEffectDrawable>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/layoutViewPager"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/margin_small_view_layout"
+                android:gravity="center"
+                android:padding="@dimen/padding_small_view_layout">
+
+                <LinearLayout
+                    android:layout_width="@dimen/small_view_layout_width"
+                    android:layout_height="wrap_content"
+                    android:gravity="center">
 
                     <View
-                        android:layout_width="@dimen/ads_height"
-                        android:layout_height="1dp"
-                        android:layout_marginLeft="@dimen/padding_small_view_layout"
-                        android:background="@color/primary" />
+                        android:id="@+id/view_page_1"
+                        android:layout_width="@dimen/small_view_width"
+                        android:layout_height="@dimen/small_view_height"
+                        android:background="@drawable/page_selected" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="@dimen/small_view_layout_width"
+                    android:layout_height="wrap_content"
+                    android:gravity="center">
+
+                    <View
+                        android:id="@+id/view_page_2"
+                        android:layout_width="@dimen/small_view_width"
+                        android:layout_height="@dimen/small_view_height"
+                        android:background="@drawable/page_selected"
+                        android:visibility="invisible" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="@dimen/small_view_layout_width"
+                    android:layout_height="wrap_content"
+                    android:gravity="center">
+
+                    <View
+                        android:id="@+id/view_page_3"
+                        android:layout_width="@dimen/small_view_width"
+                        android:layout_height="@dimen/small_view_height"
+                        android:background="@drawable/page_selected"
+                        android:visibility="invisible" />
                 </LinearLayout>
             </LinearLayout>
-        </tatteam.com.app_common.ui.drawable.FlatEffectDrawable>
-    </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/margin_small_view_layout"
+                android:gravity="center"
+                android:padding="@dimen/padding_small_view_layout">
 
-    <LinearLayout
-        android:id="@+id/layoutViewPager"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/margin_small_view_layout"
-        android:gravity="center"
-        android:padding="@dimen/padding_small_view_layout">
+                <LinearLayout
+                    android:layout_width="@dimen/small_view_layout_width"
+                    android:layout_height="wrap_content"
+                    android:gravity="center">
 
+                    <View
+                        android:layout_width="@dimen/small_view_width"
+                        android:layout_height="@dimen/small_view_height"
+                        android:background="@drawable/page_position_1" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="@dimen/small_view_layout_width"
+                    android:layout_height="wrap_content"
+                    android:gravity="center">
+
+                    <View
+                        android:layout_width="@dimen/small_view_width"
+                        android:layout_height="@dimen/small_view_height"
+                        android:background="@drawable/page_position_2" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="@dimen/small_view_layout_width"
+                    android:layout_height="wrap_content"
+                    android:gravity="center">
+
+                    <View
+                        android:layout_width="@dimen/small_view_width"
+                        android:layout_height="@dimen/small_view_height"
+                        android:background="@drawable/page_position_1" />
+                </LinearLayout>
+            </LinearLayout>
+        </RelativeLayout>
         <LinearLayout
-            android:layout_width="@dimen/small_view_layout_width"
-            android:layout_height="wrap_content"
-            android:gravity="center">
+            android:id="@+id/layoutRecordBtn"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="13"
+            android:background="@drawable/player_background"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:weightSum="2">
+            <tatteam.com.app_common.ui.drawable.RippleEffectDrawable
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center">
+                    <Button
+                        android:id="@+id/btnRecord"
+                        android:layout_width="@dimen/button_big_size"
+                        android:layout_height="@dimen/button_big_size"
+                        android:background="@drawable/record_before"/>
+                </LinearLayout>
+            </tatteam.com.app_common.ui.drawable.RippleEffectDrawable>
+            <tatteam.com.app_common.ui.drawable.RippleEffectDrawable
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center">
+                    <Button
+                        android:id="@+id/btnPlayRecord"
+                        android:layout_width="@dimen/button_big_size"
+                        android:layout_height="@dimen/button_big_size"
+                        android:background="@drawable/play"/>
+                </LinearLayout>
+            </tatteam.com.app_common.ui.drawable.RippleEffectDrawable>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/layoutControlMedia"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="13"
+            android:background="@drawable/player_background"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="100">
 
-            <View
-                android:id="@+id/view_page_1"
-                android:layout_width="@dimen/small_view_width"
-                android:layout_height="@dimen/small_view_height"
-                android:background="@drawable/page_selected" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="35"
+                android:weightSum="100">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50">
+
+                    <tatteam.com.app_common.ui.drawable.RippleEffectDrawable
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/button_big_size">
+
+                            <ImageButton
+                                android:id="@+id/btnShuffle"
+                                android:layout_width="@dimen/button_super_small_size"
+                                android:layout_height="@dimen/button_super_small_size"
+                                android:layout_centerInParent="true"
+                                android:layout_marginLeft="@dimen/margin_button"
+                                android:background="@drawable/shuffer_off"></ImageButton>
+                        </RelativeLayout>
+                    </tatteam.com.app_common.ui.drawable.RippleEffectDrawable>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50">
+
+                    <tatteam.com.app_common.ui.drawable.RippleEffectDrawable
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/button_big_size">
+
+
+                            <ImageButton
+                                android:id="@+id/btnPrevious"
+                                android:layout_width="@dimen/button_small_size"
+                                android:layout_height="@dimen/button_small_size"
+                                android:layout_centerInParent="true"
+                                android:layout_marginLeft="@dimen/margin_button"
+                                android:background="@drawable/pre"></ImageButton>
+
+                        </RelativeLayout>
+                    </tatteam.com.app_common.ui.drawable.RippleEffectDrawable>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="30">
+
+                <tatteam.com.app_common.ui.drawable.RippleEffectDrawable
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center">
+
+                        <ImageButton
+                            android:id="@+id/btnPlayPause"
+                            android:layout_width="@dimen/button_big_size"
+                            android:layout_height="@dimen/button_big_size"
+                            android:background="@drawable/play" />
+                    </RelativeLayout>
+                </tatteam.com.app_common.ui.drawable.RippleEffectDrawable>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="35"
+                android:weightSum="100">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50">
+
+                    <tatteam.com.app_common.ui.drawable.RippleEffectDrawable
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/button_big_size">
+
+                            <ImageButton
+                                android:id="@+id/btnNext"
+                                android:layout_width="@dimen/button_small_size"
+                                android:layout_height="@dimen/button_small_size"
+                                android:layout_centerInParent="true"
+                                android:layout_marginLeft="@dimen/margin_button"
+                                android:background="@drawable/next"></ImageButton>
+
+                        </RelativeLayout>
+                    </tatteam.com.app_common.ui.drawable.RippleEffectDrawable>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50">
+
+                    <tatteam.com.app_common.ui.drawable.RippleEffectDrawable
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/button_big_size">
+
+                            <ImageButton
+                                android:id="@+id/btnReplay"
+                                android:layout_width="@dimen/button_super_small_size"
+                                android:layout_height="@dimen/button_super_small_size"
+                                android:layout_centerInParent="true"
+                                android:layout_marginLeft="@dimen/margin_button"
+                                android:background="@drawable/replay_off"></ImageButton>
+                        </RelativeLayout>
+                    </tatteam.com.app_common.ui.drawable.RippleEffectDrawable>
+                </LinearLayout>
+
+            </LinearLayout>
+
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="@dimen/small_view_layout_width"
-            android:layout_height="wrap_content"
-            android:gravity="center">
-
-            <View
-                android:id="@+id/view_page_2"
-                android:layout_width="@dimen/small_view_width"
-                android:layout_height="@dimen/small_view_height"
-                android:background="@drawable/page_selected"
-                android:visibility="invisible" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="@dimen/small_view_layout_width"
-            android:layout_height="wrap_content"
-            android:gravity="center">
-
-            <View
-                android:id="@+id/view_page_3"
-                android:layout_width="@dimen/small_view_width"
-                android:layout_height="@dimen/small_view_height"
-                android:background="@drawable/page_selected"
-                android:visibility="invisible" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/margin_small_view_layout"
-        android:gravity="center"
-        android:padding="@dimen/padding_small_view_layout">
-
-        <LinearLayout
-            android:layout_width="@dimen/small_view_layout_width"
-            android:layout_height="wrap_content"
-            android:gravity="center">
-
-            <View
-                android:layout_width="@dimen/small_view_width"
-                android:layout_height="@dimen/small_view_height"
-                android:background="@drawable/page_position_1" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="@dimen/small_view_layout_width"
-            android:layout_height="wrap_content"
-            android:gravity="center">
-
-            <View
-                android:layout_width="@dimen/small_view_width"
-                android:layout_height="@dimen/small_view_height"
-                android:background="@drawable/page_position_2" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="@dimen/small_view_layout_width"
-            android:layout_height="wrap_content"
-            android:gravity="center">
-
-            <View
-                android:layout_width="@dimen/small_view_width"
-                android:layout_height="@dimen/small_view_height"
-                android:background="@drawable/page_position_1" />
-        </LinearLayout>
     </LinearLayout>
 </RelativeLayout>
-
-<LinearLayout
-android:layout_width="match_parent"
-android:layout_height="0dp"
-android:layout_weight="13"
-android:background="@drawable/player_background"
-android:gravity="center"
-android:orientation="horizontal"
-android:weightSum="100">
-
-<LinearLayout
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_weight="35"
-    android:weightSum="100">
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="50">
-
-        <tatteam.com.app_common.ui.drawable.RippleEffectDrawable
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/button_big_size">
-
-                <ImageButton
-                    android:id="@+id/btnShuffle"
-                    android:layout_width="@dimen/button_super_small_size"
-                    android:layout_height="@dimen/button_super_small_size"
-                    android:layout_centerInParent="true"
-                    android:layout_marginLeft="@dimen/margin_button"
-                    android:background="@drawable/shuffer_off"></ImageButton>
-            </RelativeLayout>
-        </tatteam.com.app_common.ui.drawable.RippleEffectDrawable>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="50">
-
-        <tatteam.com.app_common.ui.drawable.RippleEffectDrawable
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/button_big_size">
-
-
-                <ImageButton
-                    android:id="@+id/btnPrevious"
-                    android:layout_width="@dimen/button_small_size"
-                    android:layout_height="@dimen/button_small_size"
-                    android:layout_centerInParent="true"
-                    android:layout_marginLeft="@dimen/margin_button"
-                    android:background="@drawable/pre"></ImageButton>
-
-            </RelativeLayout>
-        </tatteam.com.app_common.ui.drawable.RippleEffectDrawable>
-    </LinearLayout>
-</LinearLayout>
-
-<LinearLayout
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_weight="30">
-
-    <tatteam.com.app_common.ui.drawable.RippleEffectDrawable
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center">
-
-            <ImageButton
-                android:id="@+id/btnPlayPause"
-                android:layout_width="@dimen/button_big_size"
-                android:layout_height="@dimen/button_big_size"
-                android:background="@drawable/play" />
-        </RelativeLayout>
-    </tatteam.com.app_common.ui.drawable.RippleEffectDrawable>
-</LinearLayout>
-
-<LinearLayout
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_weight="35"
-    android:weightSum="100">
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="50">
-
-        <tatteam.com.app_common.ui.drawable.RippleEffectDrawable
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/button_big_size">
-
-                <ImageButton
-                    android:id="@+id/btnNext"
-                    android:layout_width="@dimen/button_small_size"
-                    android:layout_height="@dimen/button_small_size"
-                    android:layout_centerInParent="true"
-                    android:layout_marginLeft="@dimen/margin_button"
-                    android:background="@drawable/next"></ImageButton>
-
-            </RelativeLayout>
-        </tatteam.com.app_common.ui.drawable.RippleEffectDrawable>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="50">
-
-        <tatteam.com.app_common.ui.drawable.RippleEffectDrawable
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/button_big_size">
-
-                <ImageButton
-                    android:id="@+id/btnReplay"
-                    android:layout_width="@dimen/button_super_small_size"
-                    android:layout_height="@dimen/button_super_small_size"
-                    android:layout_centerInParent="true"
-                    android:layout_marginLeft="@dimen/margin_button"
-                    android:background="@drawable/replay_off"></ImageButton>
-            </RelativeLayout>
-        </tatteam.com.app_common.ui.drawable.RippleEffectDrawable>
-    </LinearLayout>
-
-</LinearLayout>
-
-</LinearLayout>
-
-    </LinearLayout></RelativeLayout>

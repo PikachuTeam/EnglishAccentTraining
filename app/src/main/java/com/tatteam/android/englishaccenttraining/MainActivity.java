@@ -5,8 +5,10 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -19,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -27,6 +30,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
@@ -46,11 +50,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private CloseAppHandler closeAppHandler;
     private LinearLayout layout_MoreApp;
+    private LinearLayout layout_Record;
+    private LinearLayout layout_MediaControl;
     private ImageView btnMore;
     private ImageButton btnPlayPause, btnNext, btnPrevious;
     private ImageButton btnReplay, btnShuffle;
     private TextView tvLesson, tvCurrentDuration, tvDuration, tvAppName, tvMoreApp;
-
+    private Button btnRecord;
+    private Button btnPlayRecord;
     private View viewPage1, viewPage2, viewPage3;
     ArrayList<View> listSmallView = new ArrayList<>();
 
@@ -62,6 +69,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private int soundPlaying = 0;
     private MediaPlayer player;
+    private MediaPlayer recordPlayer;
+    private MediaRecorder recorder;
+    private String OUTPUT_FILE;
 
     private ArrayList<Lesson> lessonArrayList = new ArrayList<>();
     private ListLessonAdapter adapter;
@@ -73,6 +83,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private View[] pages;
 
     private boolean isMediaPlayerPaused = false;
+    private boolean isPlayerRecordPaused = false;
+    private boolean recordStatus = false;
+    private boolean recordPlaying = false;
+    private boolean isRecord = false;
 
     private final int REPEAT_OFF = 0;
     private final int REPEAT_ONE = 1;
@@ -91,8 +105,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        OUTPUT_FILE = Environment.getExternalStorageDirectory() + "/englishtrainingrecord.3gpp";
         player = new MediaPlayer();
+        recordPlayer = new MediaPlayer();
         LoadData();
         initViews();
         phoneStateListener = new PhoneStateListener() {
@@ -125,7 +140,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnShuffle = (ImageButton) this.findViewById(R.id.btnShuffle);
         btnMore = (ImageView) this.findViewById(R.id.btnMoreApp);
         btnMore.getBackground().setColorFilter(Color.parseColor("#006064"), PorterDuff.Mode.MULTIPLY);
+        btnRecord = (Button) this.findViewById(R.id.btnRecord);
+        btnPlayRecord = (Button) this.findViewById(R.id.btnPlayRecord);
         layout_MoreApp = (LinearLayout) this.findViewById(R.id.layout_MoreApp);
+        layout_MediaControl = (LinearLayout) this.findViewById(R.id.layoutControlMedia);
+        layout_Record = (LinearLayout) this.findViewById(R.id.layoutRecordBtn);
 
         tvMoreApp = (TextView) this.findViewById(R.id.tvMoreApp);
         tvAppName = (TextView) this.findViewById(R.id.tvAppName);
@@ -170,12 +189,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnReplay.setOnClickListener(this);
         btnShuffle.setOnClickListener(this);
         layout_MoreApp.setOnClickListener(this);
-
+        btnRecord.setOnClickListener(this);
+        btnPlayRecord.setOnClickListener(this);
         pager.setOnPageChangeListener(this);
 
         player.setOnPreparedListener(this);
         player.setOnCompletionListener(this);
 
+        recordPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                btnPlayRecord.setBackgroundResource(R.drawable.play);
+                recordPlaying = false;
+                isPlayerRecordPaused = false;
+                btnRecord.setEnabled(true);
+            }
+        });
+        recordPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                recordPlayer.start();
+            }
+        });
         //close app
         closeAppHandler = new CloseAppHandler(this);
         closeAppHandler.setListener(this);
@@ -308,6 +343,81 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.layout_MoreApp:
                 AppCommon.getInstance().openMoreAppDialog(this);
+                break;
+            case R.id.btnRecord:
+                btnRecord.setBackgroundResource(R.drawable.record);
+                if (recordStatus) {
+                    btnRecord.setBackgroundResource(R.drawable.record_before);
+                    if (recorder != null) {
+                        recorder.stop();
+                        btnPlayRecord.setEnabled(true);
+                        recordStatus = false;
+                    }
+                } else {
+                    if (player.isPlaying()){
+                        player.pause();
+                        isMediaPlayerPaused = true;
+                        btnPlayPause.setBackgroundResource(R.drawable.play);
+                    }
+                    btnPlayRecord.setEnabled(false);
+                    isPlayerRecordPaused = false;
+                    btnRecord.setBackgroundResource(R.drawable.record);
+                    if (recorder != null) {
+                        recorder.release();
+                    }
+                    File outputFile = new File(OUTPUT_FILE);
+                    if (outputFile.exists()) {
+                        outputFile.delete();
+                    }
+                    recorder = new MediaRecorder();
+                    recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+                    recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+                    recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+                    recorder.setOutputFile(OUTPUT_FILE);
+                    try {
+                        recorder.prepare();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    recorder.start();
+                    recordStatus = true;
+                }
+                break;
+            case R.id.btnPlayRecord:
+                if (recordPlaying) {
+                    btnRecord.setEnabled(true);
+                    btnPlayRecord.setBackgroundResource(R.drawable.play);
+                    if (recordPlayer != null) {
+                        recordPlayer.pause();
+                    }
+                    recordPlaying = false;
+                    isPlayerRecordPaused = true;
+                } else {
+                    if (player.isPlaying()){
+                        player.pause();
+                        isMediaPlayerPaused = true;
+                        btnPlayPause.setBackgroundResource(R.drawable.play);
+                    }
+                    btnRecord.setEnabled(false);
+                    btnPlayRecord.setBackgroundResource(R.drawable.pause);
+                    if (recordPlayer != null) {
+                        if (isPlayerRecordPaused) {
+                            recordPlayer.start();
+                            isPlayerRecordPaused = false;
+                            recordPlaying = true;
+                        } else {
+                            recordPlaying = true;
+                            recordPlayer.reset();
+                            try {
+                                recordPlayer.setDataSource(OUTPUT_FILE);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            recordPlayer.prepareAsync();
+                        }
+
+                    }
+                }
                 break;
         }
     }
@@ -465,6 +575,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void updatePage23() {
         ((TextView) pages[1].findViewById(R.id.tvTranscription)).setText(lessonArrayList.get(soundPlaying).getTranscription());
         ((TextView) pages[2].findViewById(R.id.tvReducedSpeech)).setText(Html.fromHtml(lessonArrayList.get(soundPlaying).getReducedSpeech()));
+        ((TextView) pages[2].findViewById(R.id.tvTransReducedScreen)).setText(lessonArrayList.get(soundPlaying).getTranscription());
     }
 
     //set page change listener
@@ -479,6 +590,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             listSmallView.get(i).setVisibility(View.INVISIBLE);
         }
         listSmallView.get(position).setVisibility(View.VISIBLE);
+        if(position == 2){
+            layout_MediaControl.setVisibility(View.GONE);
+            layout_Record.setVisibility(View.VISIBLE);
+        }else
+        {
+            layout_MediaControl.setVisibility(View.VISIBLE);
+            layout_Record.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -605,7 +724,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 lvLesson = (ListView) layout.findViewById(R.id.listLesson);
                 TextView tvLessonTitle = (TextView) layout.findViewById(R.id.tvLessonTitle);
                 tvLessonTitle.setTypeface(listType);
-
                 adapter = new ListLessonAdapter(MainActivity.this, lessonArrayList);
                 lvLesson.setAdapter(adapter);
                 lvLesson.setOnItemClickListener(MainActivity.this);
@@ -619,9 +737,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             } else {
                 TextView tvSpeech = (TextView) layout.findViewById(R.id.tvSpeech);
                 TextView tvReducedSpeech = (TextView) layout.findViewById(R.id.tvReducedSpeech);
+                TextView tvTransReduced = (TextView) layout.findViewById(R.id.tvTransReducedScreen);
                 tvSpeech.setTypeface(listType);
 //                tvReducedSpeech.setTypeface(textType);
                 tvReducedSpeech.setText(Html.fromHtml(lessonArrayList.get(soundPlaying).getReducedSpeech() + ""));
+                tvTransReduced.setText(lessonArrayList.get(soundPlaying).getTranscription() + "");
             }
             collection.addView(layout);
             return layout;

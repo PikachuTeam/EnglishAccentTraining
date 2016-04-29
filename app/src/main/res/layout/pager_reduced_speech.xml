@@ -30,7 +30,13 @@
             android:orientation="vertical"
             android:paddingLeft="@dimen/padding_pager"
             android:paddingRight="@dimen/padding_pager">
-
+            <TextView
+                android:id="@+id/tvTransReducedScreen"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:textColor="@color/primary_dark"
+                android:textSize="@dimen/common_text_size_20"/>
             <TextView
                 android:id="@+id/tvReducedSpeech"
                 android:layout_width="match_parent"
