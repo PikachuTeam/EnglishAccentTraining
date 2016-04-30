@@ -111,9 +111,54 @@
                     android:layout_height="match_parent"></android.support.v4.view.ViewPager>
             </RelativeLayout>
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="@dimen/margin_listview"
+                android:layout_marginTop="@dimen/margin_small_view_layout"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <tatteam.com.app_common.ui.drawable.FlatEffectDrawable
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:id="@+id/layout_Record"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/imgRecord"
+                            android:layout_width="@dimen/button_small_size"
+                            android:layout_height="@dimen/button_small_size"
+                            android:background="@drawable/mic" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tvRecord"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/record"
+                                android:textColor="@color/primary"
+                                android:textSize="@dimen/text_size_2" />
+
+                            <View
+                                android:layout_width="@dimen/margin_pager"
+                                android:layout_height="1dp"
+                                android:layout_marginLeft="@dimen/padding_small_view_layout"
+                                android:background="@color/primary" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </tatteam.com.app_common.ui.drawable.FlatEffectDrawable>
+            </LinearLayout>
 
             <LinearLayout
-
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -252,6 +297,7 @@
                 </LinearLayout>
             </LinearLayout>
         </RelativeLayout>
+
         <LinearLayout
             android:id="@+id/layoutRecordBtn"
             android:layout_width="match_parent"
@@ -262,37 +308,44 @@
             android:orientation="horizontal"
             android:visibility="gone"
             android:weightSum="2">
+
             <tatteam.com.app_common.ui.drawable.RippleEffectDrawable
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center">
+
                     <Button
                         android:id="@+id/btnRecord"
                         android:layout_width="@dimen/button_big_size"
                         android:layout_height="@dimen/button_big_size"
-                        android:background="@drawable/record_before"/>
+                        android:background="@drawable/record_before" />
                 </LinearLayout>
             </tatteam.com.app_common.ui.drawable.RippleEffectDrawable>
+
             <tatteam.com.app_common.ui.drawable.RippleEffectDrawable
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center">
+
                     <Button
                         android:id="@+id/btnPlayRecord"
                         android:layout_width="@dimen/button_big_size"
                         android:layout_height="@dimen/button_big_size"
-                        android:background="@drawable/play"/>
+                        android:background="@drawable/play" />
                 </LinearLayout>
             </tatteam.com.app_common.ui.drawable.RippleEffectDrawable>
         </LinearLayout>
+
         <LinearLayout
             android:id="@+id/layoutControlMedia"
             android:layout_width="match_parent"
