@@ -171,6 +171,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         customDialog = new Dialog(this);
         customDialog.setContentView(R.layout.custom_dialog);
         customDialog.setTitle("Chose your choice");
+        customDialog.setCanceledOnTouchOutside(false);
         tvDialog = (TextView) customDialog.findViewById(R.id.tvDialog);
         btnYes = (LinearLayout) customDialog.findViewById(R.id.btnYes);
         btnNo = (LinearLayout) customDialog.findViewById(R.id.btnNo);
@@ -378,7 +379,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 customDialog.dismiss();
                             }
                         });
-                    } else {
+                    } else if(recordPlayer.isPlaying()){
+                        tvDialog.setText("You must stop recording !!!");
+                        btnYes.setVisibility(View.GONE);
+                        btnNo.setVisibility(View.GONE);
+                        btnOk.setVisibility(View.VISIBLE);
+                        customDialog.setTitle("Alert");
+                        customDialog.show();
+                        btnOk.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                customDialog.dismiss();
+                            }
+                        });
+                    }
+                    else {
                         layout_Record.setVisibility(View.GONE);
                         layout_MediaControl.setVisibility(View.VISIBLE);
                         tvRecord.setText(R.string.record);
@@ -699,9 +714,69 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
         showBigAdsIfNeeded();
 
+        if(recordPlayer.isPlaying()){
+            tvDialog.setText("Would you like to stop the record ?");
+            btnOk.setVisibility(View.GONE);
+            btnYes.setVisibility(View.VISIBLE);
+            btnNo.setVisibility(View.VISIBLE);
+            customDialog.show();
+            btnYes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    btnRecord.setEnabled(true);
+                    btnPlayRecord.setBackgroundResource(R.drawable.play);
+                    if (recordPlayer != null) {
+                        recordPlayer.pause();
+                    }
+                    recordPlaying = false;
+                    isPlayerRecordPaused = true;
+                    customDialog.dismiss();
+                    progressItemListviewClick(position);
+                }
+            });
+            btnNo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    customDialog.dismiss();
+                }
+            });
+        }else if(recordStatus){
+            tvDialog.setText("Would you like to stop the record ?");
+            btnOk.setVisibility(View.GONE);
+            btnYes.setVisibility(View.VISIBLE);
+            btnNo.setVisibility(View.VISIBLE);
+            customDialog.show();
+            btnYes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (recorder != null) {
+                        btnRecord.setBackgroundResource(R.drawable.record_before);
+                        recorder.stop();
+                        btnPlayRecord.setEnabled(true);
+                        recordStatus = false;
+                        customDialog.dismiss();
+                        progressItemListviewClick(position);
+                    }
+                }
+            });
+            btnNo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    customDialog.dismiss();
+                }
+            });
+
+        }else {
+            progressItemListviewClick(position);
+        }
+
+
+    }
+
+    private void progressItemListviewClick(int position){
         for (int i = 0; i < lessonArrayList.size(); i++) {
             lessonArrayList.get(i).setIsPlay(false);
         }
@@ -713,7 +788,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         adapter.notifyDataSetChanged();
         updatePage23();
     }
-
     private void updatePage23() {
         ((TextView) pages[1].findViewById(R.id.tvTranscription)).setText(lessonArrayList.get(soundPlaying).getTranscription());
         ((TextView) pages[2].findViewById(R.id.tvReducedSpeech)).setText(Html.fromHtml(lessonArrayList.get(soundPlaying).getReducedSpeech()));
