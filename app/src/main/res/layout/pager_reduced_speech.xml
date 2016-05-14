@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_text_page_name"
-        android:layout_marginTop="@dimen/margin_pager"
+
         android:gravity="center"
         android:text="@string/title_reduced_speech"
         android:textColor="@color/primary_dark"

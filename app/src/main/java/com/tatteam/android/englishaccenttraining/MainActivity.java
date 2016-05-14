@@ -3,8 +3,8 @@ package com.tatteam.android.englishaccenttraining;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -20,12 +20,12 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -36,7 +36,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
-import tatteam.com.app_common.AppCommon;
 import tatteam.com.app_common.ads.AdsBigBannerHandler;
 import tatteam.com.app_common.ads.AdsSmallBannerHandler;
 import tatteam.com.app_common.util.AppConstant;
@@ -45,23 +44,24 @@ import tatteam.com.app_common.util.CloseAppHandler;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, AdapterView.OnItemClickListener, ViewPager.OnPageChangeListener, CustomSeekBar.OnSeekbarChangeListener, CloseAppHandler.OnCloseAppListener {
 
-    private static final boolean ADS_ENABLE = true;
+    private static final boolean ADS_ENABLE = false;
     private static final int BIG_ADS_SHOWING_INTERVAL = 5;
     private static int BIG_ADS_SHOWING_COUNTER = 1;
 
     private CloseAppHandler closeAppHandler;
-    private LinearLayout layout_MoreApp, layout_Record, layout_MediaControl, layout_BtnRecord, btnYes, btnNo;
-    private ImageView btnMore, imgRecord;
-    private ImageButton btnPlayPause, btnNext, btnPrevious;
-    private ImageButton btnReplay, btnShuffle;
-    private TextView tvLesson, tvCurrentDuration, tvDuration, tvAppName, tvMoreApp, tvRecord, tvDialog;
-    private Button btnRecord, btnPlayRecord, btnOk;
+    private LinearLayout layout_MediaControl, layout_Record, layoutBtnRecord, layoutBtnPlayRecord;
+    private LinearLayout btnYes, btnNo, btnOk,layoutBtnYN;
+
+    private ImageButton btnPlayPause, btnNext, btnPrevious, btnReplay;
+    private TextView tvLesson, tvCurrentDuration, tvDuration, tvDialog, tvDurationRecord;
+
+    private Button btnRecord, btnPlayRecord, btnModeRc, btnModeListen;
     private View viewPage1, viewPage2, viewPage3;
     ArrayList<View> listSmallView = new ArrayList<>();
 
     private ListView lvLesson;
 
-    private CustomSeekBar customSeekbar;
+    //    private CustomSeekBar customSeekbar;
     private Handler seekbarHandler = new Handler();
     private Runnable runnable;
 
@@ -138,49 +138,41 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnPlayPause = (ImageButton) this.findViewById(R.id.btnPlayPause);
         btnPrevious = (ImageButton) this.findViewById(R.id.btnPrevious);
         btnReplay = (ImageButton) this.findViewById(R.id.btnReplay);
-        btnShuffle = (ImageButton) this.findViewById(R.id.btnShuffle);
-        //getId and set icon color
-        btnMore = (ImageView) this.findViewById(R.id.btnMoreApp);
-        btnMore.getBackground().setColorFilter(Color.parseColor("#006064"), PorterDuff.Mode.MULTIPLY);
-        imgRecord = (ImageView) this.findViewById(R.id.imgRecord);
-        imgRecord.getBackground().setColorFilter(Color.parseColor("#006064"), PorterDuff.Mode.MULTIPLY);
 
         btnRecord = (Button) this.findViewById(R.id.btnRecord);
         btnPlayRecord = (Button) this.findViewById(R.id.btnPlayRecord);
-        layout_MoreApp = (LinearLayout) this.findViewById(R.id.layout_MoreApp);
+        layoutBtnRecord = (LinearLayout) this.findViewById(R.id.layoutRecord);
+        layoutBtnPlayRecord = (LinearLayout) this.findViewById(R.id.layoutPlayRecord);
         layout_MediaControl = (LinearLayout) this.findViewById(R.id.layoutControlMedia);
         layout_Record = (LinearLayout) this.findViewById(R.id.layoutRecordBtn);
-        layout_BtnRecord = (LinearLayout) this.findViewById(R.id.layout_Record);
 
-        tvRecord = (TextView) this.findViewById(R.id.tvRecord);
-        tvMoreApp = (TextView) this.findViewById(R.id.tvMoreApp);
-        tvAppName = (TextView) this.findViewById(R.id.tvAppName);
+        tvDurationRecord = (TextView) this.findViewById(R.id.tvDurationRecord);
+        btnModeRc = (Button) this.findViewById(R.id.btnModeRecord);
+        btnModeListen = (Button) this.findViewById(R.id.btnModeListen);
+
         tvLesson = (TextView) this.findViewById(R.id.tvLesson);
         tvCurrentDuration = (TextView) this.findViewById(R.id.tvCurrentDuration);
         tvDuration = (TextView) this.findViewById(R.id.tvDuration);
-        Typeface face = Typeface.createFromAsset(getAssets(), "Mathlete_Bulky.otf");
-        tvRecord.setTypeface(face);
-        tvMoreApp.setTypeface(face);
+        Typeface face = Typeface.createFromAsset(getAssets(), "Cocogoose_trial.otf");
+
         tvLesson.setTypeface(face);
         tvLesson.setSelected(true);
         tvCurrentDuration.setTypeface(face);
         tvDuration.setTypeface(face);
-        tvAppName.setTypeface(face);
 
         //Dialog
-        customDialog = new Dialog(this);
+        customDialog = new Dialog(this,R.style.dialogstyle);
         customDialog.setContentView(R.layout.custom_dialog);
-        customDialog.setTitle("Chose your choice");
         customDialog.setCanceledOnTouchOutside(false);
+        customDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         tvDialog = (TextView) customDialog.findViewById(R.id.tvDialog);
         btnYes = (LinearLayout) customDialog.findViewById(R.id.btnYes);
         btnNo = (LinearLayout) customDialog.findViewById(R.id.btnNo);
-        btnOk = (Button) customDialog.findViewById(R.id.btnOK);
+        btnOk = (LinearLayout) customDialog.findViewById(R.id.btnOK);
+        layoutBtnYN =(LinearLayout) customDialog.findViewById(R.id.layout_btnYN);
 
-
-        customSeekbar = (CustomSeekBar) this.findViewById(R.id.seekBar_Custom);
-        customSeekbar.setup();
-        customSeekbar.setSeekbarChangeListener(this);
+//        customSeekbar.setup();
+//        customSeekbar.setSeekbarChangeListener(this);
 
         //init page id (indicatorView pager)
         viewPage1 = (View) this.findViewById(R.id.view_page_1);
@@ -206,9 +198,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnNext.setOnClickListener(this);
         btnPrevious.setOnClickListener(this);
         btnReplay.setOnClickListener(this);
-        btnShuffle.setOnClickListener(this);
-        layout_MoreApp.setOnClickListener(this);
-        layout_BtnRecord.setOnClickListener(this);
+        btnModeRc.setOnClickListener(this);
+        btnModeListen.setOnClickListener(this);
+
         btnRecord.setOnClickListener(this);
         btnPlayRecord.setOnClickListener(this);
         pager.setOnPageChangeListener(this);
@@ -219,7 +211,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         recordPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                btnPlayRecord.setBackgroundResource(R.drawable.play);
+                btnPlayRecord.setBackgroundResource(R.drawable.your_rc);
                 recordPlaying = false;
                 isPlayerRecordPaused = false;
                 btnRecord.setEnabled(true);
@@ -258,10 +250,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void incomingCall() {
-
-    }
-
 
     private void updateSeekBar() {
         if (runnable == null) {
@@ -270,7 +258,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 public void run() {
                     float percent = (float) player.getCurrentPosition() / (float) player.getDuration();
                     if (percent > 0) {
-                        customSeekbar.updateIndicator(percent);
+//                        customSeekbar.updateIndicator(percent);
                         tvCurrentDuration.setText(changeTime(player.getCurrentPosition()));
                         tvDuration.setText(changeTime(player.getDuration() - player.getCurrentPosition()));
 
@@ -307,7 +295,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     if (player.isPlaying()) {
                         player.pause();
                         isMediaPlayerPaused = true;
-                        btnPlayPause.setBackgroundResource(R.drawable.play);
+                        btnPlayPause.setBackgroundResource(R.drawable.play_new);
                     } else {
                         if (isMediaPlayerPaused) {
                             player.start();
@@ -315,11 +303,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         } else {
                             playSound(soundPlaying);
                         }
-                        btnPlayPause.setBackgroundResource(R.drawable.pause);
+                        btnPlayPause.setBackgroundResource(R.drawable.pause_new);
                     }
                 } else {
                     playSound(1);
-                    btnPlayPause.setBackgroundResource(R.drawable.pause);
+                    btnPlayPause.setBackgroundResource(R.drawable.pause_new);
                 }
                 break;
             case R.id.btnNext:
@@ -352,26 +340,76 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     btnReplay.setBackgroundResource(R.drawable.replay_off);
                 }
                 break;
-            case R.id.btnShuffle:
-                if (isShuffle) {
-                    isShuffle = false;
-                    btnShuffle.setBackgroundResource(R.drawable.shuffer_off);
-                } else {
-                    isShuffle = true;
-                    btnShuffle.setBackgroundResource(R.drawable.shuffer_on);
-                }
-                break;
-            case R.id.layout_MoreApp:
-                AppCommon.getInstance().openMoreAppDialog(this);
-                break;
-            case R.id.layout_Record:
+//            case R.id.btnShuffle:
+//                if (isShuffle) {
+//                    isShuffle = false;
+//                    btnShuffle.setBackgroundResource(R.drawable.shuffer_off);
+//                } else {
+//                    isShuffle = true;
+//                    btnShuffle.setBackgroundResource(R.drawable.shuffer_on);
+//                }
+//                break;
+//            case R.id.layout_MoreApp:
+//                AppCommon.getInstance().openMoreAppDialog(this);
+//                break;
+            case R.id.btnModeListen:
+//                if (recordPlayer.isPlaying()) {
+//                    tvDialog.setText("Would you like to stop the record ?");
+//                    btnOk.setVisibility(View.GONE);
+//                    btnYes.setVisibility(View.VISIBLE);
+//                    btnNo.setVisibility(View.VISIBLE);
+//                    customDialog.show();
+//                    btnYes.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            btnRecord.setEnabled(true);
+//                            btnPlayRecord.setBackgroundResource(R.drawable.your_rc);
+//                            if (recordPlayer != null) {
+//                                recordPlayer.pause();
+//                            }
+//                            recordPlaying = false;
+//                            isPlayerRecordPaused = true;
+//                            customDialog.dismiss();
+//                            progressItemListviewClick(position);
+//                        }
+//                    });
+//                    btnNo.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            customDialog.dismiss();
+//                        }
+//                    });
+//                } else if (recordStatus) {
+//                    tvDialog.setText("Would you like to stop the record ?");
+//                    btnOk.setVisibility(View.GONE);
+//                    btnYes.setVisibility(View.VISIBLE);
+//                    btnNo.setVisibility(View.VISIBLE);
+//                    customDialog.show();
+//                    btnYes.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            if (recorder != null) {
+//                                btnRecord.setBackgroundResource(R.drawable.start_rc);
+//                                recorder.stop();
+//                                btnPlayRecord.setEnabled(true);
+//                                btnPlayRecord.setBackgroundResource(R.drawable.your_rc);
+//                                recordStatus = false;
+//                                customDialog.dismiss();
+//                                progressItemListviewClick(position);
+//                            }
+//                        }
+//                    });
+//                    btnNo.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            customDialog.dismiss();
+//                        }
+//                    });
                 if (isRecord) {
                     if (recordStatus) {
                         tvDialog.setText("You must stop recording !!!");
-                        btnYes.setVisibility(View.GONE);
-                        btnNo.setVisibility(View.GONE);
+                        layoutBtnYN.setVisibility(View.GONE);
                         btnOk.setVisibility(View.VISIBLE);
-                        customDialog.setTitle("Alert");
                         customDialog.show();
                         btnOk.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -379,12 +417,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 customDialog.dismiss();
                             }
                         });
-                    } else if(recordPlayer.isPlaying()){
+                    } else if (recordPlayer.isPlaying()) {
                         tvDialog.setText("You must stop recording !!!");
-                        btnYes.setVisibility(View.GONE);
-                        btnNo.setVisibility(View.GONE);
+                        layoutBtnYN.setVisibility(View.GONE);
                         btnOk.setVisibility(View.VISIBLE);
-                        customDialog.setTitle("Alert");
                         customDialog.show();
                         btnOk.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -392,58 +428,80 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 customDialog.dismiss();
                             }
                         });
-                    }
-                    else {
+                    } else {
                         layout_Record.setVisibility(View.GONE);
                         layout_MediaControl.setVisibility(View.VISIBLE);
-                        tvRecord.setText(R.string.record);
+
                         isRecord = false;
                     }
-                } else {
-
+                }
+                break;
+            case R.id.btnModeRecord:
+//                else {
+                if (!isRecord) {
+                    if (player.isPlaying()) {
+                        tvDialog.setText("Would you like to pause the playing track ?");
+                        layoutBtnYN.setVisibility(View.VISIBLE);
+                        btnOk.setVisibility(View.GONE);
+                        customDialog.show();
+                        btnYes.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                player.pause();
+                                btnPlayPause.setBackgroundResource(R.drawable.play_new);
+                                customDialog.dismiss();
+                            }
+                        });
+                        btnNo.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                customDialog.dismiss();
+                            }
+                        });
+                    }
                     layout_Record.setVisibility(View.VISIBLE);
                     layout_MediaControl.setVisibility(View.GONE);
-                    tvRecord.setText(R.string.listen);
+
                     OUTPUT_FILE = Environment.getExternalStorageDirectory() + "/" + lessonArrayList.get(soundPlaying).getLessonName() + ".3gpp";
 //                    outputFile = new File(OUTPUT_FILE);
                     if (checkFileExist()) {
                         btnPlayRecord.setEnabled(true);
+                        btnPlayRecord.setBackgroundResource(R.drawable.your_rc);
                     } else {
                         btnPlayRecord.setEnabled(false);
+                        btnPlayRecord.setBackgroundResource(R.drawable.your_rc_off);
+
                     }
                     isRecord = true;
                 }
-
-
                 break;
             case R.id.btnRecord:
-                btnRecord.setBackgroundResource(R.drawable.record);
+                btnRecord.setBackgroundResource(R.drawable.stop_rc);
                 if (recordStatus) {
-                    btnRecord.setBackgroundResource(R.drawable.record_before);
+                    btnRecord.setBackgroundResource(R.drawable.start_rc);
                     if (recorder != null) {
                         recorder.stop();
                         btnPlayRecord.setEnabled(true);
+                        btnPlayRecord.setBackgroundResource(R.drawable.your_rc);
                         recordStatus = false;
                     }
                 } else {
 //                    if (player.isPlaying()) {
 //                        player.pause();
 //                        isMediaPlayerPaused = true;
-//                        btnPlayPause.setBackgroundResource(R.drawable.play);
+//                        btnPlayPause.setBackgroundResource(R.drawable.play_new);
 //                    }
                     if (player.isPlaying()) {
                         tvDialog.setText(R.string.pause_media);
-                        btnYes.setVisibility(View.VISIBLE);
-                        btnNo.setVisibility(View.VISIBLE);
+                        layoutBtnYN.setVisibility(View.VISIBLE);
                         btnOk.setVisibility(View.GONE);
-                        customDialog.setTitle("Chose your choice");
                         customDialog.show();
                         btnYes.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 player.pause();
                                 isMediaPlayerPaused = true;
-                                btnPlayPause.setBackgroundResource(R.drawable.play);
+                                btnPlayPause.setBackgroundResource(R.drawable.play_new);
                                 customDialog.dismiss();
                                 startRecord();
                             }
@@ -455,7 +513,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 startRecord();
                             }
                         });
-                    }else {
+                    } else {
                         startRecord();
                     }
 
@@ -464,7 +522,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btnPlayRecord:
                 if (recordPlaying) {
                     btnRecord.setEnabled(true);
-                    btnPlayRecord.setBackgroundResource(R.drawable.play);
+                    btnPlayRecord.setBackgroundResource(R.drawable.your_rc);
                     if (recordPlayer != null) {
                         recordPlayer.pause();
                     }
@@ -474,20 +532,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     if (player.isPlaying()) {
                         player.pause();
                         isMediaPlayerPaused = true;
-                        btnPlayPause.setBackgroundResource(R.drawable.play);
+                        btnPlayPause.setBackgroundResource(R.drawable.play_new);
                     }
                     btnRecord.setEnabled(false);
-                    btnPlayRecord.setBackgroundResource(R.drawable.pause);
+                    btnPlayRecord.setBackgroundResource(R.drawable.rc_playing);
                     if (recordPlayer != null) {
                         if (isPlayerRecordPaused) {
 //                            outputFile = new File(OUTPUT_FILE);
                             if (checkFileExist()) {
                                 btnPlayRecord.setEnabled(true);
+                                btnPlayRecord.setBackgroundResource(R.drawable.your_rc);
                                 recordPlayer.start();
                                 isPlayerRecordPaused = false;
                                 recordPlaying = true;
-                            }else {
+                            } else {
                                 btnPlayRecord.setEnabled(false);
+                                btnPlayRecord.setBackgroundResource(R.drawable.your_rc_off);
                             }
                         } else {
                             recordPlaying = true;
@@ -505,10 +565,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void startRecord(){
+    private void startRecord() {
         btnPlayRecord.setEnabled(false);
+        btnPlayRecord.setBackgroundResource(R.drawable.your_rc_off);
         isPlayerRecordPaused = false;
-        btnRecord.setBackgroundResource(R.drawable.record);
+        btnRecord.setBackgroundResource(R.drawable.stop_rc);
         if (recorder != null) {
             recorder.release();
         }
@@ -557,45 +618,58 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    private void checkRecordStatusFile(){
-        if(recordPlayer.isPlaying()){
+    //    private void setDurationRecord(){
+//        try {
+//            recordPlayer.setDataSource(OUTPUT_FILE);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        tvDurationRecord.setText(changeTime(recordPlayer.getDuration())+"");
+//    }
+    private void checkRecordStatusFile() {
+        if (recordPlayer.isPlaying()) {
             recordPlayer.pause();
             isPlayerRecordPaused = true;
-            btnPlayRecord.setBackgroundResource(R.drawable.play);
-        }else if(isPlayerRecordPaused){
-            if (checkFileExist()){
+            btnPlayRecord.setBackgroundResource(R.drawable.your_rc);
+        } else if (isPlayerRecordPaused) {
+            if (checkFileExist()) {
                 isPlayerRecordPaused = false;
                 btnPlayRecord.setEnabled(true);
+                btnPlayRecord.setBackgroundResource(R.drawable.your_rc);
                 recordPlaying = false;
-            }else {
+            } else {
                 isPlayerRecordPaused = false;
                 btnPlayRecord.setEnabled(false);
+                btnPlayRecord.setBackgroundResource(R.drawable.your_rc_off);
                 recordPlaying = false;
             }
-        }else {
-            if (checkFileExist()){
+        } else {
+            if (checkFileExist()) {
                 btnPlayRecord.setEnabled(true);
-            }else {
+                btnPlayRecord.setBackgroundResource(R.drawable.your_rc);
+            } else {
                 btnPlayRecord.setEnabled(false);
+                btnPlayRecord.setBackgroundResource(R.drawable.your_rc_off);
             }
         }
     }
 
-    private boolean checkFileExist(){
+    private boolean checkFileExist() {
         outputFile = new File(OUTPUT_FILE);
-        if (outputFile.exists()){
+        if (outputFile.exists()) {
             return true;
-        }else {
+        } else {
             return false;
         }
     }
+
     private void playSound(int soundPlaying) {
         OUTPUT_FILE = Environment.getExternalStorageDirectory() + "/" + lessonArrayList.get(soundPlaying).getLessonName() + ".3gpp";
         checkRecordStatusFile();
 //        if(recordPlayer.isPlaying()){
 //            recordPlayer.pause();
 //            isPlayerRecordPaused = true;
-//            btnPlayRecord.setBackgroundResource(R.drawable.play);
+//            btnPlayRecord.setBackgroundResource(R.drawable.play_new);
 //        }else if(isPlayerRecordPaused){
 //            outputFile = new File(OUTPUT_FILE);
 //            if (outputFile.exists()){
@@ -628,9 +702,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } catch (IOException e) {
             e.printStackTrace();
         }
-        btnPlayPause.setBackgroundResource(R.drawable.pause);
+        btnPlayPause.setBackgroundResource(R.drawable.pause_new);
         tvLesson.setText(lessonArrayList.get(soundPlaying).getLessonName());
-        tvAppName.setVisibility(View.INVISIBLE);
+//        tvAppName.setVisibility(View.INVISIBLE);
         updateSeekBar();
     }
 
@@ -695,7 +769,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onCompletion(MediaPlayer mp) {
         if (isRepeat == REPEAT_OFF) {
             player.stop();
-            btnPlayPause.setBackgroundResource(R.drawable.play);
+            btnPlayPause.setBackgroundResource(R.drawable.play_new);
         } else if (isRepeat == REPEAT_ONE) {
             playSound(soundPlaying);
         } else {
@@ -706,7 +780,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 playNextAround();
             }
         }
-        customSeekbar.updateIndicator(0.0f);
+//        customSeekbar.updateIndicator(0.0f);
     }
 
     private void LoadData() {
@@ -716,78 +790,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
         showBigAdsIfNeeded();
-
-        if(recordPlayer.isPlaying()){
-            tvDialog.setText("Would you like to stop the record ?");
-            btnOk.setVisibility(View.GONE);
-            btnYes.setVisibility(View.VISIBLE);
-            btnNo.setVisibility(View.VISIBLE);
-            customDialog.show();
-            btnYes.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    btnRecord.setEnabled(true);
-                    btnPlayRecord.setBackgroundResource(R.drawable.play);
-                    if (recordPlayer != null) {
-                        recordPlayer.pause();
-                    }
-                    recordPlaying = false;
-                    isPlayerRecordPaused = true;
-                    customDialog.dismiss();
-                    progressItemListviewClick(position);
-                }
-            });
-            btnNo.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    customDialog.dismiss();
-                }
-            });
-        }else if(recordStatus){
-            tvDialog.setText("Would you like to stop the record ?");
-            btnOk.setVisibility(View.GONE);
-            btnYes.setVisibility(View.VISIBLE);
-            btnNo.setVisibility(View.VISIBLE);
-            customDialog.show();
-            btnYes.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (recorder != null) {
-                        btnRecord.setBackgroundResource(R.drawable.record_before);
-                        recorder.stop();
-                        btnPlayRecord.setEnabled(true);
-                        recordStatus = false;
-                        customDialog.dismiss();
-                        progressItemListviewClick(position);
-                    }
-                }
-            });
-            btnNo.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    customDialog.dismiss();
-                }
-            });
-
-        }else {
+        if (!isRecord) {
             progressItemListviewClick(position);
         }
-
-
     }
 
-    private void progressItemListviewClick(int position){
+    private void progressItemListviewClick(int position) {
         for (int i = 0; i < lessonArrayList.size(); i++) {
             lessonArrayList.get(i).setIsPlay(false);
         }
         tvLesson.setText(lessonArrayList.get(position).getLessonName());
         playSound(position);
         soundPlaying = position;
-        btnPlayPause.setBackgroundResource(R.drawable.pause);
+        btnPlayPause.setBackgroundResource(R.drawable.pause_new);
         lessonArrayList.get(position).setIsPlay(true);
         adapter.notifyDataSetChanged();
         updatePage23();
     }
+
     private void updatePage23() {
         ((TextView) pages[1].findViewById(R.id.tvTranscription)).setText(lessonArrayList.get(soundPlaying).getTranscription());
         ((TextView) pages[2].findViewById(R.id.tvReducedSpeech)).setText(Html.fromHtml(lessonArrayList.get(soundPlaying).getReducedSpeech()));
@@ -888,36 +908,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
 
             mViewHolder.tvLessonName = (TextView) convertView.findViewById(R.id.tvLessonName);
-            mViewHolder.tvId = (TextView) convertView.findViewById(R.id.tvId);
-            mViewHolder.imgPlay = (ImageView) convertView.findViewById(R.id.imgPlay);
-            mViewHolder.imgPlay.setTag(lessonArrayList.get(position));
+            mViewHolder.tvDurationLesson = (TextView) convertView.findViewById(R.id.tv_Duration_Lesson);
+            mViewHolder.tvPlaying = (TextView) convertView.findViewById(R.id.tv_Playing);
+            mViewHolder.viewPlaying = (View) convertView.findViewById(R.id.view_Playing);
 
-
-            Typeface listType = Typeface.createFromAsset(getAssets(), "MARI&DAVID.ttf");
-
+            Typeface listType = Typeface.createFromAsset(getAssets(), "UTM_Avo.ttf");
+            Typeface textPlaying = Typeface.createFromAsset(getAssets(), "Cocogoose_trial.otf");
             mViewHolder.tvLessonName.setText(lessons.get(position).getLessonName() + "");
             mViewHolder.tvLessonName.setTypeface(listType);
+            mViewHolder.tvPlaying.setTypeface(textPlaying);
 
-            mViewHolder.tvId.setText(lessons.get(position).getId() + "");
-            mViewHolder.tvId.setTypeface(listType);
-
-            if (lessons.get(position).isPlay() == true) {
-                mViewHolder.imgPlay.setVisibility(View.VISIBLE);
-                mViewHolder.tvId.setVisibility(View.GONE);
+            if (lessons.get(position).isPlay()) {
+                mViewHolder.tvPlaying.setVisibility(View.VISIBLE);
+                mViewHolder.viewPlaying.setVisibility(View.VISIBLE);
             } else {
-                mViewHolder.imgPlay.setVisibility(View.GONE);
-                mViewHolder.tvId.setVisibility(View.VISIBLE);
-
+                mViewHolder.tvPlaying.setVisibility(View.INVISIBLE);
+                mViewHolder.viewPlaying.setVisibility(View.GONE);
             }
+
             mViewHolder.tvLessonName.setSelected(true);
+
             return convertView;
         }
 
-
         private class MyViewHolder {
             TextView tvLessonName;
-            TextView tvId;
-            ImageView imgPlay;
+            TextView tvDurationLesson;
+            TextView tvPlaying;
+            View viewPlaying;
         }
     }
 
@@ -934,11 +952,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         public Object instantiateItem(ViewGroup collection, int position) {
             View layout = pages[position];
             Typeface listType = Typeface.createFromAsset(getAssets(), "MARI&DAVID.ttf");
-            Typeface textType = Typeface.createFromAsset(getAssets(), "UTMBillhead1910.ttf");
+            Typeface textType = Typeface.createFromAsset(getAssets(), "UTM_Avo.ttf");
             if (position == 0) {
                 lvLesson = (ListView) layout.findViewById(R.id.listLesson);
-                TextView tvLessonTitle = (TextView) layout.findViewById(R.id.tvLessonTitle);
-                tvLessonTitle.setTypeface(listType);
                 adapter = new ListLessonAdapter(MainActivity.this, lessonArrayList);
                 lvLesson.setAdapter(adapter);
                 lvLesson.setOnItemClickListener(MainActivity.this);
@@ -946,13 +962,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             } else if (position == 1) {
                 TextView tvTrans = (TextView) layout.findViewById(R.id.tvTrans);
                 TextView tvTranscription = (TextView) layout.findViewById(R.id.tvTranscription);
-                tvTrans.setTypeface(listType);
-                tvTranscription.setTypeface(textType);
+                tvTrans.setTypeface(textType);
+//                tvTranscription.setTypeface(textType);
                 tvTranscription.setText(lessonArrayList.get(soundPlaying).getTranscription() + "");
             } else {
                 TextView tvSpeech = (TextView) layout.findViewById(R.id.tvSpeech);
                 TextView tvReducedSpeech = (TextView) layout.findViewById(R.id.tvReducedSpeech);
-                tvSpeech.setTypeface(listType);
+                tvSpeech.setTypeface(textType);
 //                tvReducedSpeech.setTypeface(textType);
                 tvReducedSpeech.setText(Html.fromHtml(lessonArrayList.get(soundPlaying).getReducedSpeech() + ""));
             }

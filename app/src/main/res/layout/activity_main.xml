@@ -1,7 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_new">
 
     <RelativeLayout
         android:id="@+id/layout_ads"
@@ -19,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/layout_ads"
-        android:background="@color/primary"
+
         android:orientation="vertical"
         android:weightSum="100"
         tools:context=".MainActivity">
@@ -27,21 +28,15 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="87"
+            android:layout_weight="85"
             android:orientation="vertical"
             android:paddingBottom="@dimen/activity_vertical_margin">
-
-            <com.tatteam.android.englishaccenttraining.CustomSeekBar
-                android:id="@+id/seekBar_Custom"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/seekbar_height"
-                android:layout_marginBottom="@dimen/margin_view_1"
-                android:background="@drawable/seekbar_background_1"></com.tatteam.android.englishaccenttraining.CustomSeekBar>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/seekbar_height"
                 android:layout_marginBottom="@dimen/margin_view_1"
+                android:background="@color/primary_light"
                 android:gravity="center">
 
                 <TextView
@@ -52,18 +47,11 @@
                     android:gravity="center"
                     android:marqueeRepeatLimit="marquee_forever"
                     android:singleLine="true"
+                    android:text="@string/app_name"
                     android:textColor="@color/lesson_name"
-                    android:textSize="@dimen/text_size_item" />
+                    android:textSize="@dimen/common_size_20" />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/tvAppName"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/seekbar_height"
-                android:gravity="center"
-                android:text="@string/app_name"
-                android:textColor="@color/lesson_name"
-                android:textSize="@dimen/app_name_size" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -71,11 +59,11 @@
                 android:layout_marginLeft="@dimen/margin_view_1"
                 android:gravity="center">
 
-                <TextView
-                    android:id="@+id/tvCurrentDuration"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
+                <Button
+                    android:id="@+id/btnBackpress"
+                    android:layout_width="@dimen/button_small_size"
+                    android:layout_height="@dimen/button_small_size"
+                    android:background="@drawable/back_to_main_new"
                     android:textColor="@color/lesson_name"
                     android:textSize="@dimen/text_size_2" />
             </LinearLayout>
@@ -87,11 +75,11 @@
                 android:layout_marginRight="@dimen/margin_view_1"
                 android:gravity="center">
 
-                <TextView
-                    android:id="@+id/tvDuration"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
+                <Button
+                    android:id="@+id/btnShare"
+                    android:layout_width="@dimen/button_small_size"
+                    android:layout_height="@dimen/button_small_size"
+                    android:background="@drawable/share_new"
                     android:textColor="@color/lesson_name"
                     android:textSize="@dimen/text_size_2" />
             </LinearLayout>
@@ -102,7 +90,6 @@
                 android:layout_marginLeft="@dimen/margin_view_1"
                 android:layout_marginRight="@dimen/margin_view_1"
                 android:layout_marginTop="@dimen/margin_view_pager"
-                android:background="@drawable/page_background"
                 android:gravity="center">
 
                 <android.support.v4.view.ViewPager
@@ -110,102 +97,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"></android.support.v4.view.ViewPager>
             </RelativeLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="@dimen/margin_listview"
-                android:layout_marginTop="@dimen/margin_small_view_layout"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <tatteam.com.app_common.ui.drawable.FlatEffectDrawable
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <LinearLayout
-                        android:id="@+id/layout_Record"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                        <ImageView
-                            android:id="@+id/imgRecord"
-                            android:layout_width="@dimen/button_small_size"
-                            android:layout_height="@dimen/button_small_size"
-                            android:background="@drawable/mic" />
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/tvRecord"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/record"
-                                android:textColor="@color/primary"
-                                android:textSize="@dimen/text_size_2" />
-
-                            <View
-                                android:layout_width="@dimen/margin_pager"
-                                android:layout_height="1dp"
-                                android:layout_marginLeft="@dimen/padding_small_view_layout"
-                                android:background="@color/primary" />
-                        </LinearLayout>
-                    </LinearLayout>
-                </tatteam.com.app_common.ui.drawable.FlatEffectDrawable>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="@dimen/margin_listview"
-                android:layout_marginTop="@dimen/margin_small_view_layout"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <tatteam.com.app_common.ui.drawable.FlatEffectDrawable
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <LinearLayout
-                        android:id="@+id/layout_MoreApp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                        <ImageView
-                            android:id="@+id/btnMoreApp"
-                            android:layout_width="@dimen/button_super_small_size"
-                            android:layout_height="@dimen/button_super_small_size"
-                            android:background="@drawable/moreapp" />
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/tvMoreApp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="@dimen/padding_small_view_layout"
-                                android:text="@string/more_app"
-                                android:textColor="@color/primary"
-                                android:textSize="@dimen/text_size_2" />
-
-                            <View
-                                android:layout_width="@dimen/ads_height"
-                                android:layout_height="1dp"
-                                android:layout_marginLeft="@dimen/padding_small_view_layout"
-                                android:background="@color/primary" />
-                        </LinearLayout>
-                    </LinearLayout>
-                </tatteam.com.app_common.ui.drawable.FlatEffectDrawable>
-            </LinearLayout>
-
 
             <LinearLayout
                 android:id="@+id/layoutViewPager"
@@ -225,32 +116,34 @@
                         android:id="@+id/view_page_1"
                         android:layout_width="@dimen/small_view_width"
                         android:layout_height="@dimen/small_view_height"
-                        android:background="@drawable/page_selected" />
+                        android:background="@color/primary" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="@dimen/small_view_layout_width"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/small_view_margin"
                     android:gravity="center">
 
                     <View
                         android:id="@+id/view_page_2"
                         android:layout_width="@dimen/small_view_width"
                         android:layout_height="@dimen/small_view_height"
-                        android:background="@drawable/page_selected"
+                        android:background="@color/primary"
                         android:visibility="invisible" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="@dimen/small_view_layout_width"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/small_view_margin"
                     android:gravity="center">
 
                     <View
                         android:id="@+id/view_page_3"
                         android:layout_width="@dimen/small_view_width"
                         android:layout_height="@dimen/small_view_height"
-                        android:background="@drawable/page_selected"
+                        android:background="@color/primary_dark"
                         android:visibility="invisible" />
                 </LinearLayout>
             </LinearLayout>
@@ -271,50 +164,100 @@
                     <View
                         android:layout_width="@dimen/small_view_width"
                         android:layout_height="@dimen/small_view_height"
-                        android:background="@drawable/page_position_1" />
+                        android:background="@color/small_view_color" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="@dimen/small_view_layout_width"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/small_view_margin"
                     android:gravity="center">
 
                     <View
                         android:layout_width="@dimen/small_view_width"
                         android:layout_height="@dimen/small_view_height"
-                        android:background="@drawable/page_position_2" />
+                        android:background="@color/small_view_color" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="@dimen/small_view_layout_width"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/small_view_margin"
                     android:gravity="center">
 
                     <View
                         android:layout_width="@dimen/small_view_width"
                         android:layout_height="@dimen/small_view_height"
-                        android:background="@drawable/page_position_1" />
+                        android:background="@color/small_view_color" />
                 </LinearLayout>
             </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="5">
+
+            <TextView
+                android:id="@+id/tvCurrentDuration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_view_1"
+                android:text="0:35"
+                android:textSize="@dimen/common_text_size_15" />
+
+            <TextView
+                android:id="@+id/tvDuration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/margin_view_1"
+                android:text="1:45"
+                android:textSize="@dimen/common_text_size_15" />
+
+            <SeekBar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvCurrentDuration" />
         </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/layoutRecordBtn"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="13"
-            android:background="@drawable/player_background"
+            android:layout_weight="10"
+            android:background="@drawable/bg_control_media"
             android:gravity="center"
             android:orientation="horizontal"
             android:visibility="gone"
-            android:weightSum="2">
+            android:weightSum="100">
+
+            <tatteam.com.app_common.ui.drawable.RippleEffectDrawable
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="17">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center">
+
+                    <Button
+                        android:id="@+id/btnModeListen"
+                        android:layout_width="@dimen/button_big_size"
+                        android:layout_height="@dimen/button_rc_height"
+                        android:background="@drawable/listen" />
+                </LinearLayout>
+
+            </tatteam.com.app_common.ui.drawable.RippleEffectDrawable>
 
             <tatteam.com.app_common.ui.drawable.RippleEffectDrawable
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:layout_weight="30">
 
                 <LinearLayout
+                    android:id="@+id/layoutRecord"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center">
@@ -323,16 +266,28 @@
                         android:id="@+id/btnRecord"
                         android:layout_width="@dimen/button_big_size"
                         android:layout_height="@dimen/button_big_size"
-                        android:background="@drawable/record_before" />
+                        android:background="@drawable/start_rc" />
                 </LinearLayout>
             </tatteam.com.app_common.ui.drawable.RippleEffectDrawable>
+
+            <TextView
+                android:id="@+id/tvDurationRecord"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="23"
+                android:gravity="center"
+                android:text="- : --"
+                android:textColor="@color/primary"
+                android:textSize="@dimen/common_size_20"
+                android:visibility="visible" />
 
             <tatteam.com.app_common.ui.drawable.RippleEffectDrawable
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:layout_weight="30">
 
                 <LinearLayout
+                    android:id="@+id/layoutPlayRecord"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center">
@@ -341,7 +296,7 @@
                         android:id="@+id/btnPlayRecord"
                         android:layout_width="@dimen/button_big_size"
                         android:layout_height="@dimen/button_big_size"
-                        android:background="@drawable/play" />
+                        android:background="@drawable/your_rc_off" />
                 </LinearLayout>
             </tatteam.com.app_common.ui.drawable.RippleEffectDrawable>
         </LinearLayout>
@@ -350,8 +305,8 @@
             android:id="@+id/layoutControlMedia"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="13"
-            android:background="@drawable/player_background"
+            android:layout_weight="10"
+            android:background="@drawable/bg_control_media"
             android:gravity="center"
             android:orientation="horizontal"
             android:weightSum="100">
@@ -371,18 +326,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
 
-                        <RelativeLayout
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/button_big_size">
 
-                            <ImageButton
-                                android:id="@+id/btnShuffle"
-                                android:layout_width="@dimen/button_super_small_size"
-                                android:layout_height="@dimen/button_super_small_size"
+                            <Button
+                                android:id="@+id/btnModeRecord"
+                                android:layout_width="@dimen/padding_listview_left"
+                                android:layout_height="@dimen/button_big_size"
                                 android:layout_centerInParent="true"
                                 android:layout_marginLeft="@dimen/margin_button"
-                                android:background="@drawable/shuffer_off"></ImageButton>
-                        </RelativeLayout>
+                                android:background="@drawable/record_new"></Button>
+                        </LinearLayout>
                     </tatteam.com.app_common.ui.drawable.RippleEffectDrawable>
                 </LinearLayout>
 
@@ -406,7 +361,7 @@
                                 android:layout_height="@dimen/button_small_size"
                                 android:layout_centerInParent="true"
                                 android:layout_marginLeft="@dimen/margin_button"
-                                android:background="@drawable/pre"></ImageButton>
+                                android:background="@drawable/previous_new" />
 
                         </RelativeLayout>
                     </tatteam.com.app_common.ui.drawable.RippleEffectDrawable>
@@ -424,14 +379,14 @@
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/button_big_size"
                         android:gravity="center">
 
                         <ImageButton
                             android:id="@+id/btnPlayPause"
                             android:layout_width="@dimen/button_big_size"
                             android:layout_height="@dimen/button_big_size"
-                            android:background="@drawable/play" />
+                            android:background="@drawable/play_new" />
                     </RelativeLayout>
                 </tatteam.com.app_common.ui.drawable.RippleEffectDrawable>
             </LinearLayout>
@@ -461,7 +416,7 @@
                                 android:layout_height="@dimen/button_small_size"
                                 android:layout_centerInParent="true"
                                 android:layout_marginLeft="@dimen/margin_button"
-                                android:background="@drawable/next"></ImageButton>
+                                android:background="@drawable/next_new"></ImageButton>
 
                         </RelativeLayout>
                     </tatteam.com.app_common.ui.drawable.RippleEffectDrawable>
@@ -482,8 +437,8 @@
 
                             <ImageButton
                                 android:id="@+id/btnReplay"
-                                android:layout_width="@dimen/button_super_small_size"
-                                android:layout_height="@dimen/button_super_small_size"
+                                android:layout_width="@dimen/button_rc_height"
+                                android:layout_height="@dimen/button_small_size"
                                 android:layout_centerInParent="true"
                                 android:layout_marginLeft="@dimen/margin_button"
                                 android:background="@drawable/replay_off"></ImageButton>

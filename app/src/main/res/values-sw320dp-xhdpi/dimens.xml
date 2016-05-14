@@ -1,23 +1,26 @@
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">10dp</dimen>
+    <dimen name="activity_vertical_margin">5dp</dimen>
 
     <dimen name="ads_height">60dp</dimen>
 
     <!--button-->
-    <dimen name="button_small_size">30dp</dimen>
+    <dimen name="button_small_size">35dp</dimen>
     <dimen name="button_super_small_size">25dp</dimen>
-    <dimen name="button_big_size">45dp</dimen>
-
+    <dimen name="button_big_size">54dp</dimen>
+    <dimen name="button_rc_height">45dp</dimen>
 
     <!--view pager-->
     <dimen name="view_pager_width">320dp</dimen>
     <dimen name="view_pager_height">390dp</dimen>
 
     <dimen name="small_view_layout_width">32dp</dimen>
-    <dimen name="small_view_width">25dp</dimen>
-    <dimen name="small_view_height">12dp</dimen>
+    <dimen name="small_view_width">22dp</dimen>
+    <dimen name="small_view_height">5dp</dimen>
+    <dimen name="small_view_margin">20dp</dimen>
+
+    <dimen name="list_lesson_height">85dp</dimen>
 
     <!--seekbar-->
     <dimen name="seekbar_height">50dp</dimen>
@@ -29,14 +32,14 @@
     <dimen name="padding_listview">20dp</dimen>
     <dimen name="padding_listview_left">30dp</dimen>
     <dimen name="padding_small_view_layout">5dp</dimen>
-
+    <dimen name="padding_page_lesson">10dp</dimen>
     <!--margin-->
     <dimen name="margin_listview">20dp</dimen>
     <dimen name="margin_button">25dp</dimen>
     <dimen name="margin_view_1">10dp</dimen>
     <dimen name="margin_text_page_name">10dp</dimen>
-    <dimen name="margin_view_pager">70dp</dimen>
-    <dimen name="margin_small_view_layout">80dp</dimen>
+    <dimen name="margin_view_pager">80dp</dimen>
+    <dimen name="margin_small_view_layout">63dp</dimen>
     <dimen name="margin_pager">40dp</dimen>
     <!--text size-->
     <dimen name="text_size_1">33.3sp</dimen>
@@ -60,11 +63,16 @@
 
     <!--list_item_-->
     <dimen name="play_icon_in_item_size">19dp</dimen>
-    <dimen name="margin_name_lesson_left">25dp</dimen>
+    <dimen name="margin_name_lesson_left">15dp</dimen>
     <dimen name="margin_item">10dp</dimen>
     <!--player-->
     <dimen name="padding_left_right">15dp</dimen>
 
     <dimen name="lesson_name_width">200dp</dimen>
 
+    <!--start activity-->
+    <dimen name="img_app_icon_size">150dp</dimen>
+    <dimen name="margin_app_icon">40dp</dimen>
+    <dimen name="margin_text">30dp</dimen>
+    <dimen name="view_line_height">2dp</dimen>
 </resources>

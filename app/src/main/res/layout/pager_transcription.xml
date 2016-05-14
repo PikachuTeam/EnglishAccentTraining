@@ -14,7 +14,7 @@
         android:textColor="@color/primary_dark"
         android:textSize="@dimen/text_size_3"
         android:textStyle="bold"
-        android:layout_marginTop="@dimen/margin_pager"/>
+        />
         <ScrollView
             android:scrollbarThumbVertical="@color/primary_dark"
             android:scrollbarSize="@dimen/scroll_bar_width"
@@ -37,8 +37,7 @@
                     android:layout_height="match_parent"
                     android:textColor="@color/primary_dark"
                     android:gravity="center"
-                    android:textStyle="bold"
-                    android:textSize="@dimen/text_size_1" />
+                    android:textSize="@dimen/common_text_size_20" />
             </LinearLayout>
         </ScrollView>
 </LinearLayout>
