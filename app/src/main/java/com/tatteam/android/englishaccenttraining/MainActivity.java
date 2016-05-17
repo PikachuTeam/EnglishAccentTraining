@@ -20,14 +20,15 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private CloseAppHandler closeAppHandler;
     private LinearLayout layout_MediaControl, layout_Record, layoutBtnRecord, layoutBtnPlayRecord;
-    private LinearLayout btnYes, btnNo, btnOk,layoutBtnYN;
+    private LinearLayout btnYes, btnNo, btnOk, layoutBtnYN;
 
     private ImageButton btnPlayPause, btnNext, btnPrevious, btnReplay;
     private TextView tvLesson, tvCurrentDuration, tvDuration, tvDialog, tvDurationRecord;
@@ -100,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     File outputFile;
     Dialog customDialog;
+    SeekBar seekBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tvDuration.setTypeface(face);
 
         //Dialog
-        customDialog = new Dialog(this,R.style.dialogstyle);
+        customDialog = new Dialog(this, R.style.dialogstyle);
         customDialog.setContentView(R.layout.custom_dialog);
         customDialog.setCanceledOnTouchOutside(false);
         customDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -169,10 +171,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnYes = (LinearLayout) customDialog.findViewById(R.id.btnYes);
         btnNo = (LinearLayout) customDialog.findViewById(R.id.btnNo);
         btnOk = (LinearLayout) customDialog.findViewById(R.id.btnOK);
-        layoutBtnYN =(LinearLayout) customDialog.findViewById(R.id.layout_btnYN);
+        layoutBtnYN = (LinearLayout) customDialog.findViewById(R.id.layout_btnYN);
 
 //        customSeekbar.setup();
 //        customSeekbar.setSeekbarChangeListener(this);
+        seekBar = (SeekBar) this.findViewById(R.id.seekBar);
 
         //init page id (indicatorView pager)
         viewPage1 = (View) this.findViewById(R.id.view_page_1);
@@ -250,24 +253,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+//    Runnable run = new Runnable() {
+//        @Override
+//        public void run() {
+//            updateSeekBar();
+//        }
+//    };
 
     private void updateSeekBar() {
         if (runnable == null) {
             runnable = new Runnable() {
                 @Override
                 public void run() {
-                    float percent = (float) player.getCurrentPosition() / (float) player.getDuration();
-                    if (percent > 0) {
+//                    float percent = (float) player.getCurrentPosition() / (float) player.getDuration();
+//                    if (percent > 0) {
 //                        customSeekbar.updateIndicator(percent);
-                        tvCurrentDuration.setText(changeTime(player.getCurrentPosition()));
-                        tvDuration.setText(changeTime(player.getDuration() - player.getCurrentPosition()));
+                    seekBar.setProgress(player.getCurrentPosition());
+                    seekBar.setMax(player.getDuration());
+                    tvCurrentDuration.setText(changeTime(player.getCurrentPosition()));
+                    tvDuration.setText(changeTime(player.getDuration() - player.getCurrentPosition()));
 
-                    }
+//                    }
                     seekbarHandler.postDelayed(runnable, 30);
+
                 }
             };
             seekbarHandler.postDelayed(runnable, 30);
+
         }
+//        seekBar.setProgress(player.getCurrentPosition());
+//        seekBar.setMax(player.getDuration());
+//        tvCurrentDuration.setText(changeTime(player.getCurrentPosition()));
+//        tvDuration.setText(changeTime(player.getDuration() - player.getCurrentPosition()));
+//        seekbarHandler.postDelayed(run,30);
     }
 
     @Override
@@ -911,13 +929,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mViewHolder.tvDurationLesson = (TextView) convertView.findViewById(R.id.tv_Duration_Lesson);
             mViewHolder.tvPlaying = (TextView) convertView.findViewById(R.id.tv_Playing);
             mViewHolder.viewPlaying = (View) convertView.findViewById(R.id.view_Playing);
+            mViewHolder.imgLesson = (ImageView) convertView.findViewById(R.id.imgLesson);
 
             Typeface listType = Typeface.createFromAsset(getAssets(), "UTM_Avo.ttf");
             Typeface textPlaying = Typeface.createFromAsset(getAssets(), "Cocogoose_trial.otf");
             mViewHolder.tvLessonName.setText(lessons.get(position).getLessonName() + "");
             mViewHolder.tvLessonName.setTypeface(listType);
             mViewHolder.tvPlaying.setTypeface(textPlaying);
-
+            mViewHolder.imgLesson.setImageResource(lessons.get(position).getImageLesson());
             if (lessons.get(position).isPlay()) {
                 mViewHolder.tvPlaying.setVisibility(View.VISIBLE);
                 mViewHolder.viewPlaying.setVisibility(View.VISIBLE);
@@ -935,6 +954,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             TextView tvLessonName;
             TextView tvDurationLesson;
             TextView tvPlaying;
+            ImageView imgLesson;
             View viewPlaying;
         }
     }

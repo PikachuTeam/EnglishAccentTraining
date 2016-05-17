@@ -20,7 +20,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/layout_ads"
-
         android:orientation="vertical"
         android:weightSum="100"
         tools:context=".MainActivity">
@@ -28,7 +27,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="85"
+            android:layout_weight="84.5"
             android:orientation="vertical"
             android:paddingBottom="@dimen/activity_vertical_margin">
 
@@ -91,7 +90,6 @@
                 android:layout_marginRight="@dimen/margin_view_1"
                 android:layout_marginTop="@dimen/margin_view_pager"
                 android:gravity="center">
-
                 <android.support.v4.view.ViewPager
                     android:id="@+id/pager"
                     android:layout_width="match_parent"
@@ -203,8 +201,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_view_1"
-                android:text="0:35"
-                android:textSize="@dimen/common_text_size_15" />
+                android:text="-- : --"
+                android:textSize="@dimen/common_text_size_12" />
 
             <TextView
                 android:id="@+id/tvDuration"
@@ -212,21 +210,23 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="@dimen/margin_view_1"
-                android:text="1:45"
-                android:textSize="@dimen/common_text_size_15" />
-
-            <SeekBar
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/tvCurrentDuration" />
+                android:text="-- : --"
+                android:textSize="@dimen/common_text_size_12" />
         </RelativeLayout>
-
+        <SeekBar
+            android:id="@+id/seekBar"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5"
+            android:thumb="@drawable/thumb"
+            android:progressDrawable="@drawable/progress"/>
         <LinearLayout
             android:id="@+id/layoutRecordBtn"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="10"
             android:background="@drawable/bg_control_media"
+            android:layout_marginTop="@dimen/margin_media_control"
             android:gravity="center"
             android:orientation="horizontal"
             android:visibility="gone"
@@ -276,7 +276,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="23"
                 android:gravity="center"
-                android:text="- : --"
+                android:text="-- : --"
                 android:textColor="@color/primary"
                 android:textSize="@dimen/common_size_20"
                 android:visibility="visible" />
@@ -306,6 +306,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="10"
+            android:layout_marginTop="@dimen/margin_media_control"
             android:background="@drawable/bg_control_media"
             android:gravity="center"
             android:orientation="horizontal"
