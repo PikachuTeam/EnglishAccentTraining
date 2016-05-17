@@ -352,7 +352,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     btnReplay.setBackgroundResource(R.drawable.replay_one);
                 } else if (isRepeat == 1) {
                     isRepeat = 2;
-                    btnReplay.setBackgroundResource(R.drawable.replay_all);
+                    btnReplay.setBackgroundResource(R.drawable.replay_on);
                 } else {
                     isRepeat = 0;
                     btnReplay.setBackgroundResource(R.drawable.replay_off);

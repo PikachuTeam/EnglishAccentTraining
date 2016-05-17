@@ -39,7 +39,7 @@ public class SplashActivity extends BaseSplashActivity {
 
 
     private void switchToMainActivity() {
-        startActivity(new Intent(SplashActivity.this, MainActivity.class));
+        startActivity(new Intent(SplashActivity.this, StartActivity.class));
         this.finish();
     }
 

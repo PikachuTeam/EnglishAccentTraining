@@ -74,6 +74,7 @@
     <!--start activity-->
     <dimen name="img_app_icon_size">150dp</dimen>
     <dimen name="margin_app_icon">40dp</dimen>
+    <dimen name="margin_splash">100dp</dimen>
     <dimen name="margin_text">30dp</dimen>
     <dimen name="view_line_height">2dp</dimen>
 </resources>
