@@ -53,13 +53,13 @@
 
 
             <LinearLayout
+                android:id="@+id/btnBackpress"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/seekbar_height"
                 android:layout_marginLeft="@dimen/margin_view_1"
                 android:gravity="center">
 
-                <Button
-                    android:id="@+id/btnBackpress"
+                <ImageView
                     android:layout_width="@dimen/button_small_size"
                     android:layout_height="@dimen/button_small_size"
                     android:background="@drawable/back_to_main_new"
@@ -68,14 +68,14 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/btnMoreApp"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/seekbar_height"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="@dimen/margin_view_1"
                 android:gravity="center">
 
-                <Button
-                    android:id="@+id/btnShare"
+                <ImageView
                     android:layout_width="@dimen/button_small_size"
                     android:layout_height="@dimen/button_small_size"
                     android:background="@drawable/share_new"

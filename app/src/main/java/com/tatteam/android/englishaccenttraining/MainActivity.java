@@ -2,6 +2,7 @@ package com.tatteam.android.englishaccenttraining;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
@@ -37,6 +38,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
+import tatteam.com.app_common.AppCommon;
 import tatteam.com.app_common.ads.AdsBigBannerHandler;
 import tatteam.com.app_common.ads.AdsSmallBannerHandler;
 import tatteam.com.app_common.util.AppConstant;
@@ -51,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private CloseAppHandler closeAppHandler;
     private LinearLayout layout_MediaControl, layout_Record, layoutBtnRecord, layoutBtnPlayRecord;
-    private LinearLayout btnYes, btnNo, btnOk, layoutBtnYN;
+    private LinearLayout btnYes, btnNo, btnOk, layoutBtnYN,btnBack,btnMoreApp;
 
     private ImageButton btnPlayPause, btnNext, btnPrevious, btnReplay;
     private TextView tvLesson, tvCurrentDuration, tvDuration, tvDialog, tvDurationRecord;
@@ -63,8 +65,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ListView lvLesson;
 
     //    private CustomSeekBar customSeekbar;
-    private Handler seekbarHandler = new Handler();
-    private Runnable runnable;
+    private Handler seekbarHandler  = new Handler();
+    private Handler recordHandler = new Handler();
+    private Runnable runnable,recordRunable;
 
     private int soundPlaying = 0;
     private MediaPlayer player;
@@ -162,6 +165,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tvCurrentDuration.setTypeface(face);
         tvDuration.setTypeface(face);
 
+        btnBack = (LinearLayout) this.findViewById(R.id.btnBackpress);
+        btnMoreApp = (LinearLayout) this.findViewById(R.id.btnMoreApp);
         //Dialog
         customDialog = new Dialog(this, R.style.dialogstyle);
         customDialog.setContentView(R.layout.custom_dialog);
@@ -204,6 +209,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnModeRc.setOnClickListener(this);
         btnModeListen.setOnClickListener(this);
 
+        btnBack.setOnClickListener(this);
+        btnMoreApp.setOnClickListener(this);
+
         btnRecord.setOnClickListener(this);
         btnPlayRecord.setOnClickListener(this);
         pager.setOnPageChangeListener(this);
@@ -218,12 +226,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 recordPlaying = false;
                 isPlayerRecordPaused = false;
                 btnRecord.setEnabled(true);
+                recordHandler.removeCallbacks(recordRunable);
             }
         });
         recordPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
                 recordPlayer.start();
+                updateRecordText();
+                recordHandler.postDelayed(recordRunable,30);
             }
         });
         //close app
@@ -260,6 +271,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        }
 //    };
 
+    private void updateRecordText(){
+        if (recordRunable == null){
+            recordRunable = new Runnable() {
+                @Override
+                public void run() {
+                    tvDurationRecord.setText(changeTime(recordPlayer.getCurrentPosition()));
+//                    tvDurationRecord.setText(changeTime(recordPlayer.getDuration() - recordPlayer.getCurrentPosition()));
+                    recordHandler.postDelayed(recordRunable,30);
+                }
+            };
+            recordHandler.postDelayed(recordRunable,30);
+        }
+    }
     private void updateSeekBar() {
         if (runnable == null) {
             runnable = new Runnable() {
@@ -367,9 +391,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                    btnShuffle.setBackgroundResource(R.drawable.shuffer_on);
 //                }
 //                break;
-//            case R.id.layout_MoreApp:
-//                AppCommon.getInstance().openMoreAppDialog(this);
-//                break;
+            case R.id.btnMoreApp:
+                AppCommon.getInstance().openMoreAppDialog(this);
+                break;
+            case R.id.btnBackpress:
+//                Intent intent = new Intent(this,StartActivity.class);
+//                startActivity(intent);
+                finish();
+                break;
             case R.id.btnModeListen:
 //                if (recordPlayer.isPlaying()) {
 //                    tvDialog.setText("Would you like to stop the record ?");
@@ -509,6 +538,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                        isMediaPlayerPaused = true;
 //                        btnPlayPause.setBackgroundResource(R.drawable.play_new);
 //                    }
+//                    tvDurationRecord.setText("-- : --");
                     if (player.isPlaying()) {
                         tvDialog.setText(R.string.pause_media);
                         layoutBtnYN.setVisibility(View.VISIBLE);
@@ -576,6 +606,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 e.printStackTrace();
                             }
                             recordPlayer.prepareAsync();
+//                            updateRecordText();
                         }
                     }
                 }
@@ -584,6 +615,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void startRecord() {
+        tvDurationRecord.setText("-- : --");
         btnPlayRecord.setEnabled(false);
         btnPlayRecord.setBackgroundResource(R.drawable.your_rc_off);
         isPlayerRecordPaused = false;
@@ -608,6 +640,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         recorder.start();
         recordStatus = true;
+
     }
 
     private String changeTime(int duration) {
@@ -684,6 +717,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void playSound(int soundPlaying) {
         OUTPUT_FILE = Environment.getExternalStorageDirectory() + "/" + lessonArrayList.get(soundPlaying).getLessonName() + ".3gpp";
         checkRecordStatusFile();
+        tvDurationRecord.setText("-- : --");
 //        if(recordPlayer.isPlaying()){
 //            recordPlayer.pause();
 //            isPlayerRecordPaused = true;
