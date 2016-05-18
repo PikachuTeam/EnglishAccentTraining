@@ -316,6 +316,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onDestroy() {
         player.stop();
         seekbarHandler.removeCallbacks(runnable);
+        recordHandler.removeCallbacks(recordRunable);
 //        DataSource.getInstance().destroy();
         if (mgr != null) {
             mgr.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
