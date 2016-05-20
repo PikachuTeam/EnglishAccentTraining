@@ -28,6 +28,7 @@ public class DataSource extends BaseDataSource{
             lesson.setMusicName(cursor.getString(2));
             lesson.setTranscription(cursor.getString(1));
             lesson.setReducedSpeech(cursor.getString(0));
+            lesson.setDuration(cursor.getString(5));
             lessonsList.add(lesson);
             cursor.moveToNext();
         }

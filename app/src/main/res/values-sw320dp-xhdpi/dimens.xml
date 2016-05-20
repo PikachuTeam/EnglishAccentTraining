@@ -7,6 +7,7 @@
 
     <!--button-->
     <dimen name="button_small_size">35dp</dimen>
+    <dimen name="button_small_size_width">30dp</dimen>
     <dimen name="button_super_small_size">25dp</dimen>
     <dimen name="button_big_size">54dp</dimen>
     <dimen name="button_rc_height">45dp</dimen>

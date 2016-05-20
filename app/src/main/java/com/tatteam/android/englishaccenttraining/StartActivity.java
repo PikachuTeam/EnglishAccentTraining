@@ -5,9 +5,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
-public class StartActivity extends AppCompatActivity implements View.OnClickListener {
-    Button btnStartApp,btnOpenNewApp;
+import tatteam.com.app_common.util.CloseAppHandler;
+
+public class StartActivity extends AppCompatActivity implements View.OnClickListener, CloseAppHandler.OnCloseAppListener {
+    private Button btnStartApp,btnOpenNewApp;
+    private CloseAppHandler closeAppHandler;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -17,6 +21,14 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
         btnOpenNewApp = (Button) this.findViewById(R.id.btn_new_app);
         btnStartApp.setOnClickListener(this);
         btnOpenNewApp.setOnClickListener(this);
+
+        closeAppHandler = new CloseAppHandler(this);
+        closeAppHandler.setListener(this);
+    }
+
+    @Override
+    public void onBackPressed() {
+        closeAppHandler.setKeyBackPress(this);
     }
 
     @Override
@@ -30,5 +42,20 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
 
                 break;
         }
+    }
+
+    @Override
+    public void onRateAppDialogClose() {
+        finish();
+    }
+
+    @Override
+    public void onTryToCloseApp() {
+        Toast.makeText(this, "Press once again to exit!", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onReallyWantToCloseApp() {
+        finish();
     }
 }

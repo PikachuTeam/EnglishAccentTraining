@@ -10,6 +10,7 @@ public class Lesson {
     private String transcription;
     private String reducedSpeech;
     private String uri;
+    private String duration;
     private boolean isPlay = false;
 
     public Lesson() {
@@ -78,6 +79,14 @@ public class Lesson {
 
     public boolean isPlay() {
         return isPlay;
+    }
+
+    public String getDuration() {
+        return duration;
+    }
+
+    public void setDuration(String duration) {
+        this.duration = duration;
     }
 
     public int getImageLesson() {

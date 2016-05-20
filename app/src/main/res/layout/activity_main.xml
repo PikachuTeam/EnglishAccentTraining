@@ -321,7 +321,8 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="50">
+                    android:layout_weight="50"
+                    android:layout_gravity="center">
 
                     <tatteam.com.app_common.ui.drawable.RippleEffectDrawable
                         android:layout_width="wrap_content"
@@ -334,7 +335,7 @@
                             <Button
                                 android:id="@+id/btnModeRecord"
                                 android:layout_width="@dimen/padding_listview_left"
-                                android:layout_height="@dimen/button_big_size"
+                                android:layout_height="@dimen/button_rc_height"
                                 android:layout_centerInParent="true"
                                 android:layout_marginLeft="@dimen/margin_button"
                                 android:background="@drawable/record_new"></Button>
@@ -353,12 +354,13 @@
 
                         <RelativeLayout
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/button_big_size">
+                            android:layout_height="@dimen/button_big_size"
+                            android:layout_gravity="center">
 
 
                             <ImageButton
                                 android:id="@+id/btnPrevious"
-                                android:layout_width="@dimen/button_small_size"
+                                android:layout_width="@dimen/button_small_size_width"
                                 android:layout_height="@dimen/button_small_size"
                                 android:layout_centerInParent="true"
                                 android:layout_marginLeft="@dimen/margin_button"
@@ -409,11 +411,12 @@
 
                         <RelativeLayout
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/button_big_size">
+                            android:layout_height="@dimen/button_big_size"
+                            android:layout_gravity="center">
 
                             <ImageButton
                                 android:id="@+id/btnNext"
-                                android:layout_width="@dimen/button_small_size"
+                                android:layout_width="@dimen/button_small_size_width"
                                 android:layout_height="@dimen/button_small_size"
                                 android:layout_centerInParent="true"
                                 android:layout_marginLeft="@dimen/margin_button"
@@ -426,7 +429,8 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="50">
+                    android:layout_weight="50"
+                    android:layout_gravity="center">
 
                     <tatteam.com.app_common.ui.drawable.RippleEffectDrawable
                         android:layout_width="wrap_content"
