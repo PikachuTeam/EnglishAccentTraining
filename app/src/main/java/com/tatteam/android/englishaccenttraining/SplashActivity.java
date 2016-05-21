@@ -29,7 +29,7 @@ public class SplashActivity extends BaseSplashActivity {
         AppCommon.getInstance().increaseLaunchTime();
         AppCommon.getInstance().syncAdsIfNeeded(AppConstant.AdsType.SMALL_BANNER_LANGUAGE_LEARNING, AppConstant.AdsType.BIG_BANNER_LANGUAGE_LEARNING);
 
-        DatabaseLoader.getInstance().createIfNeeded(getApplicationContext(), "trainyouraccent.db");
+        DatabaseLoader.getInstance().createIfNeeded(getApplicationContext(), "trainyouraccent_2.db");
     }
 
     @Override

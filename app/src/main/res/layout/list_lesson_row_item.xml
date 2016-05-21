@@ -27,7 +27,8 @@
                 android:id="@+id/imgLesson"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/list_lesson_height"
-                android:layout_weight="40" />
+                android:layout_weight="40"
+                android:scaleType="centerCrop"/>
 
             <RelativeLayout
                 android:layout_width="0dp"
