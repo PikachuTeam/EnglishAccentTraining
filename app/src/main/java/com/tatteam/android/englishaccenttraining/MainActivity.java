@@ -36,10 +36,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
-import tatteam.com.app_common.AppCommon;
 import tatteam.com.app_common.ads.AdsBigBannerHandler;
 import tatteam.com.app_common.ads.AdsSmallBannerHandler;
 import tatteam.com.app_common.util.AppConstant;
+import tatteam.com.app_common.util.CommonUtil;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, AdapterView.OnItemClickListener, ViewPager.OnPageChangeListener, CustomSeekBar.OnSeekbarChangeListener {
@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static int BIG_ADS_SHOWING_COUNTER = 1;
 
     private LinearLayout layout_MediaControl, layout_Record, layoutBtnRecord, layoutBtnPlayRecord;
-    private LinearLayout btnYes, btnNo, btnOk, layoutBtnYN, btnBack, btnMoreApp;
+    private LinearLayout btnYes, btnNo, btnOk, layoutBtnYN, btnBack, btnShare;
 
     private ImageButton btnPlayPause, btnNext, btnPrevious, btnReplay;
     private TextView tvLesson, tvCurrentDuration, tvDuration, tvDialog, tvDurationRecord;
@@ -115,11 +115,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (state == TelephonyManager.CALL_STATE_RINGING) {
                     player.pause();
                     isMediaPlayerPaused = true;
+                    adapter.notifyDataSetChanged();
                 } else if (state == TelephonyManager.CALL_STATE_IDLE) {
                     player.start();
                     isMediaPlayerPaused = false;
                 } else if (state == TelephonyManager.CALL_STATE_OFFHOOK) {
                     player.pause();
+                    isMediaPlayerPaused = true;
+                    adapter.notifyDataSetChanged();
                 }
                 super.onCallStateChanged(state, incomingNumber);
             }
@@ -159,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tvDuration.setTypeface(face);
 
         btnBack = (LinearLayout) this.findViewById(R.id.btnBackpress);
-        btnMoreApp = (LinearLayout) this.findViewById(R.id.btnMoreApp);
+        btnShare = (LinearLayout) this.findViewById(R.id.btnShare);
         //Dialog
         customDialog = new Dialog(this, R.style.dialogstyle);
         customDialog.setContentView(R.layout.custom_dialog);
@@ -203,7 +206,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnModeListen.setOnClickListener(this);
 
         btnBack.setOnClickListener(this);
-        btnMoreApp.setOnClickListener(this);
+        btnShare.setOnClickListener(this);
 
         btnRecord.setOnClickListener(this);
         btnPlayRecord.setOnClickListener(this);
@@ -321,10 +324,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         player.pause();
                         isMediaPlayerPaused = true;
                         btnPlayPause.setBackgroundResource(R.drawable.play_new);
+                        adapter.notifyDataSetChanged();
                     } else {
                         if (isMediaPlayerPaused) {
                             player.start();
                             isMediaPlayerPaused = false;
+                            adapter.notifyDataSetChanged();
                         } else {
                             playSound(soundPlaying);
                         }
@@ -356,7 +361,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btnReplay:
                 if (isRepeat == 0) {
                     isRepeat = 1;
-                    btnReplay.setBackgroundResource(R.drawable.replay_one);
+                    btnReplay.setBackgroundResource(R.drawable.replay_1);
                 } else if (isRepeat == 1) {
                     isRepeat = 2;
                     btnReplay.setBackgroundResource(R.drawable.replay_on);
@@ -365,8 +370,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     btnReplay.setBackgroundResource(R.drawable.replay_off);
                 }
                 break;
-            case R.id.btnMoreApp:
-                AppCommon.getInstance().openMoreAppDialog(this);
+            case R.id.btnShare:
+                String androidLink = "https://play.google.com/store/apps/details?id=" + getPackageName();
+                String sharedText = getString(R.string.app_name) + ".\nAndroid: " + androidLink;
+                CommonUtil.sharePlainText(this, sharedText);
                 break;
             case R.id.btnBackpress:
                 finish();
@@ -398,10 +405,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     } else {
                         layout_Record.setVisibility(View.GONE);
                         layout_MediaControl.setVisibility(View.VISIBLE);
-
                         isRecord = false;
+                        adapter.notifyDataSetChanged();
                     }
                 }
+
                 break;
             case R.id.btnModeRecord:
                 if (!isRecord) {
@@ -438,6 +446,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     }
                     isRecord = true;
+                    adapter.notifyDataSetChanged();
                 }
                 break;
             case R.id.btnRecord:
@@ -644,6 +653,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnPlayPause.setBackgroundResource(R.drawable.pause_new);
         tvLesson.setText(lessonArrayList.get(soundPlaying).getLessonName());
         updateSeekBar();
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -842,8 +852,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mViewHolder.viewPlaying.setVisibility(View.GONE);
             }
 
-            mViewHolder.tvLessonName.setSelected(true);
 
+            if (isRecord) {
+                mViewHolder.tvPlaying.setText("Recording...");
+            } else {
+                if (isMediaPlayerPaused) {
+                    mViewHolder.tvPlaying.setText("Pause...");
+                } else {
+                    mViewHolder.tvPlaying.setText("Playing...");
+                }
+            }
             return convertView;
         }
 
