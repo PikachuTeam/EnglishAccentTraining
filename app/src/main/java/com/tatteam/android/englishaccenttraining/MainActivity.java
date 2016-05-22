@@ -337,6 +337,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 } else {
                     playSound(1);
+                    isMediaPlayerPaused = false;
                     btnPlayPause.setBackgroundResource(R.drawable.pause_new);
                 }
                 break;
@@ -650,6 +651,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } catch (IOException e) {
             e.printStackTrace();
         }
+        isMediaPlayerPaused = false;
         btnPlayPause.setBackgroundResource(R.drawable.pause_new);
         tvLesson.setText(lessonArrayList.get(soundPlaying).getLessonName());
         updateSeekBar();
