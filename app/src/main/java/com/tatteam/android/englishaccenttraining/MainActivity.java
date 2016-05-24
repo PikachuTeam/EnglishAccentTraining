@@ -3,6 +3,7 @@ package com.tatteam.android.englishaccenttraining;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
@@ -54,7 +55,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ImageButton btnPlayPause, btnNext, btnPrevious, btnReplay;
     private TextView tvLesson, tvCurrentDuration, tvDuration, tvDialog, tvDurationRecord;
 
-    private Button btnRecord, btnPlayRecord, btnModeRc, btnModeListen;
+    private Button btnModeListen;
+    private ImageView btnModeRc;
+    private TextView btnRecord, btnPlayRecord;
     private View viewPage1, viewPage2, viewPage3;
     ArrayList<View> listSmallView = new ArrayList<>();
     private ListView lvLesson;
@@ -88,6 +91,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private final int REPEAT_ONE = 1;
     private final int REPEAT_ALL = 2;
 
+    private final int YOUR_RC_ON = 1;
+    private final int YOUR_RC_OFF = 2;
+    private final int YOUR_RC_PLAYING = 3;
+    private final int START_RC_ON = 4;
+    private final int START_RC_OFF = 5;
+    private final int STOP_RC = 6;
     //
     private AdsSmallBannerHandler adsSmallBannerHandler;
     private AdsBigBannerHandler adsBigBannerHandler;
@@ -140,15 +149,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnPrevious = (ImageButton) this.findViewById(R.id.btnPrevious);
         btnReplay = (ImageButton) this.findViewById(R.id.btnReplay);
 
-        btnRecord = (Button) this.findViewById(R.id.btnRecord);
-        btnPlayRecord = (Button) this.findViewById(R.id.btnPlayRecord);
+        btnRecord = (TextView) this.findViewById(R.id.btnRecord);
+        btnPlayRecord = (TextView) this.findViewById(R.id.btnPlayRecord);
         layoutBtnRecord = (LinearLayout) this.findViewById(R.id.layoutRecord);
         layoutBtnPlayRecord = (LinearLayout) this.findViewById(R.id.layoutPlayRecord);
         layout_MediaControl = (LinearLayout) this.findViewById(R.id.layoutControlMedia);
         layout_Record = (LinearLayout) this.findViewById(R.id.layoutRecordBtn);
 
         tvDurationRecord = (TextView) this.findViewById(R.id.tvDurationRecord);
-        btnModeRc = (Button) this.findViewById(R.id.btnModeRecord);
+        btnModeRc = (ImageView) this.findViewById(R.id.btnModeRecord);
+        btnModeRc.setEnabled(false);
         btnModeListen = (Button) this.findViewById(R.id.btnModeListen);
 
         tvLesson = (TextView) this.findViewById(R.id.tvLesson);
@@ -218,17 +228,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         recordPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                btnPlayRecord.setBackgroundResource(R.drawable.your_rc);
+                changeRecrodTextUI(YOUR_RC_ON);
+//                btnPlayRecord.setBackgroundResource(R.drawable.your_rc);
                 recordPlaying = false;
                 isPlayerRecordPaused = false;
                 btnRecord.setEnabled(true);
+                layoutBtnRecord.setEnabled(true);
+                changeRecrodTextUI(START_RC_ON);
                 recordHandler.removeCallbacks(recordRunable);
+                btnModeListen.setEnabled(true);
+                btnModeListen.setBackgroundResource(R.drawable.listen);
             }
         });
         recordPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
                 recordPlayer.start();
+                btnModeListen.setEnabled(false);
+                btnModeListen.setBackgroundResource(R.drawable.listen_off);
                 updateRecordText();
                 recordHandler.postDelayed(recordRunable, 30);
             }
@@ -413,102 +430,63 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 break;
             case R.id.btnModeRecord:
-                if (player != null) {
-                    if (!isRecord) {
-                        if (player.isPlaying()) {
-                            tvDialog.setText("Would you like to pause the playing track ?");
-                            layoutBtnYN.setVisibility(View.VISIBLE);
-                            btnOk.setVisibility(View.GONE);
-                            customDialog.show();
-                            btnYes.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    player.pause();
-                                    isMediaPlayerPaused = true;
-                                    btnPlayPause.setBackgroundResource(R.drawable.play_new);
-                                    customDialog.dismiss();
-                                }
-                            });
-                            btnNo.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    customDialog.dismiss();
-                                }
-                            });
-                        }
-                        layout_Record.setVisibility(View.VISIBLE);
-                        layout_MediaControl.setVisibility(View.GONE);
-
-                        OUTPUT_FILE = Environment.getExternalStorageDirectory() + "/" + lessonArrayList.get(soundPlaying).getLessonName() + ".3gpp";
-                        if (checkFileExist()) {
-                            btnPlayRecord.setEnabled(true);
-                            btnPlayRecord.setBackgroundResource(R.drawable.your_rc);
-                        } else {
-                            btnPlayRecord.setEnabled(false);
-                            btnPlayRecord.setBackgroundResource(R.drawable.your_rc_off);
-
-                        }
-                        isRecord = true;
-                        adapter.notifyDataSetChanged();
+                if (!isRecord) {
+                    if (player.isPlaying()) {
+                        player.pause();
+                        isMediaPlayerPaused = true;
+                        btnPlayPause.setBackgroundResource(R.drawable.play_new);
                     }
-                }else {
-                    tvDialog.setText("You must choose a track");
-                    layoutBtnYN.setVisibility(View.GONE);
-                    btnOk.setVisibility(View.VISIBLE);
-                    customDialog.show();
-                    btnOk.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            customDialog.dismiss();
-                        }
-                    });
+                    layout_Record.setVisibility(View.VISIBLE);
+                    layout_MediaControl.setVisibility(View.GONE);
+
+                    OUTPUT_FILE = Environment.getExternalStorageDirectory() + "/" + lessonArrayList.get(soundPlaying).getLessonName() + ".3gpp";
+                    if (checkFileExist()) {
+                        btnPlayRecord.setEnabled(true);
+                        layoutBtnPlayRecord.setEnabled(true);
+                        changeRecrodTextUI(YOUR_RC_ON);
+//                            btnPlayRecord.setBackgroundResource(R.drawable.your_rc);
+                    } else {
+                        btnPlayRecord.setEnabled(false);
+                        layoutBtnPlayRecord.setEnabled(false);
+                        changeRecrodTextUI(YOUR_RC_OFF);
+//                            btnPlayRecord.setBackgroundResource(R.drawable.your_rc_off);
+
+                    }
+                    isRecord = true;
+                    adapter.notifyDataSetChanged();
                 }
+
                 break;
             case R.id.btnRecord:
-                btnRecord.setBackgroundResource(R.drawable.stop_rc);
+//                btnRecord.setBackgroundResource(R.drawable.stop_rc);
+//                changeRecrodTextUI(STOP_RC);
                 if (recordStatus) {
-                    btnRecord.setBackgroundResource(R.drawable.start_rc);
                     if (recorder != null) {
                         recorder.stop();
                         btnPlayRecord.setEnabled(true);
-                        btnPlayRecord.setBackgroundResource(R.drawable.your_rc);
+                        layoutBtnPlayRecord.setEnabled(true);
+                        changeRecrodTextUI(START_RC_ON);
+                        changeRecrodTextUI(YOUR_RC_ON);
+//                        btnPlayRecord.setBackgroundResource(R.drawable.your_rc);
                         recordStatus = false;
+                        btnModeListen.setEnabled(true);
+                        btnModeListen.setBackgroundResource(R.drawable.listen);
                     }
                 } else {
-                    if (player.isPlaying()) {
-                        tvDialog.setText(R.string.pause_media);
-                        layoutBtnYN.setVisibility(View.VISIBLE);
-                        btnOk.setVisibility(View.GONE);
-                        customDialog.show();
-                        btnYes.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                player.pause();
-                                isMediaPlayerPaused = true;
-                                btnPlayPause.setBackgroundResource(R.drawable.play_new);
-                                customDialog.dismiss();
-                                startRecord();
-                            }
-                        });
-                        btnNo.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                customDialog.dismiss();
-                                startRecord();
-                            }
-                        });
-                    } else {
-                        startRecord();
-                    }
-
+                    startRecord();
                 }
                 break;
             case R.id.btnPlayRecord:
                 if (recordPlaying) {
                     btnRecord.setEnabled(true);
-                    btnPlayRecord.setBackgroundResource(R.drawable.your_rc);
+                    layoutBtnRecord.setEnabled(true);
+                    changeRecrodTextUI(START_RC_ON);
+                    changeRecrodTextUI(YOUR_RC_ON);
+//                    btnPlayRecord.setBackgroundResource(R.drawable.your_rc);
                     if (recordPlayer != null) {
                         recordPlayer.pause();
+                        btnModeListen.setEnabled(true);
+                        btnModeListen.setBackgroundResource(R.drawable.listen);
                     }
                     recordPlaying = false;
                     isPlayerRecordPaused = true;
@@ -519,18 +497,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         btnPlayPause.setBackgroundResource(R.drawable.play_new);
                     }
                     btnRecord.setEnabled(false);
-                    btnPlayRecord.setBackgroundResource(R.drawable.rc_playing);
+                    layoutBtnRecord.setEnabled(false);
+                    changeRecrodTextUI(START_RC_OFF);
+                    changeRecrodTextUI(YOUR_RC_PLAYING);
+//                    btnPlayRecord.setBackgroundResource(R.drawable.rc_playing);
                     if (recordPlayer != null) {
                         if (isPlayerRecordPaused) {
                             if (checkFileExist()) {
                                 btnPlayRecord.setEnabled(true);
-                                btnPlayRecord.setBackgroundResource(R.drawable.your_rc);
+                                layoutBtnPlayRecord.setEnabled(true);
+                                changeRecrodTextUI(YOUR_RC_ON);
+//                                btnPlayRecord.setBackgroundResource(R.drawable.your_rc);
                                 recordPlayer.start();
+                                btnModeListen.setEnabled(false);
+                                btnModeListen.setBackgroundResource(R.drawable.listen_off);
                                 isPlayerRecordPaused = false;
                                 recordPlaying = true;
                             } else {
                                 btnPlayRecord.setEnabled(false);
-                                btnPlayRecord.setBackgroundResource(R.drawable.your_rc_off);
+                                layoutBtnPlayRecord.setEnabled(false);
+                                changeRecrodTextUI(YOUR_RC_OFF);
+//                                btnPlayRecord.setBackgroundResource(R.drawable.your_rc_off);
                             }
                         } else {
                             recordPlaying = true;
@@ -542,7 +529,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             }
                             recordPlayer.prepareAsync();
                             isPlayerRecordPaused = false;
-//                            updateRecordText();
                         }
                     }
                 }
@@ -550,12 +536,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+
     private void startRecord() {
         tvDurationRecord.setText("-- : --");
-        btnPlayRecord.setEnabled(false);
-        btnPlayRecord.setBackgroundResource(R.drawable.your_rc_off);
         isPlayerRecordPaused = false;
-        btnRecord.setBackgroundResource(R.drawable.stop_rc);
+        btnPlayRecord.setEnabled(false);
+        layoutBtnPlayRecord.setEnabled(false);
+
+        btnModeListen.setEnabled(false);
+        btnModeListen.setBackgroundResource(R.drawable.listen_off);
+        changeRecrodTextUI(STOP_RC);
+        changeRecrodTextUI(YOUR_RC_OFF);
+
         if (recorder != null) {
             recorder.release();
         }
@@ -603,30 +595,78 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    private void changeRecrodTextUI(int key) {
+        switch (key) {
+            case YOUR_RC_ON:
+                btnPlayRecord.setText(R.string.play_record);
+                btnPlayRecord.setBackgroundColor(Color.TRANSPARENT);
+                btnPlayRecord.setTextColor(getResources().getColor(R.color.primary_dark));
+                break;
+            case YOUR_RC_OFF:
+                btnPlayRecord.setText(R.string.play_record);
+//                btnPlayRecord.setBackgroundResource(R.drawable.border_text_grey);
+                btnPlayRecord.setBackgroundColor(Color.TRANSPARENT);
+                btnPlayRecord.setTextColor(getResources().getColor(R.color.small_view_color));
+                break;
+            case YOUR_RC_PLAYING:
+                btnPlayRecord.setText(R.string.stop_record);
+                btnPlayRecord.setTextColor(getResources().getColor(R.color.color_record));
+                btnPlayRecord.setBackgroundResource(R.drawable.border_text);
+                break;
+            case START_RC_ON:
+                btnRecord.setTextColor(getResources().getColor(R.color.primary_dark));
+                btnRecord.setBackgroundColor(Color.TRANSPARENT);
+//                btnRecord.setBackgroundResource(R.drawable.border_text);
+                break;
+            case START_RC_OFF:
+                btnRecord.setTextColor(getResources().getColor(R.color.small_view_color));
+                btnRecord.setBackgroundColor(Color.TRANSPARENT);
+//                btnRecord.setBackgroundResource(R.drawable.border_text_grey);
+                break;
+            case STOP_RC:
+                btnRecord.setTextColor(getResources().getColor(R.color.color_record));
+                btnRecord.setBackgroundResource(R.drawable.border_text);
+                break;
+        }
+
+    }
+
     private void checkRecordStatusFile() {
         if (recordPlayer.isPlaying()) {
             recordPlayer.pause();
             isPlayerRecordPaused = true;
-            btnPlayRecord.setBackgroundResource(R.drawable.your_rc);
+            btnModeListen.setEnabled(true);
+            btnModeListen.setBackgroundResource(R.drawable.listen);
+            changeRecrodTextUI(YOUR_RC_ON);
+//            btnPlayRecord.setBackgroundResource(R.drawable.your_rc);
+
         } else if (isPlayerRecordPaused) {
             if (checkFileExist()) {
                 isPlayerRecordPaused = false;
                 btnPlayRecord.setEnabled(true);
-                btnPlayRecord.setBackgroundResource(R.drawable.your_rc);
+                layoutBtnPlayRecord.setEnabled(true);
+                changeRecrodTextUI(YOUR_RC_ON);
+//                btnPlayRecord.setBackgroundResource(R.drawable.your_rc);
                 recordPlaying = false;
             } else {
                 isPlayerRecordPaused = false;
                 btnPlayRecord.setEnabled(false);
-                btnPlayRecord.setBackgroundResource(R.drawable.your_rc_off);
+                layoutBtnPlayRecord.setEnabled(false);
+                changeRecrodTextUI(YOUR_RC_OFF);
+//                btnPlayRecord.setBackgroundResource(R.drawable.your_rc_off);
                 recordPlaying = false;
             }
         } else {
             if (checkFileExist()) {
                 btnPlayRecord.setEnabled(true);
-                btnPlayRecord.setBackgroundResource(R.drawable.your_rc);
+                layoutBtnPlayRecord.setEnabled(true);
+                changeRecrodTextUI(YOUR_RC_ON);
+//                btnPlayRecord.setBackgroundResource(R.drawable.your_rc);
             } else {
                 btnPlayRecord.setEnabled(false);
-                btnPlayRecord.setBackgroundResource(R.drawable.your_rc_off);
+                layoutBtnPlayRecord.setEnabled(false);
+                changeRecrodTextUI(YOUR_RC_OFF);
+//                btnPlayRecord.setBackgroundResource(R.drawable.your_rc_off);
             }
         }
     }
@@ -666,6 +706,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        btnModeRc.setEnabled(true);
+        btnModeRc.setBackgroundResource(R.drawable.record_new);
         isMediaPlayerPaused = false;
         btnPlayPause.setBackgroundResource(R.drawable.pause_new);
         tvLesson.setText(lessonArrayList.get(soundPlaying).getLessonName());

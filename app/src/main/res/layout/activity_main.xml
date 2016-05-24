@@ -235,7 +235,7 @@
             <tatteam.com.app_common.ui.drawable.RippleEffectDrawable
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="25">
+                android:layout_weight="20">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -253,20 +253,24 @@
 
             <tatteam.com.app_common.ui.drawable.RippleEffectDrawable
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="30">
 
                 <LinearLayout
                     android:id="@+id/layoutRecord"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center">
-
-                    <Button
-                        android:id="@+id/btnRecord"
-                        android:layout_width="@dimen/button_rc_height"
-                        android:layout_height="@dimen/button_rc_height"
-                        android:background="@drawable/start_rc" />
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:padding="@dimen/activity_vertical_margin">
+                        <TextView
+                            android:id="@+id/btnRecord"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:textSize="@dimen/common_text_size_20"
+                            android:gravity="center"
+                            android:textStyle="bold"
+                            android:textColor="@color/primary_dark"
+                            android:text="Record" />
                 </LinearLayout>
             </tatteam.com.app_common.ui.drawable.RippleEffectDrawable>
 
@@ -283,20 +287,25 @@
 
             <tatteam.com.app_common.ui.drawable.RippleEffectDrawable
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="30">
 
                 <LinearLayout
                     android:id="@+id/layoutPlayRecord"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center">
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:padding="@dimen/activity_vertical_margin">
 
-                    <Button
+                    <TextView
                         android:id="@+id/btnPlayRecord"
-                        android:layout_width="@dimen/button_rc_height"
-                        android:layout_height="@dimen/button_rc_height"
-                        android:background="@drawable/your_rc_off" />
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textSize="@dimen/common_text_size_20"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:textColor="@color/primary_dark"
+                        android:text="Play REC" />
                 </LinearLayout>
             </tatteam.com.app_common.ui.drawable.RippleEffectDrawable>
         </LinearLayout>
@@ -332,13 +341,13 @@
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/button_big_size">
 
-                            <Button
+                            <ImageView
                                 android:id="@+id/btnModeRecord"
                                 android:layout_width="@dimen/button_small_size_width"
                                 android:layout_height="@dimen/button_rc_height"
                                 android:layout_centerInParent="true"
                                 android:layout_marginLeft="@dimen/margin_button"
-                                android:background="@drawable/record_new"></Button>
+                                android:background="@drawable/record_off"></ImageView>
                         </LinearLayout>
                     </tatteam.com.app_common.ui.drawable.RippleEffectDrawable>
                 </LinearLayout>
