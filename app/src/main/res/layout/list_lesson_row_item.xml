@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/list_lesson_height"
             android:background="@color/playing_view_color"
-            android:visibility="gone" />
+            android:visibility="invisible" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -38,7 +38,7 @@
 
                 <TextView
                     android:id="@+id/tvLessonName"
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/text_item_width"
                     android:layout_height="wrap_content"
                     android:ellipsize="marquee"
                     android:marqueeRepeatLimit="marquee_forever"
@@ -48,7 +48,7 @@
                     android:textSize="@dimen/common_text_size_20" />
 
                 <RelativeLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tvLessonName"
                     android:layout_marginTop="@dimen/margin_listview">
@@ -75,19 +75,26 @@
             </RelativeLayout>
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/tv_Playing"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/list_lesson_height"
-            android:layout_centerVertical="true"
-            android:gravity="center"
-            android:text="Playing..."
-            android:ellipsize="marquee"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:singleLine="true"
-            android:textColor="@color/splash_background"
-            android:textSize="@dimen/text_size_3"
-            android:textStyle="bold"
-            android:visibility="gone" />
+            android:layout_height="match_parent"
+            android:gravity="center">
+            <TextView
+                android:id="@+id/tv_Playing"
+                android:layout_width="@dimen/img_app_icon_size"
+                android:layout_height="@dimen/list_lesson_height"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:text="Playing..."
+                android:selectAllOnFocus="true"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:singleLine="true"
+                android:textColor="@color/splash_background"
+                android:textSize="@dimen/common_text_size_37"
+                android:textStyle="bold"
+                android:visibility="invisible" />
+        </LinearLayout>
+
     </android.support.v7.widget.CardView>
 </RelativeLayout>

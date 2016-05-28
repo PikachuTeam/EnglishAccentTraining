@@ -1,8 +1,7 @@
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">5dp</dimen>
-
+    <dimen name="activity_vertical_margin">10dp</dimen>
     <dimen name="ads_height">60dp</dimen>
 
     <!--button-->
@@ -62,6 +61,7 @@
 
     <!--list_item_margin-->
     <dimen name="list_item_margin_bot">20dp</dimen>
+    <dimen name="text_item_width">180dp</dimen>
 
     <!--list_item_-->
     <dimen name="play_icon_in_item_size">19dp</dimen>

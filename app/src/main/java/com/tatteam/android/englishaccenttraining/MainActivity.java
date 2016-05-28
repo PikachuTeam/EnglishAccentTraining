@@ -2,16 +2,19 @@ package com.tatteam.android.englishaccenttraining;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -31,6 +34,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,7 +47,7 @@ import tatteam.com.app_common.util.AppConstant;
 import tatteam.com.app_common.util.CommonUtil;
 
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, AdapterView.OnItemClickListener, ViewPager.OnPageChangeListener, CustomSeekBar.OnSeekbarChangeListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, AdapterView.OnItemClickListener, ViewPager.OnPageChangeListener {
 
     private static final boolean ADS_ENABLE = false;
     private static final int BIG_ADS_SHOWING_INTERVAL = 5;
@@ -76,6 +80,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ListLessonAdapter adapter;
 
     private MyPagerAdapter myPagerAdapter;
+    private LinearLayout layoutViewPage1, layoutViewPage2, layoutViewPage3;
+    ViewPager pager;
 
     private int isRepeat = 0;
     private boolean isShuffle = false;
@@ -97,6 +103,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private final int START_RC_ON = 4;
     private final int START_RC_OFF = 5;
     private final int STOP_RC = 6;
+
+    //Request permission
+    private final int PERMISSION_REQUEST_CODE = 1;
     //
     private AdsSmallBannerHandler adsSmallBannerHandler;
     private AdsBigBannerHandler adsBigBannerHandler;
@@ -188,24 +197,46 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        customSeekbar.setSeekbarChangeListener(this);
         seekBar = (SeekBar) this.findViewById(R.id.seekBar);
 
-        //init page id (indicatorView pager)
-        viewPage1 = (View) this.findViewById(R.id.view_page_1);
-        viewPage2 = (View) this.findViewById(R.id.view_page_2);
-        viewPage3 = (View) this.findViewById(R.id.view_page_3);
-
-        //init small indicatorView page
-        listSmallView.add(viewPage1);
-        listSmallView.add(viewPage2);
-        listSmallView.add(viewPage3);
-
         //set adapter indicatorView pager
         pages = new View[3];
         pages[0] = View.inflate(this, R.layout.pager_list_lesson, null);
         pages[1] = View.inflate(this, R.layout.pager_transcription, null);
         pages[2] = View.inflate(this, R.layout.pager_reduced_speech, null);
         myPagerAdapter = new MyPagerAdapter(MainActivity.this, pages);
-        ViewPager pager = (ViewPager) findViewById(R.id.pager);
+        pager = (ViewPager) findViewById(R.id.pager);
         pager.setAdapter(myPagerAdapter);
+
+        //init page id (indicatorView pager)
+        viewPage1 = (View) this.findViewById(R.id.view_page_1);
+        viewPage2 = (View) this.findViewById(R.id.view_page_2);
+        viewPage3 = (View) this.findViewById(R.id.view_page_3);
+
+        layoutViewPage1 = (LinearLayout) this.findViewById(R.id.layout_view_page1);
+        layoutViewPage2 = (LinearLayout) this.findViewById(R.id.layout_view_page2);
+        layoutViewPage3 = (LinearLayout) this.findViewById(R.id.layout_view_page3);
+
+        layoutViewPage1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pager.setCurrentItem(0, true);
+            }
+        });
+        layoutViewPage2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pager.setCurrentItem(1, true);
+            }
+        });
+        layoutViewPage3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pager.setCurrentItem(2, true);
+            }
+        });
+        //init small indicatorView page
+        listSmallView.add(viewPage1);
+        listSmallView.add(viewPage2);
+        listSmallView.add(viewPage3);
 
         //event
         btnPlayPause.setOnClickListener(this);
@@ -229,7 +260,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onCompletion(MediaPlayer mp) {
                 changeRecrodTextUI(YOUR_RC_ON);
-//                btnPlayRecord.setBackgroundResource(R.drawable.your_rc);
                 recordPlaying = false;
                 isPlayerRecordPaused = false;
                 btnRecord.setEnabled(true);
@@ -250,9 +280,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 recordHandler.postDelayed(recordRunable, 30);
             }
         });
-        //close app
-//        closeAppHandler = new CloseAppHandler(this);
-//        closeAppHandler.setListener(this);
 
         //ads
         if (ADS_ENABLE) {
@@ -430,44 +457,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 break;
             case R.id.btnModeRecord:
-                if (!isRecord) {
-                    if (player.isPlaying()) {
-                        player.pause();
-                        isMediaPlayerPaused = true;
-                        btnPlayPause.setBackgroundResource(R.drawable.play_new);
-                    }
-                    layout_Record.setVisibility(View.VISIBLE);
-                    layout_MediaControl.setVisibility(View.GONE);
-
-                    OUTPUT_FILE = Environment.getExternalStorageDirectory() + "/" + lessonArrayList.get(soundPlaying).getLessonName() + ".3gpp";
-                    if (checkFileExist()) {
-                        btnPlayRecord.setEnabled(true);
-                        layoutBtnPlayRecord.setEnabled(true);
-                        changeRecrodTextUI(YOUR_RC_ON);
-//                            btnPlayRecord.setBackgroundResource(R.drawable.your_rc);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (ContextCompat.checkSelfPermission(MainActivity.this, "android.permission.WRITE_EXTERNAL_STORAGE") != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(MainActivity.this, new String[]{"android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.RECORD_AUDIO"}, PERMISSION_REQUEST_CODE);
                     } else {
-                        btnPlayRecord.setEnabled(false);
-                        layoutBtnPlayRecord.setEnabled(false);
-                        changeRecrodTextUI(YOUR_RC_OFF);
-//                            btnPlayRecord.setBackgroundResource(R.drawable.your_rc_off);
-
+                        openModeRecord();
                     }
-                    isRecord = true;
-                    adapter.notifyDataSetChanged();
+                } else {
+                    openModeRecord();
                 }
-
                 break;
             case R.id.btnRecord:
-//                btnRecord.setBackgroundResource(R.drawable.stop_rc);
-//                changeRecrodTextUI(STOP_RC);
                 if (recordStatus) {
                     if (recorder != null) {
-                        recorder.stop();
+                        if(checkFileExist()){
+                            try {
+                                recorder.stop();
+                            } catch (RuntimeException e) {
+                            }
+                        }
                         btnPlayRecord.setEnabled(true);
                         layoutBtnPlayRecord.setEnabled(true);
                         changeRecrodTextUI(START_RC_ON);
                         changeRecrodTextUI(YOUR_RC_ON);
-//                        btnPlayRecord.setBackgroundResource(R.drawable.your_rc);
                         recordStatus = false;
                         btnModeListen.setEnabled(true);
                         btnModeListen.setBackgroundResource(R.drawable.listen);
@@ -482,7 +494,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     layoutBtnRecord.setEnabled(true);
                     changeRecrodTextUI(START_RC_ON);
                     changeRecrodTextUI(YOUR_RC_ON);
-//                    btnPlayRecord.setBackgroundResource(R.drawable.your_rc);
                     if (recordPlayer != null) {
                         recordPlayer.pause();
                         btnModeListen.setEnabled(true);
@@ -500,14 +511,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     layoutBtnRecord.setEnabled(false);
                     changeRecrodTextUI(START_RC_OFF);
                     changeRecrodTextUI(YOUR_RC_PLAYING);
-//                    btnPlayRecord.setBackgroundResource(R.drawable.rc_playing);
+
                     if (recordPlayer != null) {
                         if (isPlayerRecordPaused) {
                             if (checkFileExist()) {
                                 btnPlayRecord.setEnabled(true);
                                 layoutBtnPlayRecord.setEnabled(true);
                                 changeRecrodTextUI(YOUR_RC_ON);
-//                                btnPlayRecord.setBackgroundResource(R.drawable.your_rc);
                                 recordPlayer.start();
                                 btnModeListen.setEnabled(false);
                                 btnModeListen.setBackgroundResource(R.drawable.listen_off);
@@ -517,7 +527,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 btnPlayRecord.setEnabled(false);
                                 layoutBtnPlayRecord.setEnabled(false);
                                 changeRecrodTextUI(YOUR_RC_OFF);
-//                                btnPlayRecord.setBackgroundResource(R.drawable.your_rc_off);
                             }
                         } else {
                             recordPlaying = true;
@@ -533,6 +542,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 }
                 break;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_REQUEST_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    openModeRecord();
+                } else {
+                    Toast.makeText(MainActivity.this, "Permission Denied,Please allow in App Settings for additional functionality", Toast.LENGTH_SHORT).show();
+                }
+        }
+    }
+
+    private void openModeRecord() {
+        if (!isRecord) {
+            if (player.isPlaying()) {
+                player.pause();
+                isMediaPlayerPaused = true;
+                btnPlayPause.setBackgroundResource(R.drawable.play_new);
+            }
+            layout_Record.setVisibility(View.VISIBLE);
+            layout_MediaControl.setVisibility(View.GONE);
+
+            OUTPUT_FILE = Environment.getExternalStorageDirectory() + "/" + lessonArrayList.get(soundPlaying).getLessonName() + ".3gpp";
+            if (checkFileExist()) {
+                btnPlayRecord.setEnabled(true);
+                layoutBtnPlayRecord.setEnabled(true);
+                changeRecrodTextUI(YOUR_RC_ON);
+            } else {
+                btnPlayRecord.setEnabled(false);
+                layoutBtnPlayRecord.setEnabled(false);
+                changeRecrodTextUI(YOUR_RC_OFF);
+            }
+            isRecord = true;
+            adapter.notifyDataSetChanged();
         }
     }
 
@@ -555,9 +601,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             outputFile.delete();
         }
         recorder = new MediaRecorder();
+
         recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+        recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
         recorder.setOutputFile(OUTPUT_FILE);
         try {
             recorder.prepare();
@@ -599,33 +646,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (key) {
             case YOUR_RC_ON:
                 btnPlayRecord.setText(R.string.play_record);
+                layoutBtnPlayRecord.setBackgroundResource(R.drawable.border_text);
                 btnPlayRecord.setBackgroundColor(Color.TRANSPARENT);
-                btnPlayRecord.setTextColor(getResources().getColor(R.color.primary_dark));
                 break;
             case YOUR_RC_OFF:
                 btnPlayRecord.setText(R.string.play_record);
-//                btnPlayRecord.setBackgroundResource(R.drawable.border_text_grey);
+                layoutBtnPlayRecord.setBackgroundResource(R.drawable.border_text_grey);
                 btnPlayRecord.setBackgroundColor(Color.TRANSPARENT);
-                btnPlayRecord.setTextColor(getResources().getColor(R.color.small_view_color));
                 break;
             case YOUR_RC_PLAYING:
                 btnPlayRecord.setText(R.string.stop_record);
-                btnPlayRecord.setTextColor(getResources().getColor(R.color.color_record));
-                btnPlayRecord.setBackgroundResource(R.drawable.border_text);
+                layoutBtnPlayRecord.setBackgroundResource(R.drawable.border_text_red);
                 break;
             case START_RC_ON:
-                btnRecord.setTextColor(getResources().getColor(R.color.primary_dark));
+                btnRecord.setText(R.string.start_record);
+                layoutBtnRecord.setBackgroundResource(R.drawable.border_text);
                 btnRecord.setBackgroundColor(Color.TRANSPARENT);
-//                btnRecord.setBackgroundResource(R.drawable.border_text);
                 break;
             case START_RC_OFF:
-                btnRecord.setTextColor(getResources().getColor(R.color.small_view_color));
+                btnRecord.setText(R.string.start_record);
+                layoutBtnRecord.setBackgroundResource(R.drawable.border_text_grey);
                 btnRecord.setBackgroundColor(Color.TRANSPARENT);
-//                btnRecord.setBackgroundResource(R.drawable.border_text_grey);
                 break;
             case STOP_RC:
-                btnRecord.setTextColor(getResources().getColor(R.color.color_record));
-                btnRecord.setBackgroundResource(R.drawable.border_text);
+                btnRecord.setText(R.string.stop_recording);
+                layoutBtnRecord.setBackgroundResource(R.drawable.border_text_red);
                 break;
         }
 
@@ -638,7 +683,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             btnModeListen.setEnabled(true);
             btnModeListen.setBackgroundResource(R.drawable.listen);
             changeRecrodTextUI(YOUR_RC_ON);
-//            btnPlayRecord.setBackgroundResource(R.drawable.your_rc);
 
         } else if (isPlayerRecordPaused) {
             if (checkFileExist()) {
@@ -646,14 +690,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 btnPlayRecord.setEnabled(true);
                 layoutBtnPlayRecord.setEnabled(true);
                 changeRecrodTextUI(YOUR_RC_ON);
-//                btnPlayRecord.setBackgroundResource(R.drawable.your_rc);
                 recordPlaying = false;
             } else {
                 isPlayerRecordPaused = false;
                 btnPlayRecord.setEnabled(false);
                 layoutBtnPlayRecord.setEnabled(false);
                 changeRecrodTextUI(YOUR_RC_OFF);
-//                btnPlayRecord.setBackgroundResource(R.drawable.your_rc_off);
                 recordPlaying = false;
             }
         } else {
@@ -661,12 +703,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 btnPlayRecord.setEnabled(true);
                 layoutBtnPlayRecord.setEnabled(true);
                 changeRecrodTextUI(YOUR_RC_ON);
-//                btnPlayRecord.setBackgroundResource(R.drawable.your_rc);
             } else {
                 btnPlayRecord.setEnabled(false);
                 layoutBtnPlayRecord.setEnabled(false);
                 changeRecrodTextUI(YOUR_RC_OFF);
-//                btnPlayRecord.setBackgroundResource(R.drawable.your_rc_off);
             }
         }
     }
@@ -692,7 +732,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         lesson.setIsPlay(true);
 
-        adapter.notifyDataSetChanged();
         updatePage23();
 
         try {
@@ -829,22 +868,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onPageSelected(int position) {
         for (int i = 0; i < listSmallView.size(); i++) {
-            listSmallView.get(i).setVisibility(View.INVISIBLE);
+            listSmallView.get(i).setBackgroundResource(R.color.small_view_color);
         }
-        listSmallView.get(position).setVisibility(View.VISIBLE);
+        listSmallView.get(position).setBackgroundResource(R.color.primary);
     }
 
     @Override
     public void onPageScrollStateChanged(int state) {
 
-    }
-
-    @Override
-    public void onSeekbarChangeListener(int smallViewWidth, int parentWidth) {
-        float percent = (float) smallViewWidth / parentWidth;
-        if (player != null && player.isPlaying()) {
-            player.seekTo((int) (player.getDuration() * percent));
-        }
     }
 
     @Override
@@ -901,17 +932,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Typeface textPlaying = Typeface.createFromAsset(getAssets(), "Cocogoose_trial.otf");
             mViewHolder.tvLessonName.setText(lessons.get(position).getLessonName() + "");
             mViewHolder.tvLessonName.setTypeface(listType);
+            //set selected help textview marquee forever
+            mViewHolder.tvLessonName.setSelected(true);
             mViewHolder.tvPlaying.setTypeface(textPlaying);
             mViewHolder.imgLesson.setImageResource(lessons.get(position).getImageLesson());
             mViewHolder.tvDurationLesson.setText(lessons.get(position).getDuration());
+            mViewHolder.tvPlaying.setSelected(true);
             if (lessons.get(position).isPlay()) {
                 mViewHolder.tvPlaying.setVisibility(View.VISIBLE);
                 mViewHolder.viewPlaying.setVisibility(View.VISIBLE);
             } else {
-                mViewHolder.tvPlaying.setVisibility(View.GONE);
-                mViewHolder.viewPlaying.setVisibility(View.GONE);
+                mViewHolder.tvPlaying.setVisibility(View.INVISIBLE);
+                mViewHolder.viewPlaying.setVisibility(View.INVISIBLE);
             }
-
 
             if (isRecord) {
                 mViewHolder.tvPlaying.setText("Recording...");
@@ -952,7 +985,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 adapter = new ListLessonAdapter(MainActivity.this, lessonArrayList);
                 lvLesson.setAdapter(adapter);
                 lvLesson.setOnItemClickListener(MainActivity.this);
-
             } else if (position == 1) {
                 TextView tvTrans = (TextView) layout.findViewById(R.id.tvTrans);
                 TextView tvTranscription = (TextView) layout.findViewById(R.id.tvTranscription);

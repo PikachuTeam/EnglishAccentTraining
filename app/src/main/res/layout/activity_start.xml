@@ -16,8 +16,8 @@
 
     <TextView
         android:id="@+id/tv_appNameStart"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/text_item_width"
         android:layout_below="@id/img_app_icon"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="@dimen/margin_text"
@@ -25,7 +25,7 @@
         android:gravity="center"
         android:text="@string/app_name"
         android:textColor="@color/primary"
-        android:textSize="@dimen/common_text_size_50"
+        android:textSize="@dimen/common_text_size_45"
         android:textStyle="bold" />
 
     <RelativeLayout
@@ -34,11 +34,11 @@
         android:layout_below="@+id/tv_appNameStart"
         android:layout_marginTop="@dimen/margin_listview">
 
-        <Button
+        <ImageView
             android:id="@+id/btn_new_app"
             android:layout_width="@dimen/img_app_icon_size"
             android:layout_height="@dimen/img_app_icon_size"
-            android:background="@drawable/esl_button" />
+            android:background="@drawable/esl_button_off" />
 
         <Button
             android:id="@+id/btn_start_app"

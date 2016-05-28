@@ -34,10 +34,13 @@
             android:layout_below="@id/tvDialog"
             android:gravity="center"
             android:visibility="visible">
-            <ImageView
+            <TextView
                 android:layout_width="@dimen/button_rc_height"
                 android:layout_height="@dimen/button_rc_height"
-                android:background="@drawable/yes"/>
+                android:text="Ok"
+                android:textSize="@dimen/common_text_size_20"
+                android:gravity="center"
+                android:textColor="@color/primary"/>
         </LinearLayout>
 
         <LinearLayout
@@ -55,10 +58,13 @@
                 android:layout_weight="49.5"
                 android:gravity="center">
 
-                <ImageView
+                <TextView
                     android:layout_width="@dimen/button_rc_height"
                     android:layout_height="@dimen/button_rc_height"
-                    android:background="@drawable/no" />
+                    android:text="No"
+                    android:textSize="@dimen/common_text_size_20"
+                    android:gravity="center"
+                    android:textColor="@color/primary"/>
             </LinearLayout>
 
             <View
@@ -74,10 +80,13 @@
                 android:layout_weight="49.5"
                 android:gravity="center">
 
-                <ImageView
+                <TextView
                     android:layout_width="@dimen/button_rc_height"
                     android:layout_height="@dimen/button_rc_height"
-                    android:background="@drawable/yes" />
+                    android:text="Yes"
+                    android:textSize="@dimen/common_text_size_20"
+                    android:gravity="center"
+                    android:textColor="@color/primary"/>
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>

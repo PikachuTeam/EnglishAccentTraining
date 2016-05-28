@@ -36,7 +36,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:textColor="@color/primary_dark"
-                android:textSize="@dimen/common_text_size_20" />
+                android:textSize="@dimen/common_text_size_18" />
         </LinearLayout>
     </ScrollView>
 

@@ -14,4 +14,6 @@
     <string name="pause_media">Do you want to pause the playing track?</string>
     <string name="stop_record">Stop REC</string>
     <string name="play_record">Play REC</string>
+    <string name="stop_recording">Stop Record</string>
+    <string name="start_record">Start Record</string>
 </resources>

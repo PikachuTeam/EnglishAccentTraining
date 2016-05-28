@@ -2,23 +2,26 @@
     <!-- Default screen margins. per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">19.2dp</dimen>
     <dimen name="activity_vertical_margin">12dp</dimen>
-
     <dimen name="ads_height">72dp</dimen>
 
     <!--button-->
-    <dimen name="button_small_size">36dp</dimen>
+    <dimen name="button_small_size">42dp</dimen>
+    <dimen name="button_small_size_width">36dp</dimen>
     <dimen name="button_super_small_size">30dp</dimen>
-    <dimen name="button_big_size">54dp</dimen>
-
+    <dimen name="button_big_size">64.8dp</dimen>
+    <dimen name="button_rc_height">54dp</dimen>
 
     <!--view pager-->
     <dimen name="view_pager_width">384dp</dimen>
     <dimen name="view_pager_height">468dp</dimen>
 
     <dimen name="small_view_layout_width">38.4dp</dimen>
-    <dimen name="small_view_width">30dp</dimen>
-    <dimen name="small_view_height">14.4dp</dimen>
+    <dimen name="small_view_width">26.4dp</dimen>
+    <dimen name="small_view_height">6dp</dimen>
+    <dimen name="small_view_margin">24dp</dimen>
 
+    <dimen name="list_lesson_height">108dp</dimen>
+    <dimen name="list_lesson_width">174dp</dimen>
     <!--seekbar-->
     <dimen name="seekbar_height">60dp</dimen>
     <dimen name="seekbar_custom_height">120dp</dimen>
@@ -26,20 +29,21 @@
     <dimen name="layout_textview_duration_height">36dp</dimen>
     <!--padding-->
     <dimen name="padding_pager">60dp</dimen>
-    <dimen name="padding_listview">24dp</dimen>
+    <dimen name="padding_listview">12dp</dimen>
     <dimen name="padding_listview_left">36dp</dimen>
     <dimen name="padding_small_view_layout">6dp</dimen>
-
+    <dimen name="padding_page_lesson">12dp</dimen>
     <!--margin-->
     <dimen name="margin_listview">24dp</dimen>
     <dimen name="margin_button">30dp</dimen>
     <dimen name="margin_view_1">12dp</dimen>
     <dimen name="margin_text_page_name">12dp</dimen>
-    <dimen name="margin_view_pager">84dp</dimen>
-    <dimen name="margin_small_view_layout">96dp</dimen>
+    <dimen name="margin_view_pager">96dp</dimen>
+    <dimen name="margin_small_view_layout">72dp</dimen>
     <dimen name="margin_pager">48dp</dimen>
+    <dimen name="margin_media_control">9.6dp</dimen>
     <!--text size-->
-    <dimen name="text_size_1">40sp</dimen>
+    <dimen name="text_size_1">39.96sp</dimen>
     <dimen name="text_size_2">28.8sp</dimen>
     <dimen name="text_size_3">42sp</dimen>
     <dimen name="text_size_item">48sp</dimen>
@@ -56,15 +60,22 @@
     <dimen name="scroll_bar_width">4.8dp</dimen>
 
     <!--list_item_margin-->
-    <dimen name="list_item_margin_bot">18dp</dimen>
+    <dimen name="list_item_margin_bot">24dp</dimen>
+    <dimen name="text_item_width">216dp</dimen>
 
     <!--list_item_-->
     <dimen name="play_icon_in_item_size">22.8dp</dimen>
-    <dimen name="margin_name_lesson_left">30dp</dimen>
+    <dimen name="margin_name_lesson_left">18dp</dimen>
     <dimen name="margin_item">12dp</dimen>
     <!--player-->
     <dimen name="padding_left_right">18dp</dimen>
 
     <dimen name="lesson_name_width">240dp</dimen>
 
+    <!--start activity-->
+    <dimen name="img_app_icon_size">180dp</dimen>
+    <dimen name="margin_app_icon">48dp</dimen>
+    <dimen name="margin_splash">120dp</dimen>
+    <dimen name="margin_text">36dp</dimen>
+    <dimen name="view_line_height">2.4dp</dimen>
 </resources>
