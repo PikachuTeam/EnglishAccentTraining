@@ -23,7 +23,6 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
 
         btnStartApp = (Button) this.findViewById(R.id.btn_start_app);
         btnOpenNewApp = (ImageView) this.findViewById(R.id.btn_new_app);
-        btnOpenNewApp.getBackground().setColorFilter(getResources().getColor(R.color.small_view_color), PorterDuff.Mode.MULTIPLY);
 
         btnStartApp.setOnClickListener(this);
         btnOpenNewApp.setOnClickListener(this);

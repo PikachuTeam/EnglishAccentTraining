@@ -14,17 +14,38 @@
         android:layout_marginTop="@dimen/margin_splash"
         android:background="@drawable/app_icon" />
 
-    <TextView
-        android:id="@+id/tv_appNameStart"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/img_app_icon"
-        android:layout_centerHorizontal="true"
         android:layout_marginLeft="@dimen/margin_text"
         android:layout_marginRight="@dimen/margin_text"
         android:gravity="center"
-        android:text="@string/app_name"
-        android:textColor="@color/primary"
-        android:textSize="@dimen/common_text_size_45"
-        android:textStyle="bold" />
+        android:layout_below="@id/img_app_icon"
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="American"
+            android:textColor="@color/primary"
+            android:textSize="@dimen/common_text_size_40"
+            android:textStyle="bold" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="English"
+            android:gravity="center_horizontal"
+            android:textColor="@color/primary"
+            android:textSize="@dimen/common_text_size_40"
+            android:textStyle="bold"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Accent Guide"
+            android:gravity="center_horizontal"
+            android:textColor="@color/primary"
+            android:textSize="@dimen/common_text_size_40"
+            android:textStyle="bold"/>
+    </LinearLayout>
 </RelativeLayout>

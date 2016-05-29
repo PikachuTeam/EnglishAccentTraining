@@ -357,13 +357,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         recordStatus = false;
         btnModeListen.setEnabled(true);
         btnModeListen.setBackgroundResource(R.drawable.listen);
-
-
     }
 
     @Override
     protected void onDestroy() {
         player.stop();
+        recordPlayer.stop();
         seekbarHandler.removeCallbacks(runnable);
         recordHandler.removeCallbacks(recordRunable);
 //        DataSource.getInstance().destroy();
