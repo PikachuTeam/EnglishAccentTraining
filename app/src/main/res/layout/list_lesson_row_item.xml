@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="wrap_content">
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/list_lesson_height"
             android:background="@color/playing_view_color"
-            android:visibility="invisible" />
+            android:visibility="gone" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -28,7 +28,7 @@
                 android:layout_width="0dp"
                 android:layout_height="@dimen/list_lesson_height"
                 android:layout_weight="40"
-                android:scaleType="centerCrop"/>
+                android:scaleType="centerCrop" />
 
             <RelativeLayout
                 android:layout_width="0dp"
@@ -66,35 +66,27 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="@dimen/margin_view_1"
                         android:layout_toRightOf="@+id/img_Duration"
-                        android:text="1:35"
                         android:gravity="center"
+                        android:text="1:35"
                         android:textColor="@color/primary"
-                        android:textSize="@dimen/common_text_size_12" />
+                        android:textSize="@dimen/common_text_size_15" />
                 </RelativeLayout>
 
             </RelativeLayout>
         </LinearLayout>
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/tv_Playing"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center">
-            <TextView
-                android:id="@+id/tv_Playing"
-                android:layout_width="@dimen/img_app_icon_size"
-                android:layout_height="@dimen/list_lesson_height"
-                android:layout_centerVertical="true"
-                android:gravity="center"
-                android:text="Playing..."
-                android:selectAllOnFocus="true"
-                android:ellipsize="marquee"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:singleLine="true"
-                android:textColor="@color/splash_background"
-                android:textSize="@dimen/common_text_size_37"
-                android:textStyle="bold"
-                android:visibility="invisible" />
-        </LinearLayout>
+            android:layout_height="@dimen/list_lesson_height"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="Playing..."
+            android:textColor="@color/splash_background"
+            android:textSize="@dimen/common_text_size_35"
+            android:textStyle="bold"
+            android:visibility="gone" />
 
     </android.support.v7.widget.CardView>
 </RelativeLayout>

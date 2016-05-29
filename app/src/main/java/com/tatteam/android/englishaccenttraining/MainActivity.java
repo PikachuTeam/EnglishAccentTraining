@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
@@ -249,7 +250,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnBack.setOnClickListener(this);
         btnShare.setOnClickListener(this);
 
-        btnRecord.setOnClickListener(this);
+        layoutBtnRecord.setOnClickListener(this);
         btnPlayRecord.setOnClickListener(this);
         pager.setOnPageChangeListener(this);
 
@@ -339,6 +340,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             seekbarHandler.postDelayed(runnable, 30);
 
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        try {
+            recorder.stop();
+        } catch (RuntimeException e) {
+
+        }
+        btnPlayRecord.setEnabled(true);
+        layoutBtnPlayRecord.setEnabled(true);
+        changeRecrodTextUI(START_RC_ON);
+        changeRecrodTextUI(YOUR_RC_ON);
+        recordStatus = false;
+        btnModeListen.setEnabled(true);
+        btnModeListen.setBackgroundResource(R.drawable.listen);
+
+
     }
 
     @Override
@@ -467,10 +487,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     openModeRecord();
                 }
                 break;
-            case R.id.btnRecord:
+            case R.id.layoutRecord:
                 if (recordStatus) {
                     if (recorder != null) {
-                        if(checkFileExist()){
+                        if (checkFileExist()) {
                             try {
                                 recorder.stop();
                             } catch (RuntimeException e) {
@@ -927,7 +947,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mViewHolder.tvPlaying = (TextView) convertView.findViewById(R.id.tv_Playing);
             mViewHolder.viewPlaying = (View) convertView.findViewById(R.id.view_Playing);
             mViewHolder.imgLesson = (ImageView) convertView.findViewById(R.id.imgLesson);
+            mViewHolder.imgDuration = (ImageView) convertView.findViewById(R.id.img_Duration);
 
+
+            mViewHolder.imgDuration.getBackground().setColorFilter(getResources().getColor(R.color.primary), PorterDuff.Mode.MULTIPLY);
             Typeface listType = Typeface.createFromAsset(getAssets(), "UTM_Avo.ttf");
             Typeface textPlaying = Typeface.createFromAsset(getAssets(), "Cocogoose_trial.otf");
             mViewHolder.tvLessonName.setText(lessons.get(position).getLessonName() + "");
@@ -942,8 +965,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mViewHolder.tvPlaying.setVisibility(View.VISIBLE);
                 mViewHolder.viewPlaying.setVisibility(View.VISIBLE);
             } else {
-                mViewHolder.tvPlaying.setVisibility(View.INVISIBLE);
-                mViewHolder.viewPlaying.setVisibility(View.INVISIBLE);
+                mViewHolder.tvPlaying.setVisibility(View.GONE);
+                mViewHolder.viewPlaying.setVisibility(View.GONE);
             }
 
             if (isRecord) {
@@ -963,6 +986,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             TextView tvDurationLesson;
             TextView tvPlaying;
             ImageView imgLesson;
+            ImageView imgDuration;
             View viewPlaying;
         }
     }
