@@ -135,9 +135,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     player.pause();
                     isMediaPlayerPaused = true;
                     adapter.notifyDataSetChanged();
-                } else if (state == TelephonyManager.CALL_STATE_IDLE) {
-                    player.start();
-                    isMediaPlayerPaused = false;
+//                } else if (state == TelephonyManager.CALL_STATE_IDLE) {
+//                    player.start();
+//                    isMediaPlayerPaused = false;
                 } else if (state == TelephonyManager.CALL_STATE_OFFHOOK) {
                     player.pause();
                     isMediaPlayerPaused = true;

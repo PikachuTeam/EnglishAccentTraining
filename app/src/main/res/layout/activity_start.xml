@@ -29,7 +29,7 @@
             android:gravity="center_horizontal"
             android:text="American"
             android:textColor="@color/primary"
-            android:textSize="@dimen/common_text_size_45"
+            android:textSize="@dimen/common_text_size_40"
             android:textStyle="bold" />
         <TextView
             android:layout_width="match_parent"
@@ -37,7 +37,7 @@
             android:text="English"
             android:gravity="center_horizontal"
             android:textColor="@color/primary"
-            android:textSize="@dimen/common_text_size_45"
+            android:textSize="@dimen/common_text_size_40"
             android:textStyle="bold"/>
         <TextView
             android:layout_width="match_parent"
@@ -45,7 +45,7 @@
             android:text="Accent Guide"
             android:gravity="center_horizontal"
             android:textColor="@color/primary"
-            android:textSize="@dimen/common_text_size_45"
+            android:textSize="@dimen/common_text_size_40"
             android:textStyle="bold"/>
     </LinearLayout>
 
