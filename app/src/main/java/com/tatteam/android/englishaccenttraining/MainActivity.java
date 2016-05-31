@@ -48,7 +48,7 @@ import tatteam.com.app_common.util.AppConstant;
 import tatteam.com.app_common.util.CommonUtil;
 
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, AdapterView.OnItemClickListener, ViewPager.OnPageChangeListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, AdapterView.OnItemClickListener, ViewPager.OnPageChangeListener, SeekBar.OnSeekBarChangeListener {
 
     private static final boolean ADS_ENABLE = false;
     private static final int BIG_ADS_SHOWING_INTERVAL = 5;
@@ -197,7 +197,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        customSeekbar.setup();
 //        customSeekbar.setSeekbarChangeListener(this);
         seekBar = (SeekBar) this.findViewById(R.id.seekBar);
-
+        seekBar.setOnSeekBarChangeListener(this);
         //set adapter indicatorView pager
         pages = new View[3];
         pages[0] = View.inflate(this, R.layout.pager_list_lesson, null);
@@ -896,10 +896,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onPageScrollStateChanged(int state) {
 
     }
-
     @Override
     public void onBackPressed() {
         finish();
+    }
+
+    //seekbar listener
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        if(fromUser){
+            player.seekTo(progress);
+            seekBar.setProgress(progress);
+        }
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+
     }
 
     //adapter listview
