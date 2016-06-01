@@ -7,4 +7,5 @@
     <item android:id="@android:id/progress">
         <clip android:drawable="@drawable/progress_seekbar" />
     </item>
+
 </layer-list>

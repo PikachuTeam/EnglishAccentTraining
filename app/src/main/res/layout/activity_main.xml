@@ -27,7 +27,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="85.5"
+            android:layout_weight="84"
             android:orientation="vertical">
 
             <LinearLayout
@@ -150,7 +150,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="4">
+            android:layout_weight="3">
 
             <TextView
                 android:id="@+id/tvCurrentDuration"
@@ -173,8 +173,9 @@
         <SeekBar
             android:id="@+id/seekBar"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.5"
+            android:layout_height="@dimen/view_line_height"
+            android:layout_weight="3"
+            android:maxHeight="@dimen/view_line_height"
             android:progressDrawable="@drawable/progress"
             android:thumb="@drawable/thumb"/>
 
@@ -285,7 +286,6 @@
             android:id="@+id/layoutControlMedia"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-
             android:layout_weight="10"
             android:background="@drawable/bg_control_media"
             android:gravity="center_vertical"

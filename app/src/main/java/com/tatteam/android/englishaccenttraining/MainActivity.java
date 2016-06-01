@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -834,7 +835,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onCompletion(MediaPlayer mp) {
         if (isRepeat == REPEAT_OFF) {
-            player.stop();
+            player.pause();
+            isMediaPlayerPaused = true;
             btnPlayPause.setBackgroundResource(R.drawable.play_new);
         } else if (isRepeat == REPEAT_ONE) {
             playSound(soundPlaying);
