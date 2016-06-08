@@ -1,6 +1,8 @@
 package tatteam.com.app_common.ads;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -15,12 +17,27 @@ import tatteam.com.app_common.util.AppLocalSharedPreferences;
  * Created by ThanhNH-Mac on 10/30/15.
  */
 public class AdsSmallBannerHandler extends BaseAdsBannerHandler {
+    private static final long RETRY = 60 * 1000;
+
     private AdView adView;
+    private AdSize adSize;
     private ViewGroup adsContainer;
+    private Handler retryHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message message) {
+            requestAds(adView);
+            return false;
+        }
+    });
 
     public AdsSmallBannerHandler(Context context, ViewGroup adsContainer, AppConstant.AdsType adsType) {
+        this(context, adsContainer, adsType, AdSize.SMART_BANNER);
+    }
+
+    public AdsSmallBannerHandler(Context context, ViewGroup adsContainer, AppConstant.AdsType adsType, AdSize adSize) {
         super(context, adsType);
         this.adsContainer = adsContainer;
+        this.adSize = adSize;
     }
 
     public AdView getAdView() {
@@ -34,14 +51,20 @@ public class AdsSmallBannerHandler extends BaseAdsBannerHandler {
             if (!unitId.trim().isEmpty()) {
                 if (this.adView == null) {
                     this.adView = new AdView(this.context);
-                    this.adView.setAdSize(AdSize.SMART_BANNER);
+                    this.adView.setAdSize(adSize);
                     this.adsContainer.addView(adView);
                 }
                 this.adView.setAdUnitId(unitId);
-                AdRequest adRequest = new AdRequest.Builder().build();
-                adView.setAdListener(this);
-                adView.loadAd(adRequest);
+                requestAds(this.adView);
             }
+        }
+    }
+
+    private void requestAds(AdView adView) {
+        if (adView != null) {
+            AdRequest adRequest = new AdRequest.Builder().build();
+            adView.setAdListener(this);
+            adView.loadAd(adRequest);
         }
     }
 
@@ -55,6 +78,7 @@ public class AdsSmallBannerHandler extends BaseAdsBannerHandler {
         super.onAdFailedToLoad(errorCode);
         if (adView != null) {
             adView.setVisibility(View.GONE);
+            retryHandler.sendEmptyMessageDelayed(0, RETRY);
         }
     }
 
@@ -76,5 +100,11 @@ public class AdsSmallBannerHandler extends BaseAdsBannerHandler {
         }
     }
 
-
+    @Override
+    public void destroy() {
+        super.destroy();
+        if (retryHandler != null) {
+            retryHandler.removeCallbacksAndMessages(null);
+        }
+    }
 }

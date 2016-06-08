@@ -59,7 +59,7 @@
             android:id="@+id/btn_new_app"
             android:layout_width="@dimen/img_app_icon_size"
             android:layout_height="@dimen/img_app_icon_size"
-            android:background="@drawable/esl_button_off" />
+            android:background="@drawable/esl_button" />
 
         <Button
             android:id="@+id/btn_start_app"

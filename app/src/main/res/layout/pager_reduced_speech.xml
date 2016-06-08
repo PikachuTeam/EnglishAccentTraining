@@ -30,6 +30,7 @@
             android:orientation="vertical"
             android:paddingLeft="@dimen/padding_listview"
             android:paddingRight="@dimen/padding_listview">
+
             <TextView
                 android:id="@+id/tvReducedSpeech"
                 android:layout_width="match_parent"
@@ -37,6 +38,12 @@
                 android:gravity="center"
                 android:textColor="@color/primary_dark"
                 android:textSize="@dimen/common_text_size_18" />
+
+            <FrameLayout
+                android:layout_marginTop="@dimen/margin_text_page_name"
+                android:id="@+id/ads_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
         </LinearLayout>
     </ScrollView>
 

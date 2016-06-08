@@ -1,7 +1,6 @@
 package com.tatteam.android.englishaccenttraining;
 
 import android.content.Intent;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -10,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import tatteam.com.app_common.util.CloseAppHandler;
+import tatteam.com.app_common.util.CommonUtil;
 
 public class StartActivity extends AppCompatActivity implements View.OnClickListener, CloseAppHandler.OnCloseAppListener {
     private Button btnStartApp;
@@ -44,7 +44,13 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
                 startActivity(openApp);
                 break;
             case R.id.btn_new_app:
-                Toast.makeText(this,"Will be updated soon.",Toast.LENGTH_SHORT).show();
+                String packageName = "com.essential.esl";
+                if (CommonUtil.isPackageInstalled(packageName, this)) {
+                    Intent intent = this.getPackageManager().getLaunchIntentForPackage(packageName);
+                    startActivity(intent);
+                } else {
+                    CommonUtil.openApplicationOnGooglePlay(this, packageName);
+                }
                 break;
         }
     }

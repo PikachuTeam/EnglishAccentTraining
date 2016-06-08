@@ -29,7 +29,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -37,6 +36,8 @@ import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.ads.AdSize;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,7 +52,9 @@ import tatteam.com.app_common.util.CommonUtil;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, AdapterView.OnItemClickListener, ViewPager.OnPageChangeListener, SeekBar.OnSeekBarChangeListener {
 
-    private static final boolean ADS_ENABLE = false;
+    public static AppConstant.AdsType ADS_TYPE_SMALL;
+    public static AppConstant.AdsType ADS_TYPE_BIG;
+
     private static final int BIG_ADS_SHOWING_INTERVAL = 5;
     private static int BIG_ADS_SHOWING_COUNTER = 1;
 
@@ -109,9 +112,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //Request permission
     private final int PERMISSION_REQUEST_CODE = 1;
     //
-    private AdsSmallBannerHandler adsSmallBannerHandler;
+    private AdsSmallBannerHandler adsSmallBannerHandler1;
+    private AdsSmallBannerHandler adsSmallBannerHandler2;
+
     private AdsBigBannerHandler adsBigBannerHandler;
-    private FrameLayout adsContainer;
     //incoming call
     private PhoneStateListener phoneStateListener;
     TelephonyManager mgr;
@@ -284,18 +288,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
 
         //ads
-        if (ADS_ENABLE) {
-            adsContainer = (FrameLayout) this.findViewById(R.id.ads_container);
-            adsSmallBannerHandler = new AdsSmallBannerHandler(this, adsContainer, AppConstant.AdsType.SMALL_BANNER_LANGUAGE_LEARNING);
-            adsSmallBannerHandler.setup();
+        adsSmallBannerHandler1 = new AdsSmallBannerHandler(this, (ViewGroup) pages[1].findViewById(R.id.ads_container), ADS_TYPE_SMALL, AdSize.MEDIUM_RECTANGLE);
+        adsSmallBannerHandler1.setup();
 
-            adsBigBannerHandler = new AdsBigBannerHandler(this, AppConstant.AdsType.BIG_BANNER_LANGUAGE_LEARNING);
-            adsBigBannerHandler.setup();
-        }
+        adsSmallBannerHandler2 = new AdsSmallBannerHandler(this, (ViewGroup) pages[2].findViewById(R.id.ads_container), ADS_TYPE_SMALL, AdSize.MEDIUM_RECTANGLE);
+        adsSmallBannerHandler2.setup();
+
+        adsBigBannerHandler = new AdsBigBannerHandler(this, ADS_TYPE_BIG);
+        adsBigBannerHandler.setup();
     }
 
     private void showBigAdsIfNeeded() {
-        if (ADS_ENABLE && adsBigBannerHandler != null) {
+        if (adsBigBannerHandler != null) {
             if (BIG_ADS_SHOWING_COUNTER % BIG_ADS_SHOWING_INTERVAL == 0) {
                 try {
                     adsBigBannerHandler.show();
@@ -370,8 +374,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (mgr != null) {
             mgr.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
         }
-        if (adsSmallBannerHandler != null) {
-            adsSmallBannerHandler.destroy();
+        if (adsSmallBannerHandler1 != null) {
+            adsSmallBannerHandler1.destroy();
+        }
+        if (adsSmallBannerHandler2 != null) {
+            adsSmallBannerHandler2.destroy();
         }
         if (adsBigBannerHandler != null) {
             adsBigBannerHandler.destroy();
@@ -898,6 +905,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onPageScrollStateChanged(int state) {
 
     }
+
     @Override
     public void onBackPressed() {
         finish();
@@ -906,7 +914,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //seekbar listener
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        if(fromUser){
+        if (fromUser) {
             player.seekTo(progress);
             seekBar.setProgress(progress);
         }

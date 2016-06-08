@@ -13,31 +13,36 @@
         android:text="@string/title_transcription"
         android:textColor="@color/primary_dark"
         android:textSize="@dimen/text_size_3"
-        android:textStyle="bold"
-        />
-        <ScrollView
-            android:scrollbarThumbVertical="@color/primary_dark"
-            android:scrollbarSize="@dimen/scroll_bar_width"
-            android:id="@+id/scrTranscription"
+        android:textStyle="bold" />
+
+    <ScrollView
+        android:id="@+id/scrTranscription"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/padding_listview"
+        android:scrollbarSize="@dimen/scroll_bar_width"
+        android:scrollbarThumbVertical="@color/primary_dark">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingBottom="@dimen/padding_listview"
-            >
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/padding_listview"
+            android:paddingRight="@dimen/padding_listview">
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/tvTranscription"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:paddingLeft="@dimen/padding_listview"
-                android:paddingRight="@dimen/padding_listview">
+                android:gravity="center"
+                android:textColor="@color/primary_dark"
+                android:textSize="@dimen/common_text_size_20" />
 
-                <TextView
-                    android:id="@+id/tvTranscription"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:textColor="@color/primary_dark"
-                    android:gravity="center"
-                    android:textSize="@dimen/common_text_size_20" />
-            </LinearLayout>
-        </ScrollView>
+            <FrameLayout
+                android:id="@+id/ads_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_text_page_name" />
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>
