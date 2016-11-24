@@ -38,6 +38,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdSize;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.io.File;
 import java.io.IOException;
@@ -780,6 +781,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tvLesson.setText(lessonArrayList.get(soundPlaying).getLessonName());
         updateSeekBar();
         adapter.notifyDataSetChanged();
+
+
+        FirebaseAnalytics mFirebaseAnalytics= FirebaseAnalytics.getInstance(this);
+
+        //content type
+        Bundle bundle = new Bundle();
+        bundle.putInt(FirebaseAnalytics.Param.ITEM_ID, soundPlaying);
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, tvLesson.getText().toString());
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "mp3");
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+
+
+        //customize
+        Bundle bundle2 = new Bundle();
+        bundle2.putInt("lesson_id", soundPlaying);
+        bundle2.putString("lesson_name", tvLesson.getText().toString());
+        bundle2.putString("lesson_type", "mp3");
+        mFirebaseAnalytics.logEvent("select_lesson", bundle);
     }
 
     @Override

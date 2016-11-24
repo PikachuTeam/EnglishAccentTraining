@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "378931522797",
+    "firebase_url": "https://english-accent-training.firebaseio.com",
+    "project_id": "english-accent-training",
+    "storage_bucket": "english-accent-training.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:378931522797:android:b00335cce7420d2d",
+        "android_client_info": {
+          "package_name": "com.tatteam.android.englishaccenttraining"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "378931522797-cti3fmjmod23gdbqml9bih7bgigf2fdn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDc-BiMhKGwK7bQnJusp_-AsR_V8JKTg7c"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

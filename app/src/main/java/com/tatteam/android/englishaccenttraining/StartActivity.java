@@ -8,6 +8,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import tatteam.com.app_common.util.CloseAppHandler;
 import tatteam.com.app_common.util.CommonUtil;
 
@@ -44,13 +46,22 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
                 startActivity(openApp);
                 break;
             case R.id.btn_new_app:
+
+
+                FirebaseAnalytics mFirebaseAnalytics= FirebaseAnalytics.getInstance(this);
+                //customize
+                Bundle bundle2 = new Bundle();
                 String packageName = "com.essential.esl";
                 if (CommonUtil.isPackageInstalled(packageName, this)) {
                     Intent intent = this.getPackageManager().getLaunchIntentForPackage(packageName);
                     startActivity(intent);
+                    bundle2.putBoolean("is_exist", true);
                 } else {
                     CommonUtil.openApplicationOnGooglePlay(this, packageName);
+                    bundle2.putBoolean("is_exist", false);
                 }
+
+                mFirebaseAnalytics.logEvent("interest_esl", bundle2);
                 break;
         }
     }
