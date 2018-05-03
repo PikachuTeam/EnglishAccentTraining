@@ -7,7 +7,7 @@
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="@dimen/list_lesson_height"
-        android:layout_marginBottom="@dimen/list_item_margin_bot"
+        android:layout_marginBottom="@dimen/common_size_5"
         android:elevation="@dimen/card_view_elevation"
         app:cardCornerRadius="@dimen/card_view_conner_radius">
 

@@ -40,33 +40,29 @@
 
             <LinearLayout
                 android:id="@+id/btnBackpress"
-                android:layout_width="@dimen/button_big_size"
+                android:layout_width="@dimen/seekbar_height"
                 android:layout_height="@dimen/seekbar_height"
-                android:layout_marginLeft="@dimen/margin_view_1"
                 android:gravity="center_vertical">
 
                 <ImageView
-                    android:layout_width="@dimen/button_super_small_size"
-                    android:layout_height="@dimen/button_small_size"
-                    android:background="@drawable/back_press"
-                    android:textColor="@color/lesson_name"
-                    android:textSize="@dimen/text_size_2" />
+                    android:layout_width="@dimen/seekbar_height"
+                    android:layout_height="@dimen/seekbar_height"
+                    android:background="@drawable/ic_back"
+                    android:textColor="@color/lesson_name" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/btnShare"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/seekbar_height"
                 android:layout_height="@dimen/seekbar_height"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="@dimen/margin_view_1"
                 android:gravity="center">
 
                 <ImageView
                     android:layout_width="@dimen/button_small_size"
                     android:layout_height="@dimen/button_small_size"
-                    android:background="@drawable/share"
-                    android:textColor="@color/lesson_name"
-                    android:textSize="@dimen/text_size_2" />
+                    android:background="@drawable/ic_share"
+                    android:textColor="@color/lesson_name" />
             </LinearLayout>
 
             <RelativeLayout
@@ -108,7 +104,6 @@
                     android:id="@+id/layout_view_page2"
                     android:layout_width="@dimen/small_view_layout_width"
                     android:layout_height="@dimen/list_item_margin_bot"
-                    android:layout_marginLeft="@dimen/small_view_margin"
                     android:gravity="center">
 
                     <View
@@ -122,7 +117,6 @@
                     android:id="@+id/layout_view_page3"
                     android:layout_width="@dimen/small_view_layout_width"
                     android:layout_height="@dimen/list_item_margin_bot"
-                    android:layout_marginLeft="@dimen/small_view_margin"
                     android:gravity="center">
 
                     <View

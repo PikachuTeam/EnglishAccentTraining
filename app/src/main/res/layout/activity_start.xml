@@ -13,16 +13,18 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/margin_app_icon"
         android:background="@drawable/app_icon" />
+
     <LinearLayout
         android:id="@+id/tv_appNameStart"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/img_app_icon"
+        android:layout_centerHorizontal="true"
         android:layout_marginLeft="@dimen/margin_text"
         android:layout_marginRight="@dimen/margin_text"
         android:gravity="center"
-        android:layout_below="@id/img_app_icon"
-        android:layout_centerHorizontal="true"
         android:orientation="vertical">
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -31,64 +33,71 @@
             android:textColor="@color/primary"
             android:textSize="@dimen/common_text_size_25"
             android:textStyle="bold" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
             android:text="English"
-            android:gravity="center_horizontal"
             android:textColor="@color/primary"
             android:textSize="@dimen/common_text_size_25"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Accent Guide"
             android:gravity="center_horizontal"
+            android:text="Accent Guide"
             android:textColor="@color/primary"
             android:textSize="@dimen/common_text_size_25"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
     </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/tv_appNameStart"
-        android:layout_marginTop="@dimen/padding_listview_left">
-        <Button
-            android:id="@+id/btn_start_app"
-            android:layout_width="@dimen/common_size_100"
-            android:layout_height="@dimen/common_size_100"
-            android:background="@drawable/start_app_new"
-            android:layout_marginLeft="@dimen/margin_text"/>
+        android:layout_marginTop="@dimen/common_size_30">
+
         <LinearLayout
             android:id="@+id/layout_privacy"
             android:layout_width="@dimen/common_size_100"
             android:layout_height="@dimen/common_size_100"
-            android:layout_alignParentRight="true"
-            android:orientation="vertical"
-            android:layout_marginRight="@dimen/margin_text"
-            android:gravity="center">
+            android:layout_marginLeft="@dimen/margin_text"
+            android:gravity="center"
+            android:orientation="vertical">
+
             <ImageView
                 android:layout_width="@dimen/common_size_80"
                 android:layout_height="@dimen/common_size_80"
                 android:background="@drawable/ic_privacy" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/common_size_20"
-                android:text="Privacy policy"
                 android:gravity="center"
-                android:textSize="@dimen/common_text_size_13"
+                android:text="Privacy policy"
                 android:textColor="@color/primary"
-                android:textStyle="bold"/>
+                android:textSize="@dimen/common_text_size_13"
+                android:textStyle="bold" />
         </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_start_app"
+            android:layout_width="@dimen/common_size_100"
+            android:layout_height="@dimen/common_size_100"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/margin_text"
+            android:background="@drawable/start_app_new" />
+
         <ImageView
             android:id="@+id/btn_new_app"
             android:layout_width="@dimen/common_size_100"
             android:layout_height="@dimen/common_size_100"
-            android:background="@drawable/esl_button"
             android:layout_below="@id/btn_start_app"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/common_size_20"
-            android:layout_centerHorizontal="true"/>
+            android:background="@drawable/esl_button" />
     </RelativeLayout>
 
 </RelativeLayout>
