@@ -28,6 +28,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.0.0'
     compile 'com.google.firebase:firebase-core:10.0.0'
     compile project(':app_common')
+    compile 'com.android.support.constraint:constraint-layout:1.1.0'
 }
 
 // Add to the bottom of the file

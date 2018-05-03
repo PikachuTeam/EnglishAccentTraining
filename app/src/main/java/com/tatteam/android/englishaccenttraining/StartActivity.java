@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -17,6 +18,7 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
     private Button btnStartApp;
     private ImageView btnOpenNewApp;
     private CloseAppHandler closeAppHandler;
+    private LinearLayout btnPrivacy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,9 +27,11 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
 
         btnStartApp = (Button) this.findViewById(R.id.btn_start_app);
         btnOpenNewApp = (ImageView) this.findViewById(R.id.btn_new_app);
+        btnPrivacy = (LinearLayout) this.findViewById(R.id.layout_privacy);
 
         btnStartApp.setOnClickListener(this);
         btnOpenNewApp.setOnClickListener(this);
+        btnPrivacy.setOnClickListener(this);
 
         closeAppHandler = new CloseAppHandler(this);
         closeAppHandler.setListener(this);
@@ -47,8 +51,7 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.btn_new_app:
 
-
-                FirebaseAnalytics mFirebaseAnalytics= FirebaseAnalytics.getInstance(this);
+                FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
                 //customize
                 Bundle bundle2 = new Bundle();
                 String packageName = "com.essential.esl";
@@ -62,6 +65,10 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
                 }
 
                 mFirebaseAnalytics.logEvent("interest_esl", bundle2);
+                break;
+            case R.id.layout_privacy:
+                Intent privacyIntent = new Intent(StartActivity.this, PrivacyActivity.class);
+                startActivity(privacyIntent);
                 break;
         }
     }
