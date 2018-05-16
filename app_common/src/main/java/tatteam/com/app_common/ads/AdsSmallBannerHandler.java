@@ -17,94 +17,94 @@ import tatteam.com.app_common.util.AppLocalSharedPreferences;
  * Created by ThanhNH-Mac on 10/30/15.
  */
 public class AdsSmallBannerHandler extends BaseAdsBannerHandler {
-    private static final long RETRY = 60 * 1000;
+  private static final long RETRY = 60 * 1000;
 
-    private AdView adView;
-    private AdSize adSize;
-    private ViewGroup adsContainer;
-    private Handler retryHandler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message message) {
-            requestAds(adView);
-            return false;
+  private AdView adView;
+  private AdSize adSize;
+  private ViewGroup adsContainer;
+  private Handler retryHandler = new Handler(new Handler.Callback() {
+    @Override
+    public boolean handleMessage(Message message) {
+      requestAds(adView);
+      return false;
+    }
+  });
+
+  public AdsSmallBannerHandler(Context context, ViewGroup adsContainer, AppConstant.AdsType adsType) {
+    this(context, adsContainer, adsType, AdSize.SMART_BANNER);
+  }
+
+  public AdsSmallBannerHandler(Context context, ViewGroup adsContainer, AppConstant.AdsType adsType, AdSize adSize) {
+    super(context, adsType);
+    this.adsContainer = adsContainer;
+    this.adSize = adSize;
+  }
+
+  public AdView getAdView() {
+    return this.adView;
+  }
+
+  @Override
+  protected void buildAds() {
+    if (this.adsContainer != null && this.adsType != null) {
+      String unitId = AppLocalSharedPreferences.getInstance().getAdsId(this.adsType);
+      if (!unitId.trim().isEmpty()) {
+        if (this.adView == null) {
+          this.adView = new AdView(this.context);
+          this.adView.setAdSize(adSize);
+          this.adsContainer.addView(adView);
         }
-    });
-
-    public AdsSmallBannerHandler(Context context, ViewGroup adsContainer, AppConstant.AdsType adsType) {
-        this(context, adsContainer, adsType, AdSize.SMART_BANNER);
+        this.adView.setAdUnitId(unitId);
+        requestAds(this.adView);
+      }
     }
+  }
 
-    public AdsSmallBannerHandler(Context context, ViewGroup adsContainer, AppConstant.AdsType adsType, AdSize adSize) {
-        super(context, adsType);
-        this.adsContainer = adsContainer;
-        this.adSize = adSize;
+  private void requestAds(AdView adView) {
+    if (adView != null) {
+      AdRequest adRequest = new AdRequest.Builder().build();
+      adView.setAdListener(this);
+      adView.loadAd(adRequest);
     }
+  }
 
-    public AdView getAdView() {
-        return this.adView;
-    }
+  @Override
+  public void onAdClosed() {
+    super.onAdClosed();
+  }
 
-    @Override
-    protected void buildAds() {
-        if (this.adsContainer != null && this.adsType != null) {
-            String unitId = AppLocalSharedPreferences.getInstance().getAdsId(this.adsType);
-            if (!unitId.trim().isEmpty()) {
-                if (this.adView == null) {
-                    this.adView = new AdView(this.context);
-                    this.adView.setAdSize(adSize);
-                    this.adsContainer.addView(adView);
-                }
-                this.adView.setAdUnitId(unitId);
-                requestAds(this.adView);
-            }
-        }
+  @Override
+  public void onAdFailedToLoad(int errorCode) {
+    super.onAdFailedToLoad(errorCode);
+    if (adView != null) {
+      adView.setVisibility(View.GONE);
+      retryHandler.sendEmptyMessageDelayed(0, RETRY);
     }
+  }
 
-    private void requestAds(AdView adView) {
-        if (adView != null) {
-            AdRequest adRequest = new AdRequest.Builder().build();
-            adView.setAdListener(this);
-            adView.loadAd(adRequest);
-        }
-    }
+  @Override
+  public void onAdLeftApplication() {
+    super.onAdLeftApplication();
+  }
 
-    @Override
-    public void onAdClosed() {
-        super.onAdClosed();
-    }
+  @Override
+  public void onAdOpened() {
+    super.onAdOpened();
+  }
 
-    @Override
-    public void onAdFailedToLoad(int errorCode) {
-        super.onAdFailedToLoad(errorCode);
-        if (adView != null) {
-            adView.setVisibility(View.GONE);
-            retryHandler.sendEmptyMessageDelayed(0, RETRY);
-        }
+  @Override
+  public void onAdLoaded() {
+    super.onAdLoaded();
+    if (adView != null) {
+      adView.setVisibility(View.VISIBLE);
     }
+  }
 
-    @Override
-    public void onAdLeftApplication() {
-        super.onAdLeftApplication();
+  @Override
+  public void destroy() {
+    super.destroy();
+    if (retryHandler != null) {
+      retryHandler.removeCallbacksAndMessages(null);
     }
-
-    @Override
-    public void onAdOpened() {
-        super.onAdOpened();
-    }
-
-    @Override
-    public void onAdLoaded() {
-        super.onAdLoaded();
-        if (adView != null) {
-            adView.setVisibility(View.VISIBLE);
-        }
-    }
-
-    @Override
-    public void destroy() {
-        super.destroy();
-        if (retryHandler != null) {
-            retryHandler.removeCallbacksAndMessages(null);
-        }
-    }
+  }
 }
