@@ -2,6 +2,7 @@ package com.tatteam.android.englishaccenttraining;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -38,6 +39,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.ads.AdSize;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.tatteam.android.englishaccenttraining.chat.ChatActivity;
 
 import java.io.File;
 import java.io.IOException;
@@ -296,6 +298,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     adsBigBannerHandler = new AdsBigBannerHandler(this, ADS_TYPE_BIG);
     adsBigBannerHandler.setup();
+
+    findViewById(R.id.btn_join_chat).setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        startActivity(new Intent(MainActivity.this, ChatActivity.class));
+      }
+    });
   }
 
   private void showBigAdsIfNeeded() {

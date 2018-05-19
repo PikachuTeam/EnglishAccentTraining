@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.tatteam.android.englishaccenttraining"
-        minSdkVersion 14
+        minSdkVersion 16
         targetSdkVersion 27
         versionCode 9
         versionName '1.8'
@@ -32,6 +32,8 @@ dependencies {
     implementation 'com.google.android.gms:play-services-ads:15.0.0'
     implementation 'com.google.firebase:firebase-core:15.0.0'
     implementation 'com.google.firebase:firebase-database:15.0.0'
+
+    implementation 'io.github.rockerhieu:emojicon:1.4.2'
 
     implementation project(':app_common')
 }
