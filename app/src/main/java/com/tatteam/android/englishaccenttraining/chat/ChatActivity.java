@@ -175,6 +175,10 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
   private void showEmojiKeyboard(boolean showed) {
     mEmojiKeyboardShowed = showed;
 
+    if(!mEmojiKeyboardShowed){
+      mBtnShowEmojiKeyboard.setImageResource(R.drawable.ic_emoji);
+    }
+
     TransitionManager.beginDelayedTransition(mContentArea);
     ConstraintSet constraintSet = mEmojiKeyboardShowed ? mShowEmojiKeyboardConstraintSet : mHideEmojiKeyboardConstraintSet;
     constraintSet.applyTo(mContentArea);
@@ -182,12 +186,21 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
 
   private void showSoftKeyboard() {
     mSoftKeyboardShowed = true;
+    mBtnShowEmojiKeyboard.setImageResource(R.drawable.ic_emoji);
+
+    if(mEmojiKeyboardShowed){
+      getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
+    }
+
     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
     imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
   }
 
   private void hideSoftKeyboard() {
     mSoftKeyboardShowed = false;
+    if(mEmojiKeyboardShowed){
+      mBtnShowEmojiKeyboard.setImageResource(R.drawable.ic_keyboard);
+    }
     getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
     imm.hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(), 0);

@@ -27,7 +27,7 @@
         app:cardCornerRadius="25dp"
         app:layout_constraintBottom_toTopOf="@id/emoji_keyboard"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@id/btn_send">
+        app:layout_constraintRight_toLeftOf="@id/btn_send_container">
 
         <LinearLayout
             android:id="@+id/tmp"
@@ -42,7 +42,7 @@
                 android:layout_gravity="center_vertical|bottom"
                 android:layout_marginBottom="5dp"
                 android:layout_marginLeft="5dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
+                android:background="@drawable/bg_round_button"
                 android:padding="5dp"
                 android:src="@drawable/ic_emoji"/>
 
@@ -60,16 +60,24 @@
         </LinearLayout>
     </android.support.v7.widget.CardView>
 
-    <ImageButton
+    <android.support.v7.widget.CardView
+        android:id="@+id/btn_send_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="5dp"
+        app:cardCornerRadius="25dp"
+        app:cardPreventCornerOverlap="false"
+        app:layout_constraintBottom_toBottomOf="@id/chat_area"
+        app:layout_constraintLeft_toRightOf="@id/chat_area"
+        app:layout_constraintRight_toRightOf="parent">
+    <ImageView
         android:id="@+id/btn_send"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginRight="5dp"
+        android:padding="15dp"
         android:background="@drawable/bg_button_send_message"
-        android:src="@drawable/ic_send_message"
-        app:layout_constraintBottom_toBottomOf="@id/chat_area"
-        app:layout_constraintLeft_toRightOf="@id/chat_area"
-        app:layout_constraintRight_toRightOf="parent"/>
+        android:src="@drawable/ic_send_message"/>
+    </android.support.v7.widget.CardView>
 
     <FrameLayout
         android:id="@+id/emoji_keyboard"
