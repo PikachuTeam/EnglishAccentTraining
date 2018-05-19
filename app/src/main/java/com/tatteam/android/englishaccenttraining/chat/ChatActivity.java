@@ -24,172 +24,172 @@ import io.github.rockerhieu.emojicon.EmojiconsFragment;
 import io.github.rockerhieu.emojicon.emoji.Emojicon;
 
 public class ChatActivity extends AppCompatActivity implements EmojiconsFragment.OnEmojiconBackspaceClickedListener, EmojiconGridFragment.OnEmojiconClickedListener, KeyboardHeightObserver {
-  private ConstraintLayout mContentArea;
-  private EmojiconEditText mEtChat;
-  private ImageView mBtnShowEmojiKeyboard;
-  private View mKeyboardContainer;
+    private ConstraintLayout mContentArea;
+    private EmojiconEditText mEtChat;
+    private ImageView mBtnShowEmojiKeyboard;
+    private View mKeyboardContainer;
 
-  private KeyboardHeightProvider mKeyboardHeightProvider;
+    private KeyboardHeightProvider mKeyboardHeightProvider;
 
-  private ConstraintSet mShowEmojiKeyboardConstraintSet;
-  private ConstraintSet mHideEmojiKeyboardConstraintSet;
+    private ConstraintSet mShowEmojiKeyboardConstraintSet;
+    private ConstraintSet mHideEmojiKeyboardConstraintSet;
 
-  private int mKeyboardHeight;
-  private boolean mEmojiKeyboardShowed;
-  private boolean mSoftKeyboardShowed;
+    private int mKeyboardHeight;
+    private boolean mEmojiKeyboardShowed;
+    private boolean mSoftKeyboardShowed;
 
-  @Override
-  protected void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-    setContentView(R.layout.activity_chat_without_emoji_keyboard);
+        setContentView(R.layout.activity_chat_without_emoji_keyboard);
 
-    mKeyboardHeightProvider = new KeyboardHeightProvider(this);
+        mKeyboardHeightProvider = new KeyboardHeightProvider(this);
 
-    getSupportFragmentManager()
-            .beginTransaction()
-            .add(R.id.emoji_keyboard, EmojiconsFragment.newInstance(false))
-            .commit();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.emoji_keyboard, EmojiconsFragment.newInstance(false))
+                .commit();
 
-    findViews();
-    setEventListeners();
-    initConstraintSet();
+        findViews();
+        setEventListeners();
+        initConstraintSet();
 
-    findViewById(R.id.view_layout).post(new Runnable() {
-      @Override
-      public void run() {
-        mKeyboardHeightProvider.start();
-      }
-    });
-  }
-
-  @Override
-  protected void onResume() {
-    super.onResume();
-    mKeyboardHeightProvider.setKeyboardHeightObserver(this);
-  }
-
-  @Override
-  protected void onPause() {
-    super.onPause();
-    mKeyboardHeightProvider.setKeyboardHeightObserver(null);
-  }
-
-  @Override
-  protected void onDestroy() {
-    mKeyboardHeightProvider.close();
-    super.onDestroy();
-  }
-
-  @Override
-  public void onEmojiconBackspaceClicked(View v) {
-    EmojiconsFragment.backspace(mEtChat);
-  }
-
-  @Override
-  public void onEmojiconClicked(Emojicon emojicon) {
-    EmojiconsFragment.input(mEtChat, emojicon);
-  }
-
-  @Override
-  public void onBackPressed() {
-    if (mEmojiKeyboardShowed && !mSoftKeyboardShowed) {
-      showEmojiKeyboard(false);
-    } else
-      super.onBackPressed();
-  }
-
-  @Override
-  public boolean dispatchKeyEvent(KeyEvent event) {
-    Log.e("Keycode dispatch", event.getKeyCode() + "");
-    return super.dispatchKeyEvent(event);
-  }
-
-  @Override
-  public boolean onKeyDown(int keyCode, KeyEvent event) {
-    Log.e("Keycode", keyCode + "");
-    return super.onKeyDown(keyCode, event);
-  }
-
-  @Override
-  public void onKeyboardHeightChanged(int height, int orientation) {
-    if (height > 0) {
-      if (mKeyboardContainer.getHeight() != height) {
-        if (!mEmojiKeyboardShowed) {
-          Log.e("Dafuq", "This");
-          getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-        }
-
-        mShowEmojiKeyboardConstraintSet.constrainHeight(R.id.emoji_keyboard, height);
-        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) mKeyboardContainer.getLayoutParams();
-        layoutParams.height = height;
-        mKeyboardContainer.setLayoutParams(layoutParams);
-      }
-    } else {
-      if (mEmojiKeyboardShowed && mSoftKeyboardShowed)
-        showEmojiKeyboard(false);
+        findViewById(R.id.view_layout).post(new Runnable() {
+            @Override
+            public void run() {
+                mKeyboardHeightProvider.start();
+            }
+        });
     }
-    mSoftKeyboardShowed = height > 0;
-  }
 
-  private void findViews() {
-    mKeyboardContainer = findViewById(R.id.emoji_keyboard);
-    mEtChat = findViewById(R.id.et_chat);
-    mContentArea = findViewById(R.id.content_area);
-    mBtnShowEmojiKeyboard =
-            findViewById(R.id.btn_show_emoji_keyboard);
-  }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mKeyboardHeightProvider.setKeyboardHeightObserver(this);
+    }
 
-  private void setEventListeners() {
-    mBtnShowEmojiKeyboard.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        if (!mEmojiKeyboardShowed) {
-          mBtnShowEmojiKeyboard.setImageResource(R.drawable.ic_keyboard);
-          if (mSoftKeyboardShowed) {
-            mSoftKeyboardShowed = false;
-            hideSoftKeyboard();
-          }
-          showEmojiKeyboard(true);
-          return;
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mKeyboardHeightProvider.setKeyboardHeightObserver(null);
+    }
+
+    @Override
+    protected void onDestroy() {
+        mKeyboardHeightProvider.close();
+        super.onDestroy();
+    }
+
+    @Override
+    public void onEmojiconBackspaceClicked(View v) {
+        EmojiconsFragment.backspace(mEtChat);
+    }
+
+    @Override
+    public void onEmojiconClicked(Emojicon emojicon) {
+        EmojiconsFragment.input(mEtChat, emojicon);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mEmojiKeyboardShowed && !mSoftKeyboardShowed) {
+            showEmojiKeyboard(false);
+        } else
+            super.onBackPressed();
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        Log.e("Keycode dispatch", event.getKeyCode() + "");
+        return super.dispatchKeyEvent(event);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        Log.e("Keycode", keyCode + "");
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void onKeyboardHeightChanged(int height, int orientation) {
+        if (height > 0) {
+            if (mKeyboardContainer.getHeight() != height) {
+                if (!mEmojiKeyboardShowed) {
+                    Log.e("Dafuq", "This");
+                    getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+                }
+
+                mShowEmojiKeyboardConstraintSet.constrainHeight(R.id.emoji_keyboard, height);
+                ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) mKeyboardContainer.getLayoutParams();
+                layoutParams.height = height;
+                mKeyboardContainer.setLayoutParams(layoutParams);
+            }
+        } else {
+            if (mEmojiKeyboardShowed && mSoftKeyboardShowed)
+                showEmojiKeyboard(false);
         }
+        mSoftKeyboardShowed = height > 0;
+    }
 
-        if (!mSoftKeyboardShowed) {
-          showSoftKeyboard();
-          return;
-        }
+    private void findViews() {
+        mKeyboardContainer = findViewById(R.id.emoji_keyboard);
+        mEtChat = findViewById(R.id.et_chat);
+        mContentArea = findViewById(R.id.content_area);
+        mBtnShowEmojiKeyboard =
+                findViewById(R.id.btn_show_emoji_keyboard);
+    }
 
-        hideSoftKeyboard();
-      }
-    });
-  }
+    private void setEventListeners() {
+        mBtnShowEmojiKeyboard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!mEmojiKeyboardShowed) {
+                    mBtnShowEmojiKeyboard.setImageResource(R.drawable.ic_keyboard);
+                    if (mSoftKeyboardShowed) {
+                        mSoftKeyboardShowed = false;
+                        hideSoftKeyboard();
+                    }
+                    showEmojiKeyboard(true);
+                    return;
+                }
 
-  private void initConstraintSet() {
-    mHideEmojiKeyboardConstraintSet = new ConstraintSet();
-    mHideEmojiKeyboardConstraintSet.clone(mContentArea);
+                if (!mSoftKeyboardShowed) {
+                    showSoftKeyboard();
+                    return;
+                }
 
-    mShowEmojiKeyboardConstraintSet = new ConstraintSet();
-    mShowEmojiKeyboardConstraintSet.clone(this, R.layout.activity_chat_with_emoji_keyboard);
-  }
+                hideSoftKeyboard();
+            }
+        });
+    }
 
-  private void showEmojiKeyboard(boolean showed) {
-    mEmojiKeyboardShowed = showed;
+    private void initConstraintSet() {
+        mHideEmojiKeyboardConstraintSet = new ConstraintSet();
+        mHideEmojiKeyboardConstraintSet.clone(mContentArea);
 
-    TransitionManager.beginDelayedTransition(mContentArea);
-    ConstraintSet constraintSet = mEmojiKeyboardShowed ? mShowEmojiKeyboardConstraintSet : mHideEmojiKeyboardConstraintSet;
-    constraintSet.applyTo(mContentArea);
-  }
+        mShowEmojiKeyboardConstraintSet = new ConstraintSet();
+        mShowEmojiKeyboardConstraintSet.clone(this, R.layout.activity_chat_with_emoji_keyboard);
+    }
 
-  private void showSoftKeyboard() {
-    mSoftKeyboardShowed = true;
-    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-  }
+    private void showEmojiKeyboard(boolean showed) {
+        mEmojiKeyboardShowed = showed;
 
-  private void hideSoftKeyboard() {
-    mSoftKeyboardShowed = false;
-    getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
-    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-    imm.hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(), 0);
-  }
+        TransitionManager.beginDelayedTransition(mContentArea);
+        ConstraintSet constraintSet = mEmojiKeyboardShowed ? mShowEmojiKeyboardConstraintSet : mHideEmojiKeyboardConstraintSet;
+        constraintSet.applyTo(mContentArea);
+    }
+
+    private void showSoftKeyboard() {
+        mSoftKeyboardShowed = true;
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+    }
+
+    private void hideSoftKeyboard() {
+        mSoftKeyboardShowed = false;
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(), 0);
+    }
 }

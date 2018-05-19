@@ -408,7 +408,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/common_size_100"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="@dimen/common_size_60"
         android:src="@drawable/ic_join_chat_2"/>
 </RelativeLayout>
