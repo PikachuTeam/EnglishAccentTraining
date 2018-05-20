@@ -7,4 +7,5 @@ public class Constant {
     public static final String SENDER ="from";
     public static final String TIME ="time";
     public static final String CONTENT ="content";
+    public static final String DEVICE_ID ="deviceId";
 }
