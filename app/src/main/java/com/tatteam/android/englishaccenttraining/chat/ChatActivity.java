@@ -163,8 +163,6 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
     }
 
     private void findViews() {
-
-
         mKeyboardContainer = findViewById(R.id.emoji_keyboard);
         mEtChat = findViewById(R.id.et_chat);
         mContentArea = findViewById(R.id.content_area);
@@ -176,7 +174,9 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
 
         mAdapterChat = new ChatMessagesAdapter(this, chatMessageArrayList);
         mRecyclerChat = findViewById(R.id.recycler_chat);
-        mRecyclerChat.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setStackFromEnd(true);
+        mRecyclerChat.setLayoutManager(linearLayoutManager);
         mRecyclerChat.setAdapter(mAdapterChat);
 
 
@@ -264,8 +264,7 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
                     if (!sender.equals("")) {
                         chatMessage = new ChatMessage(sender, currentDateTime.toString(), mEtChat.getText().toString(), ChatMessage.MY_MESSAGE);
                         mDatabase.child(ID_FIREBASE).child(chatMessage.time).setValue(chatMessage);
-                    } else {
-//                        Toast.makeText(this,"null",Toast.LENGTH_SHORT).show();
+                        mEtChat.setText("");
                     }
                 }
                 break;
@@ -283,6 +282,7 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
                 chatMessage.content = message.get(Constant.CONTENT);
 //                chatMessage.viewType = Long.par.parseInt(message.get("viewType"));
                 chatMessageArrayList.add(chatMessage);
+                mRecyclerChat.scrollToPosition(chatMessageArrayList.size() - 1);
                 mAdapterChat.notifyDataSetChanged();
             }
 

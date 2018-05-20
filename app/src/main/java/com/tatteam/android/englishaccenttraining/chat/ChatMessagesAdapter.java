@@ -75,7 +75,7 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public class TheirMessViewHolder extends RecyclerView.ViewHolder {
-        TextView mTextContent, mTextTimeSent,mTextSender;
+        TextView mTextContent, mTextTimeSent, mTextSender;
 
         public TheirMessViewHolder(View itemView) {
             super(itemView);
@@ -86,7 +86,7 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         public void bindData(ChatMessage chatMessage) {
             mTextContent.setText(chatMessage.content);
-            mTextTimeSent.setText(chatMessage.time);
+            mTextTimeSent.setText(processDateTime(chatMessage.time));
             mTextSender.setText(chatMessage.from);
         }
     }
@@ -104,14 +104,19 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         public void bindData(ChatMessage chatMessage) {
             mTextContent.setText(chatMessage.content);
-            mTextTimeSent.setText(chatMessage.time);
-//            if (chatMessage.sent) {
-//                mImageSend.setImageResource(R.drawable.ic_sent);
-//            } else {
-//                mImageSend.setImageResource(R.drawable.ic_sending);
-//            }
+            mTextTimeSent.setText(processDateTime(chatMessage.time));
+            if (chatMessage.sent) {
+                mImageSend.setImageResource(R.drawable.ic_sent);
+            } else {
+                mImageSend.setImageResource(R.drawable.ic_sending);
+            }
 
         }
+    }
+
+    public String processDateTime(String time) {
+        String processTime = time.substring(9, 11) + ":" + time.substring(11, 13);
+        return processTime;
     }
 
 }
