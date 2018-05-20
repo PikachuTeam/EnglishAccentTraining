@@ -105,7 +105,7 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         public void bindData(ChatMessage chatMessage) {
             mTextContent.setText(chatMessage.content);
             mTextTimeSent.setText(processDateTime(chatMessage.time));
-            if (!chatMessage.sent) {
+            if (chatMessage.sent) {
                 mImageSend.setImageResource(R.drawable.ic_sent);
             } else {
                 mImageSend.setImageResource(R.drawable.ic_sending);
