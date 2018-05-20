@@ -58,7 +58,7 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
     private boolean mEmojiKeyboardShowed;
     private boolean mSoftKeyboardShowed;
 
-    private ImageView mButtonSend;
+    private ImageView mButtonSend, mButtonBack;
     private RecyclerView mRecyclerChat;
     private ChatMessagesAdapter mAdapterChat;
     private ArrayList<ChatMessage> chatMessageArrayList = new ArrayList<>();
@@ -168,9 +168,9 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
         mContentArea = findViewById(R.id.content_area);
         mBtnShowEmojiKeyboard = findViewById(R.id.btn_show_emoji_keyboard);
         mButtonSend = findViewById(R.id.btn_send);
+        mButtonBack = findViewById(R.id.img_back);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
-
 
         mAdapterChat = new ChatMessagesAdapter(this, chatMessageArrayList);
         mRecyclerChat = findViewById(R.id.recycler_chat);
@@ -182,6 +182,7 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
 
         getListMessage();
         mButtonSend.setOnClickListener(this);
+        mButtonBack.setOnClickListener(this);
         pre = this.getSharedPreferences(Constant.PREF_NAME, MODE_PRIVATE);
     }
 
@@ -267,6 +268,9 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
                         mEtChat.setText("");
                     }
                 }
+                break;
+            case R.id.img_back:
+                onBackPressed();
                 break;
         }
     }

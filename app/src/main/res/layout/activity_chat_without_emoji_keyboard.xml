@@ -4,22 +4,52 @@
     android:id="@+id/view_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background_white"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
+    <RelativeLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/primary"
+        android:layout_height="@dimen/common_size_50"
+        android:background="@color/primary_light"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent">
+
+        <ImageView
+            android:id="@+id/img_back"
+            android:layout_width="@dimen/common_size_40"
+            android:layout_height="@dimen/common_size_40"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_back" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/img_icon"
+                android:layout_width="@dimen/common_size_30"
+                android:layout_height="@dimen/common_size_30"
+                android:src="@drawable/app_icon" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/common_size_5"
+                android:gravity="center"
+                android:text="CHAT ROOM"
+                android:textColor="@color/white"
+                android:textSize="@dimen/common_text_size_15"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </RelativeLayout>
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/content_area"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@color/white">
+        android:layout_alignParentBottom="true">
 
         <ImageView
             android:id="@+id/screen_background"
@@ -106,11 +136,11 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="parent" />
     </android.support.constraint.ConstraintLayout>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_chat"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/content_area"
-        android:layout_below="@id/toolbar"
-        android:background="@color/accent"></android.support.v7.widget.RecyclerView>
+        android:layout_below="@id/toolbar"></android.support.v7.widget.RecyclerView>
 </RelativeLayout>

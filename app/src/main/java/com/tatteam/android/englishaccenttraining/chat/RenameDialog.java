@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
@@ -41,6 +42,8 @@ public class RenameDialog extends Dialog implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_rename);
+        getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
         DisplayMetrics metrics = getContext().getResources().getDisplayMetrics();
         int width = metrics.widthPixels;
         getWindow().setLayout((8 * width) / 9, WindowManager.LayoutParams.WRAP_CONTENT);
