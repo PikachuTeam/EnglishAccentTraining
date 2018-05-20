@@ -263,7 +263,7 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
                     sender = pre.getString(Constant.NAME, "");
                     if (!sender.equals("")) {
                         chatMessage = new ChatMessage(sender, currentDateTime.toString(), mEtChat.getText().toString(), ChatMessage.MY_MESSAGE);
-                        mDatabase.child(ID_FIREBASE).child(chatMessage.time).setValue(chatMessage);
+                        mDatabase.child(ID_FIREBASE).push().setValue(chatMessage);
                         mEtChat.setText("");
                     }
                 }
