@@ -16,4 +16,5 @@
     <string name="play_record">Play REC</string>
     <string name="stop_recording">STOP</string>
     <string name="start_record">START</string>
+    <string name="alert_mess">You need have a nickname</string>
 </resources>

@@ -75,17 +75,19 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public class TheirMessViewHolder extends RecyclerView.ViewHolder {
-        TextView mTextContent, mTextTimeSent;
+        TextView mTextContent, mTextTimeSent,mTextSender;
 
         public TheirMessViewHolder(View itemView) {
             super(itemView);
             mTextContent = itemView.findViewById(R.id.tv_content);
             mTextTimeSent = itemView.findViewById(R.id.tv_time_chat);
+            mTextSender = itemView.findViewById(R.id.tv_user_name);
         }
 
         public void bindData(ChatMessage chatMessage) {
             mTextContent.setText(chatMessage.content);
             mTextTimeSent.setText(chatMessage.time);
+            mTextSender.setText(chatMessage.from);
         }
     }
 
@@ -103,11 +105,11 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         public void bindData(ChatMessage chatMessage) {
             mTextContent.setText(chatMessage.content);
             mTextTimeSent.setText(chatMessage.time);
-            if (chatMessage.sent) {
-                mImageSend.setImageResource(R.drawable.ic_sent);
-            } else {
-                mImageSend.setImageResource(R.drawable.ic_sending);
-            }
+//            if (chatMessage.sent) {
+//                mImageSend.setImageResource(R.drawable.ic_sent);
+//            } else {
+//                mImageSend.setImageResource(R.drawable.ic_sending);
+//            }
 
         }
     }

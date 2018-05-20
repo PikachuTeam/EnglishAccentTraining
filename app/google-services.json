@@ -1,27 +1,35 @@
 {
   "project_info": {
-    "project_number": "378931522797",
-    "firebase_url": "https://english-accent-training.firebaseio.com",
-    "project_id": "english-accent-training",
-    "storage_bucket": "english-accent-training.appspot.com"
+    "project_number": "536629112830",
+    "firebase_url": "https://american-english-accent-guide.firebaseio.com",
+    "project_id": "american-english-accent-guide",
+    "storage_bucket": "american-english-accent-guide.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:378931522797:android:b00335cce7420d2d",
+        "mobilesdk_app_id": "1:536629112830:android:b00335cce7420d2d",
         "android_client_info": {
           "package_name": "com.tatteam.android.englishaccenttraining"
         }
       },
       "oauth_client": [
         {
-          "client_id": "378931522797-cti3fmjmod23gdbqml9bih7bgigf2fdn.apps.googleusercontent.com",
+          "client_id": "536629112830-m2clr89dkb9lig84q6tncbgn2ei09pui.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tatteam.android.englishaccenttraining",
+            "certificate_hash": "1f64b7c598549e003bfb21b57bfb2ad3ab99be44"
+          }
+        },
+        {
+          "client_id": "536629112830-bma9e3491c87i93llmobjffupj6h5fur.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDc-BiMhKGwK7bQnJusp_-AsR_V8JKTg7c"
+          "current_key": "AIzaSyDp1EGXpxnSOmz31pL_30FyPwGwG-XitqY"
         }
       ],
       "services": {
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "536629112830-bma9e3491c87i93llmobjffupj6h5fur.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2

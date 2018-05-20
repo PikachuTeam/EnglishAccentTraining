@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/view_layout"
     android:layout_width="match_parent"
@@ -13,12 +12,13 @@
         android:layout_height="?attr/actionBarSize"
         android:background="@color/primary"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/content_area"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:background="@color/white">
 
         <ImageView
@@ -29,7 +29,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <android.support.v7.widget.CardView
             android:id="@+id/chat_area"
@@ -55,28 +55,27 @@
                     android:layout_height="40dp"
                     android:layout_gravity="center_vertical|bottom"
                     android:layout_marginBottom="5dp"
-                    android:clickable="true"
-                    android:focusable="true"
                     android:layout_marginLeft="5dp"
                     android:background="@drawable/bg_round_button"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:padding="8dp"
-                    android:src="@drawable/ic_emoji"/>
+                    android:src="@drawable/ic_emoji" />
 
                 <io.github.rockerhieu.emojicon.EmojiconEditText
                     android:id="@+id/et_chat"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
                     android:background="@drawable/bg_et_chat"
                     android:gravity="center_vertical"
                     android:hint="Type message here"
                     android:minHeight="50dp"
                     android:padding="5dp"
-                    android:layout_marginRight="5dp"
                     android:textSize="16dp"
-                    app:emojiconSize="20dp"/>
+                    app:emojiconSize="20dp" />
             </LinearLayout>
         </android.support.v7.widget.CardView>
-
 
 
         <android.support.v7.widget.CardView
@@ -89,13 +88,14 @@
             app:layout_constraintBottom_toBottomOf="@id/chat_area"
             app:layout_constraintLeft_toRightOf="@id/chat_area"
             app:layout_constraintRight_toRightOf="parent">
+
             <ImageView
                 android:id="@+id/btn_send"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:padding="15dp"
                 android:background="@drawable/bg_button_send_message"
-                android:src="@drawable/ic_send_message"/>
+                android:padding="15dp"
+                android:src="@drawable/ic_send_message" />
         </android.support.v7.widget.CardView>
 
         <FrameLayout
@@ -104,6 +104,13 @@
             android:layout_height="220dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="parent"/>
+            app:layout_constraintTop_toBottomOf="parent" />
     </android.support.constraint.ConstraintLayout>
-</LinearLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_chat"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/content_area"
+        android:layout_below="@id/toolbar"
+        android:background="@color/accent"></android.support.v7.widget.RecyclerView>
+</RelativeLayout>

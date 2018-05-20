@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_size_50"
+        android:background="@color/primary"
+        android:gravity="center"
+        android:text="Your nickname"
+        android:textColor="@color/white" />
+
+    <EditText
+        android:id="@+id/ed_rename"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_size_50"
+        android:gravity="center"
+        android:hint="Insert your name here"
+        android:textSize="@dimen/common_size_15" />
+
+
+    <TextView
+        android:id="@+id/btn_ok"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_size_40"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="OK"
+        android:textColor="@color/primary"
+        android:textSize="@dimen/common_size_15" />
+
+</LinearLayout>
