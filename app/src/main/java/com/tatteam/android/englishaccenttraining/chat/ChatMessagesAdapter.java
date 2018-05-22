@@ -180,7 +180,12 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
       }
 
-      mTextSender.setText(chatMessage.from);
+      if (!chatMessage.isAdjacent) {
+        mTextSender.setVisibility(View.VISIBLE);
+        mTextSender.setText(chatMessage.from);
+      } else {
+        mTextSender.setVisibility(View.GONE);
+      }
     }
   }
 
@@ -207,12 +212,17 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
       }
 
-      if (chatMessage.sent) {
-        mImageSend.setImageResource(R.drawable.ic_sent);
-      } else {
-        mImageSend.setImageResource(R.drawable.ic_sending);
+      switch (chatMessage.state) {
+        case ChatMessage.STATE_SENDING:
+          mImageSend.setImageResource(R.drawable.ic_sending);
+          break;
+        case ChatMessage.STATE_ERROR:
+          mImageSend.setImageResource(R.drawable.ic_message_error);
+          break;
+        default:
+          mImageSend.setImageResource(R.drawable.ic_sent);
+          break;
       }
-
     }
   }
 

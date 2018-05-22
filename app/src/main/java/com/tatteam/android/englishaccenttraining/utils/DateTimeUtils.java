@@ -53,4 +53,15 @@ public class DateTimeUtils {
 
     return dateWithoutTime1.compareTo(dateWithoutTime2) == 0;
   }
+
+  public static int compareTwoTime(String time1, String time2) throws ParseException {
+    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    Calendar dateTime1 = Calendar.getInstance();
+    dateTime1.setTime(dateFormat.parse(time1));
+
+    Calendar dateTime2 = Calendar.getInstance();
+    dateTime2.setTime(dateFormat.parse(time2));
+
+    return dateTime1.compareTo(dateTime2);
+  }
 }
