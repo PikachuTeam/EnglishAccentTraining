@@ -16,12 +16,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 
+import com.google.android.gms.ads.AdSize;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -45,6 +46,9 @@ import io.github.rockerhieu.emojicon.EmojiconEditText;
 import io.github.rockerhieu.emojicon.EmojiconGridFragment;
 import io.github.rockerhieu.emojicon.EmojiconsFragment;
 import io.github.rockerhieu.emojicon.emoji.Emojicon;
+import tatteam.com.app_common.ads.AdsSmallBannerHandler;
+
+import static com.tatteam.android.englishaccenttraining.MainActivity.ADS_TYPE_SMALL;
 
 public class ChatActivity extends AppCompatActivity implements EmojiconsFragment.OnEmojiconBackspaceClickedListener, EmojiconGridFragment.OnEmojiconClickedListener, KeyboardHeightObserver, View.OnClickListener {
   private static final int RC_PERMISSION_READ_PHONE = 689;
@@ -77,15 +81,20 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
 
   private ChatItemDecoration mChatItemDecoration;
 
+  private AdsSmallBannerHandler adsSmallBannerHandler1;
+
+
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    initFirebase();
-
-    mIsFirst = true;
-
     setContentView(R.layout.activity_chat_without_emoji_keyboard);
+
+    adsSmallBannerHandler1 = new AdsSmallBannerHandler(this, (ViewGroup) findViewById(R.id.ads_container), ADS_TYPE_SMALL, AdSize.BANNER);
+    adsSmallBannerHandler1.setup();
+
+    initFirebase();
+    mIsFirst = true;
 
     mKeyboardHeightProvider = new KeyboardHeightProvider(this);
 
@@ -128,6 +137,9 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
     mKeyboardHeightProvider.close();
     hideSoftKeyboard();
     mDatabase.child(ID_FIREBASE).removeEventListener(mChildEventListener);
+    if (adsSmallBannerHandler1 != null) {
+      adsSmallBannerHandler1.destroy();
+    }
     super.onDestroy();
   }
 
@@ -195,7 +207,6 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
               @Override
               public void onDataChange(DataSnapshot dataSnapshot) {
                 mFirebaseConnected = dataSnapshot.getValue(Boolean.class);
-                Log.e("Check connection", "" + mFirebaseConnected);
               }
 
               @Override
