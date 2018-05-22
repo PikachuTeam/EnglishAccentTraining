@@ -147,7 +147,14 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public void bindData(ChatMessage chatMessage) {
-      mTextDate.setText(chatMessage.time);
+      mTextDate.setText("");
+      if (!TextUtils.isEmpty(chatMessage.time)) {
+        try {
+          mTextDate.setText(DateTimeUtils.getChatDateToShow(chatMessage.time));
+        } catch (ParseException e) {
+          e.printStackTrace();
+        }
+      }
     }
   }
 

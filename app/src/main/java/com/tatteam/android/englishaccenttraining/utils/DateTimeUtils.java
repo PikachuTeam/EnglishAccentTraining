@@ -33,4 +33,24 @@ public class DateTimeUtils {
     DateFormat toShowFormat = new SimpleDateFormat("dd MMM yyyy");
     return toShowFormat.format(dateFormat.parse(dateTime));
   }
+
+  public static boolean isSameDate(String time1, String time2) throws ParseException {
+    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+    Calendar dateWithoutTime1 = Calendar.getInstance();
+    dateWithoutTime1.setTime(dateFormat.parse(time1));
+    dateWithoutTime1.set(Calendar.HOUR_OF_DAY, 0);
+    dateWithoutTime1.set(Calendar.MINUTE, 0);
+    dateWithoutTime1.set(Calendar.SECOND, 0);
+    dateWithoutTime1.set(Calendar.MILLISECOND, 0);
+
+    Calendar dateWithoutTime2 = Calendar.getInstance();
+    dateWithoutTime2.setTime(dateFormat.parse(time2));
+    dateWithoutTime2.set(Calendar.HOUR_OF_DAY, 0);
+    dateWithoutTime2.set(Calendar.MINUTE, 0);
+    dateWithoutTime2.set(Calendar.SECOND, 0);
+    dateWithoutTime2.set(Calendar.MILLISECOND, 0);
+
+    return dateWithoutTime1.compareTo(dateWithoutTime2) == 0;
+  }
 }

@@ -14,7 +14,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -120,6 +120,7 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
   protected void onDestroy() {
     mKeyboardHeightProvider.close();
     hideSoftKeyboard();
+    mDatabase.child(ID_FIREBASE).removeEventListener(mChildEventListener);
     super.onDestroy();
   }
 
@@ -158,11 +159,12 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
   @Override
   public void onKeyboardHeightChanged(int height, int orientation) {
     if (height > 0) {
+      if (!mEmojiKeyboardShowed) {
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+      } else {
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
+      }
       if (mKeyboardContainer.getHeight() != height) {
-        if (!mEmojiKeyboardShowed) {
-          getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-        }
-
         mShowEmojiKeyboardConstraintSet.constrainHeight(R.id.emoji_keyboard, height);
         ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) mKeyboardContainer.getLayoutParams();
         layoutParams.height = height;
@@ -199,7 +201,6 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
         if (!mEmojiKeyboardShowed) {
           mBtnShowEmojiKeyboard.setImageResource(R.drawable.ic_keyboard);
           if (mSoftKeyboardShowed) {
-            mSoftKeyboardShowed = false;
             hideSoftKeyboard();
           }
           showEmojiKeyboard(true);
@@ -294,39 +295,20 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
   }
 
   private void getListMessage() {
-    mDatabase.child(ID_FIREBASE).limitToLast(PAGE_SIZE).addChildEventListener(new ChildEventListener() {
-      @Override
-      public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-        chatMessageArrayList.add(0, getChatMessage(dataSnapshot));
-        mAdapterChat.notifyItemInserted(0);
-        mRecyclerChat.scrollToPosition(0);
-      }
-
-      @Override
-      public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-      }
-
-      @Override
-      public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-      }
-
-      @Override
-      public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-      }
-
-      @Override
-      public void onCancelled(DatabaseError databaseError) {
-
-      }
-    });
+    mDatabase.child(ID_FIREBASE).limitToLast(PAGE_SIZE).addChildEventListener(mChildEventListener);
   }
 
   private void getMoreMessages() {
-    Log.e("Du ma", "Fuck");
-    mDatabase.child(ID_FIREBASE).limitToLast(PAGE_SIZE).startAt(chatMessageArrayList.get(chatMessageArrayList.size() - 1).id)
+    String startChatId = "";
+
+    for (int i = chatMessageArrayList.size() - 1; i >= 0; i++) {
+      if (!TextUtils.isEmpty(chatMessageArrayList.get(i).id)) {
+        startChatId = chatMessageArrayList.get(i).id;
+        break;
+      }
+    }
+
+    mDatabase.child(ID_FIREBASE).limitToFirst(PAGE_SIZE).startAt(startChatId)
             .addListenerForSingleValueEvent(new ValueEventListener() {
               @Override
               public void onDataChange(DataSnapshot dataSnapshot) {
@@ -377,6 +359,49 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
 
     chatMessage.sent = true;
 
+    // Check if current msg has same date with previous
+    try {
+      if (!chatMessageArrayList.isEmpty() && !DateTimeUtils.isSameDate(chatMessageArrayList.get(0).time, chatMessage.time)) {
+        ChatMessage dateChatMessage = new ChatMessage();
+        dateChatMessage.time = chatMessage.time;
+        dateChatMessage.viewType = ChatMessage.TIME;
+
+        chatMessageArrayList.add(0, dateChatMessage);
+        mAdapterChat.notifyItemInserted(0);
+      }
+    } catch (ParseException e) {
+      e.printStackTrace();
+    }
+
     return chatMessage;
   }
+
+  private ChildEventListener mChildEventListener = new ChildEventListener() {
+    @Override
+    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+      chatMessageArrayList.add(0, getChatMessage(dataSnapshot));
+      mAdapterChat.notifyItemInserted(0);
+      mRecyclerChat.scrollToPosition(0);
+    }
+
+    @Override
+    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+    }
+
+    @Override
+    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+    }
+
+    @Override
+    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+    }
+
+    @Override
+    public void onCancelled(DatabaseError databaseError) {
+
+    }
+  };
 }
