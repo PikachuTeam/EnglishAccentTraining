@@ -15,7 +15,8 @@
     <color name="color_record">#ff00</color>
     <color name="start_rc_color">#00fd04</color>
     <color name="progress_bar_color">#58bcb8</color>
-    <color name="my_chat_bg">#abb9ae</color>
-
+    <color name="my_chat_bg">#abc471</color>
+    <color name="my_chat_sending">#ccd7b5</color>
     <color name="button_highlight_color">#64000000</color>
+
 </resources>

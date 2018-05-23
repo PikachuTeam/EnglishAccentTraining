@@ -14,17 +14,9 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/common_size_40"
-        android:gravity="center"
-        android:text="American English Accent Guide"
-        android:textColor="@color/primary"
-        android:textSize="@dimen/common_size_17"
-        android:textStyle="bold" />
-
-    <TextView
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:layout_marginTop="@dimen/common_size_10"
         android:paddingLeft="@dimen/common_size_35"
         android:paddingRight="@dimen/common_size_35"
         android:text="Chat with people all over the world"
@@ -37,7 +29,7 @@
         android:layout_marginTop="@dimen/common_size_10"
         android:background="@drawable/bg_lesson"
         android:gravity="center"
-        android:hint="Insert your nickname here"
+        android:hint="Enter a cool nickname"
         android:textSize="@dimen/common_size_15" />
 
 
