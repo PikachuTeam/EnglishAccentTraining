@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -51,517 +50,482 @@ import tatteam.com.app_common.ads.AdsSmallBannerHandler;
 import static com.tatteam.android.englishaccenttraining.MainActivity.ADS_TYPE_SMALL;
 
 public class ChatActivity extends AppCompatActivity implements EmojiconsFragment.OnEmojiconBackspaceClickedListener, EmojiconGridFragment.OnEmojiconClickedListener, KeyboardHeightObserver, View.OnClickListener {
-    private static final int RC_PERMISSION_READ_PHONE = 689;
-    private static final int PAGE_SIZE = 20;
+  private static final int RC_PERMISSION_READ_PHONE = 689;
+  private static final int PAGE_SIZE = 20;
 
-    private ConstraintLayout mContentArea;
-    private EmojiconEditText mEtChat;
-    private ImageView mBtnShowEmojiKeyboard;
-    private View mKeyboardContainer;
+  private ConstraintLayout mContentArea;
+  private EmojiconEditText mEtChat;
+  private ImageView mBtnShowEmojiKeyboard;
+  private View mKeyboardContainer;
 
-    private KeyboardHeightProvider mKeyboardHeightProvider;
+  private KeyboardHeightProvider mKeyboardHeightProvider;
 
-    private ConstraintSet mShowEmojiKeyboardConstraintSet;
-    private ConstraintSet mHideEmojiKeyboardConstraintSet;
+  private ConstraintSet mShowEmojiKeyboardConstraintSet;
+  private ConstraintSet mHideEmojiKeyboardConstraintSet;
 
-    private boolean mEmojiKeyboardShowed;
-    private boolean mSoftKeyboardShowed;
+  private boolean mEmojiKeyboardShowed;
+  private boolean mSoftKeyboardShowed;
 
-    private ImageView mButtonSend, mButtonBack;
-    private RecyclerView mRecyclerChat;
-    private ChatMessagesAdapter mAdapterChat;
-    private ArrayList<ChatMessage> chatMessageArrayList = new ArrayList<>();
-    private final String ID_FIREBASE = "chat_data";
-    ChatMessage chatMessage;
-    private static DatabaseReference mDatabase;
-    private SharedPreferences pre;
+  private ImageView mButtonSend, mButtonBack;
+  private RecyclerView mRecyclerChat;
+  private ChatMessagesAdapter mAdapterChat;
+  private ArrayList<ChatMessage> chatMessageArrayList = new ArrayList<>();
+  private final String ID_FIREBASE = "chat_data";
+  ChatMessage chatMessage;
+  private static DatabaseReference mDatabase;
+  private SharedPreferences pre;
 
-    private boolean mIsFirst;
-    private boolean mFirebaseConnected;
+  private boolean mIsFirst;
+  private boolean mFirebaseConnected;
 
-    private ChatItemDecoration mChatItemDecoration;
+  private ChatItemDecoration mChatItemDecoration;
+  private AdsSmallBannerHandler adsSmallBannerHandler1;
 
-    private AdsSmallBannerHandler adsSmallBannerHandler1;
+  @Override
+  protected void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
 
+    setContentView(R.layout.activity_chat_without_emoji_keyboard);
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    adsSmallBannerHandler1 = new AdsSmallBannerHandler(this, (ViewGroup) findViewById(R.id.ads_container), ADS_TYPE_SMALL, AdSize.BANNER);
+    adsSmallBannerHandler1.setup();
 
-        setContentView(R.layout.activity_chat_without_emoji_keyboard);
+    initFirebase();
+    mIsFirst = true;
 
-        adsSmallBannerHandler1 = new AdsSmallBannerHandler(this, (ViewGroup) findViewById(R.id.ads_container), ADS_TYPE_SMALL, AdSize.BANNER);
-        adsSmallBannerHandler1.setup();
+    mKeyboardHeightProvider = new KeyboardHeightProvider(this);
 
-        initFirebase();
-        mIsFirst = true;
+    getSupportFragmentManager()
+            .beginTransaction()
+            .add(R.id.emoji_keyboard, EmojiconsFragment.newInstance(false))
+            .commit();
 
-        mKeyboardHeightProvider = new KeyboardHeightProvider(this);
+    findViews();
+    setEventListeners();
+    initConstraintSet();
 
-        getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.emoji_keyboard, EmojiconsFragment.newInstance(false))
-                .commit();
+    findViewById(R.id.view_layout).post(new Runnable() {
+      @Override
+      public void run() {
+        mKeyboardHeightProvider.start();
+      }
+    });
 
-        findViews();
-        setEventListeners();
-        initConstraintSet();
+    if (PermissionChecker.checkPermission(this, Manifest.permission.READ_PHONE_STATE))
+      getListMessage();
+    else
+      ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, RC_PERMISSION_READ_PHONE);
+  }
 
-        findViewById(R.id.view_layout).post(new Runnable() {
-            @Override
-            public void run() {
-                mKeyboardHeightProvider.start();
-            }
-        });
+  @Override
+  protected void onResume() {
+    super.onResume();
+    mKeyboardHeightProvider.setKeyboardHeightObserver(this);
+  }
 
-        if (PermissionChecker.checkPermission(this, Manifest.permission.READ_PHONE_STATE))
-            getListMessage();
-        else
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, RC_PERMISSION_READ_PHONE);
+  @Override
+  protected void onPause() {
+    super.onPause();
+    mKeyboardHeightProvider.setKeyboardHeightObserver(null);
+  }
+
+  @Override
+  protected void onDestroy() {
+    mKeyboardHeightProvider.close();
+    hideSoftKeyboard();
+
+    mDatabase.child(ID_FIREBASE).removeEventListener(mChildEventListener);
+    FirebaseDatabase.getInstance().getReference(".info/connected").removeEventListener(mConnectionListener);
+    FirebaseDatabase.getInstance().getReference(ID_FIREBASE).keepSynced(false);
+
+    if (adsSmallBannerHandler1 != null) {
+      adsSmallBannerHandler1.destroy();
     }
+    super.onDestroy();
+  }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mKeyboardHeightProvider.setKeyboardHeightObserver(this);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mKeyboardHeightProvider.setKeyboardHeightObserver(null);
-    }
-
-    @Override
-    protected void onDestroy() {
-        mKeyboardHeightProvider.close();
-        hideSoftKeyboard();
-        mDatabase.child(ID_FIREBASE).removeEventListener(mChildEventListener);
-        if (adsSmallBannerHandler1 != null) {
-            adsSmallBannerHandler1.destroy();
-        }
-        super.onDestroy();
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == RC_PERMISSION_READ_PHONE) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                if (mIsFirst) {
-                    mIsFirst = false;
-                    getListMessage();
-                } else
-                    sendMessage();
-            }
-        }
-    }
-
-    @Override
-    public void onEmojiconBackspaceClicked(View v) {
-        EmojiconsFragment.backspace(mEtChat);
-    }
-
-    @Override
-    public void onEmojiconClicked(Emojicon emojicon) {
-        EmojiconsFragment.input(mEtChat, emojicon);
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (mEmojiKeyboardShowed && !mSoftKeyboardShowed) {
-            showEmojiKeyboard(false);
+  @Override
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    if (requestCode == RC_PERMISSION_READ_PHONE) {
+      if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (mIsFirst) {
+          mIsFirst = false;
+          getListMessage();
         } else
-            super.onBackPressed();
+          sendMessage();
+      }
     }
+  }
 
-    @Override
-    public void onKeyboardHeightChanged(int height, int orientation) {
-        if (height > 0) {
-            if (!mEmojiKeyboardShowed) {
-                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-            } else {
-                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
-            }
-            if (mKeyboardContainer.getHeight() != height) {
-                mShowEmojiKeyboardConstraintSet.constrainHeight(R.id.emoji_keyboard, height);
-                ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) mKeyboardContainer.getLayoutParams();
-                layoutParams.height = height;
-                mKeyboardContainer.setLayoutParams(layoutParams);
-            }
-        } else {
-            if (mEmojiKeyboardShowed && mSoftKeyboardShowed)
-                showEmojiKeyboard(false);
-        }
-        mSoftKeyboardShowed = height > 0;
-    }
+  @Override
+  public void onEmojiconBackspaceClicked(View v) {
+    EmojiconsFragment.backspace(mEtChat);
+  }
 
-    private void initFirebase() {
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-        FirebaseDatabase.getInstance().getReference(ID_FIREBASE).keepSynced(true);
+  @Override
+  public void onEmojiconClicked(Emojicon emojicon) {
+    EmojiconsFragment.input(mEtChat, emojicon);
+  }
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+  @Override
+  public void onBackPressed() {
+    if (mEmojiKeyboardShowed && !mSoftKeyboardShowed) {
+      showEmojiKeyboard(false);
+    } else
+      super.onBackPressed();
+  }
 
-        FirebaseDatabase.getInstance().getReference(".info/connected")
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        mFirebaseConnected = dataSnapshot.getValue(Boolean.class);
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-    }
-
-    private void findViews() {
-        mKeyboardContainer = findViewById(R.id.emoji_keyboard);
-        mEtChat = findViewById(R.id.et_chat);
-        mContentArea = findViewById(R.id.content_area);
-        mBtnShowEmojiKeyboard = findViewById(R.id.btn_show_emoji_keyboard);
-        mButtonSend = findViewById(R.id.btn_send);
-        mButtonBack = findViewById(R.id.img_back);
-
-        mButtonSend.setOnClickListener(this);
-        mButtonBack.setOnClickListener(this);
-        pre = this.getSharedPreferences(Constant.PREF_NAME, MODE_PRIVATE);
-
-        initRecyclerView();
-    }
-
-    private void setEventListeners() {
-        mBtnShowEmojiKeyboard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!mEmojiKeyboardShowed) {
-                    mBtnShowEmojiKeyboard.setImageResource(R.drawable.ic_keyboard);
-                    if (mSoftKeyboardShowed) {
-                        hideSoftKeyboard();
-                    }
-                    showEmojiKeyboard(true);
-                    return;
-                }
-
-                if (!mSoftKeyboardShowed) {
-                    showSoftKeyboard();
-                    return;
-                }
-
-                hideSoftKeyboard();
-            }
-        });
-    }
-
-    private void initRecyclerView() {
-        mChatItemDecoration = new ChatItemDecoration();
-
-        mRecyclerChat = findViewById(R.id.recycler_chat);
-        mRecyclerChat.addItemDecoration(mChatItemDecoration);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setReverseLayout(true);
-        mRecyclerChat.setLayoutManager(linearLayoutManager);
-
-        mAdapterChat = new ChatMessagesAdapter(this, chatMessageArrayList, mRecyclerChat);
-        mRecyclerChat.setAdapter(mAdapterChat);
-    }
-
-    private void initConstraintSet() {
-        mHideEmojiKeyboardConstraintSet = new ConstraintSet();
-        mHideEmojiKeyboardConstraintSet.clone(mContentArea);
-
-        mShowEmojiKeyboardConstraintSet = new ConstraintSet();
-        mShowEmojiKeyboardConstraintSet.clone(this, R.layout.activity_chat_with_emoji_keyboard);
-    }
-
-    private void showEmojiKeyboard(boolean showed) {
-        mEmojiKeyboardShowed = showed;
-
-        if (!mEmojiKeyboardShowed) {
-            mBtnShowEmojiKeyboard.setImageResource(R.drawable.ic_emoji);
-        }
-
-        TransitionManager.beginDelayedTransition(mContentArea);
-        ConstraintSet constraintSet = mEmojiKeyboardShowed ? mShowEmojiKeyboardConstraintSet : mHideEmojiKeyboardConstraintSet;
-        constraintSet.applyTo(mContentArea);
-    }
-
-    private void showSoftKeyboard() {
-        mSoftKeyboardShowed = true;
-        mBtnShowEmojiKeyboard.setImageResource(R.drawable.ic_emoji);
-
-        if (mEmojiKeyboardShowed) {
-            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
-        }
-
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-    }
-
-    private void hideSoftKeyboard() {
-        mSoftKeyboardShowed = false;
-        if (mEmojiKeyboardShowed) {
-            mBtnShowEmojiKeyboard.setImageResource(R.drawable.ic_keyboard);
-        }
+  @Override
+  public void onKeyboardHeightChanged(int height, int orientation) {
+    if (height > 0) {
+      if (!mEmojiKeyboardShowed) {
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+      } else {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(), 0);
+      }
+      if (mKeyboardContainer.getHeight() != height) {
+        mShowEmojiKeyboardConstraintSet.constrainHeight(R.id.emoji_keyboard, height);
+        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) mKeyboardContainer.getLayoutParams();
+        layoutParams.height = height;
+        mKeyboardContainer.setLayoutParams(layoutParams);
+      }
+    } else {
+      if (mEmojiKeyboardShowed && mSoftKeyboardShowed)
+        showEmojiKeyboard(false);
+    }
+    mSoftKeyboardShowed = height > 0;
+  }
+
+  private void initFirebase() {
+    FirebaseDatabase.getInstance().getReference(ID_FIREBASE).keepSynced(true);
+
+    mDatabase = FirebaseDatabase.getInstance().getReference();
+
+    FirebaseDatabase.getInstance().getReference(".info/connected").addValueEventListener(mConnectionListener);
+  }
+
+  private void findViews() {
+    mKeyboardContainer = findViewById(R.id.emoji_keyboard);
+    mEtChat = findViewById(R.id.et_chat);
+    mContentArea = findViewById(R.id.content_area);
+    mBtnShowEmojiKeyboard = findViewById(R.id.btn_show_emoji_keyboard);
+    mButtonSend = findViewById(R.id.btn_send);
+    mButtonBack = findViewById(R.id.img_back);
+
+    mButtonSend.setOnClickListener(this);
+    mButtonBack.setOnClickListener(this);
+    pre = this.getSharedPreferences(Constant.PREF_NAME, MODE_PRIVATE);
+
+    initRecyclerView();
+  }
+
+  private void setEventListeners() {
+    mBtnShowEmojiKeyboard.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        if (!mEmojiKeyboardShowed) {
+          mBtnShowEmojiKeyboard.setImageResource(R.drawable.ic_keyboard);
+          if (mSoftKeyboardShowed) {
+            hideSoftKeyboard();
+          }
+          showEmojiKeyboard(true);
+          return;
+        }
+
+        if (!mSoftKeyboardShowed) {
+          showSoftKeyboard();
+          return;
+        }
+
+        hideSoftKeyboard();
+      }
+    });
+
+    mAdapterChat.setOnLoadMoreListener(new ChatMessagesAdapter.OnLoadMoreListener() {
+      @Override
+      public void onLoadMore() {
+        getMoreMessages();
+      }
+    });
+  }
+
+  private void initRecyclerView() {
+    mChatItemDecoration = new ChatItemDecoration();
+
+    mRecyclerChat = findViewById(R.id.recycler_chat);
+    mRecyclerChat.addItemDecoration(mChatItemDecoration);
+    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+    linearLayoutManager.setReverseLayout(true);
+    mRecyclerChat.setLayoutManager(linearLayoutManager);
+
+    mAdapterChat = new ChatMessagesAdapter(this, chatMessageArrayList, mRecyclerChat);
+    mRecyclerChat.setAdapter(mAdapterChat);
+  }
+
+  private void initConstraintSet() {
+    mHideEmojiKeyboardConstraintSet = new ConstraintSet();
+    mHideEmojiKeyboardConstraintSet.clone(mContentArea);
+
+    mShowEmojiKeyboardConstraintSet = new ConstraintSet();
+    mShowEmojiKeyboardConstraintSet.clone(this, R.layout.activity_chat_with_emoji_keyboard);
+  }
+
+  private void showEmojiKeyboard(boolean showed) {
+    mEmojiKeyboardShowed = showed;
+
+    if (!mEmojiKeyboardShowed) {
+      mBtnShowEmojiKeyboard.setImageResource(R.drawable.ic_emoji);
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btn_send:
-                if (!mEtChat.getText().toString().trim().equals("")) {
-                    if (PermissionChecker.checkPermission(this, Manifest.permission.READ_PHONE_STATE)) {
-                        sendMessage();
-                    } else {
-                        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, RC_PERMISSION_READ_PHONE);
-                    }
+    TransitionManager.beginDelayedTransition(mContentArea);
+    ConstraintSet constraintSet = mEmojiKeyboardShowed ? mShowEmojiKeyboardConstraintSet : mHideEmojiKeyboardConstraintSet;
+    constraintSet.applyTo(mContentArea);
+  }
+
+  private void showSoftKeyboard() {
+    mSoftKeyboardShowed = true;
+    mBtnShowEmojiKeyboard.setImageResource(R.drawable.ic_emoji);
+
+    if (mEmojiKeyboardShowed) {
+      getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
+    }
+
+    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+  }
+
+  private void hideSoftKeyboard() {
+    mSoftKeyboardShowed = false;
+    if (mEmojiKeyboardShowed) {
+      mBtnShowEmojiKeyboard.setImageResource(R.drawable.ic_keyboard);
+    }
+    getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
+    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+    imm.hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(), 0);
+  }
+
+  @Override
+  public void onClick(View v) {
+    switch (v.getId()) {
+      case R.id.btn_send:
+        if (!mEtChat.getText().toString().trim().equals("")) {
+          if (PermissionChecker.checkPermission(this, Manifest.permission.READ_PHONE_STATE)) {
+            sendMessage();
+          } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, RC_PERMISSION_READ_PHONE);
+          }
+        }
+        break;
+      case R.id.img_back:
+        onBackPressed();
+        break;
+    }
+  }
+
+  private void getListMessage() {
+    mDatabase.child(ID_FIREBASE).limitToLast(PAGE_SIZE).addChildEventListener(mChildEventListener);
+  }
+
+  private void getMoreMessages() {
+    String startChatId = "";
+
+    for (int i = chatMessageArrayList.size() - 1; i >= 0; i++) {
+      if (!TextUtils.isEmpty(chatMessageArrayList.get(i).id)) {
+        startChatId = chatMessageArrayList.get(i).id;
+        break;
+      }
+    }
+
+    mDatabase.child(ID_FIREBASE).orderByKey().limitToLast(PAGE_SIZE).endAt(startChatId)
+            .addListenerForSingleValueEvent(new ValueEventListener() {
+              @Override
+              public void onDataChange(DataSnapshot dataSnapshot) {
+                mAdapterChat.setCanLoadMore(dataSnapshot.getChildrenCount() == PAGE_SIZE);
+                mAdapterChat.dismissLoadMore();
+                int startIndex = chatMessageArrayList.size();
+                for (DataSnapshot data : dataSnapshot.getChildren()) {
+                  chatMessageArrayList.add(startIndex, getChatMessage(data)); // Add item at startIndex because firebase data is sorted by ascending
                 }
-                break;
-            case R.id.img_back:
-                onBackPressed();
-                break;
-        }
-    }
-
-    private void getListMessage() {
-        mDatabase.child(ID_FIREBASE).limitToLast(PAGE_SIZE).addChildEventListener(mChildEventListener);
-    }
-
-    private void getMoreMessages() {
-        String startChatId = "";
-
-        for (int i = chatMessageArrayList.size() - 1; i >= 0; i++) {
-            if (!TextUtils.isEmpty(chatMessageArrayList.get(i).id)) {
-                startChatId = chatMessageArrayList.get(i).id;
-                break;
-            }
-        }
-
-        mDatabase.child(ID_FIREBASE).limitToFirst(PAGE_SIZE).startAt(startChatId)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        mAdapterChat.setCanLoadMore(dataSnapshot.getChildrenCount() == PAGE_SIZE);
-                        mAdapterChat.dismissLoadMore();
-                        int startIndex = chatMessageArrayList.size();
-                        for (DataSnapshot data : dataSnapshot.getChildren()) {
-                            chatMessageArrayList.add(getChatMessage(data));
-                        }
-                        mChatItemDecoration.updateList(chatMessageArrayList);
-                        mAdapterChat.notifyItemRangeInserted(startIndex, chatMessageArrayList.size() - startIndex);
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                    }
-                });
-    }
-
-    private void sendMessage() {
-        String sender = pre.getString(Constant.NAME, "");
-        if (!sender.equals("")) {
-            chatMessage = new ChatMessage(sender, DateTimeUtils.getCurrentTimeInWorldGMT(),
-                    mEtChat.getText().toString(), DeviceUtils.getInstance().getDeviceId(this));
-            chatMessage.state = ChatMessage.STATE_SENDING;
-
-            ChatMessage copiedMessage = copyChatMessage(chatMessage);
-            try {
-                copiedMessage.time = DateTimeUtils.getChatTimeFromWorldTime(copiedMessage.time);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            addNewMessage(copiedMessage);
-
-            mDatabase.child(ID_FIREBASE).push().setValue(chatMessage);
-            mEtChat.setText("");
-        }
-    }
-
-    private ChatMessage getChatMessage(DataSnapshot data) {
-        HashMap<String, Object> message = (HashMap<String, Object>) data.getValue();
-        ChatMessage chatMessage = new ChatMessage();
-        chatMessage.id = data.getKey();
-        chatMessage.from = message.get(Constant.SENDER).toString();
-        try {
-            chatMessage.time = DateTimeUtils.getChatTimeFromWorldTime(message.get(Constant.TIME).toString());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        chatMessage.content = message.get(Constant.CONTENT).toString();
-        chatMessage.deviceId = message.get(Constant.DEVICE_ID).toString();
-
-        if (chatMessage.deviceId.equals(DeviceUtils.getInstance().getDeviceId(this))) {
-            chatMessage.viewType = ChatMessage.MY_MESSAGE;
-        } else {
-            chatMessage.viewType = ChatMessage.THEIR_MESSAGE;
-        }
-
-        if (message.containsKey(Constant.STATE))
-            chatMessage.state = Integer.parseInt(message.get(Constant.STATE).toString());
-        else
-            chatMessage.state = ChatMessage.STATE_SUCCESS;
-
-        if (!chatMessageArrayList.isEmpty()) {
-            ChatMessage previousMessage = chatMessageArrayList.get(0);
-            chatMessage.isAdjacent = TextUtils.equals(previousMessage.deviceId, chatMessage.deviceId);
-        }
-
-        return chatMessage;
-    }
-
-    private ChatMessage copyChatMessage(ChatMessage toCopyMessage) {
-        ChatMessage chatMessage = new ChatMessage();
-
-        chatMessage.copy(toCopyMessage);
-
-        if (!chatMessageArrayList.isEmpty()) {
-            ChatMessage previousMessage = chatMessageArrayList.get(0);
-            chatMessage.isAdjacent = TextUtils.equals(previousMessage.deviceId, chatMessage.deviceId);
-        }
-        return chatMessage;
-    }
-
-    private void addTimeMessage() {
-        // Check if current msg has same date with previous
-        try {
-            if (!chatMessageArrayList.isEmpty() && !DateTimeUtils.isSameDate(chatMessageArrayList.get(0).time, chatMessage.time)) {
-                ChatMessage dateChatMessage = new ChatMessage();
-                dateChatMessage.time = chatMessage.time;
-                dateChatMessage.viewType = ChatMessage.TIME;
-
-                chatMessageArrayList.add(0, dateChatMessage);
+                chatMessageArrayList.remove(startIndex); // Remove the last one because it's the item we get start id
                 mChatItemDecoration.updateList(chatMessageArrayList);
-                mAdapterChat.notifyItemInserted(0);
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+                mAdapterChat.notifyItemRangeInserted(startIndex, chatMessageArrayList.size() - startIndex);
+              }
+
+              @Override
+              public void onCancelled(DatabaseError databaseError) {
+              }
+            });
+  }
+
+  private void sendMessage() {
+    String sender = pre.getString(Constant.NAME, "");
+    if (!sender.equals("")) {
+      chatMessage = new ChatMessage(sender, DateTimeUtils.getCurrentTimeInWorldGMT(),
+              mEtChat.getText().toString(), DeviceUtils.getInstance().getDeviceId(this));
+      chatMessage.state = ChatMessage.STATE_SENDING;
+
+      ChatMessage copiedMessage = copyChatMessage(chatMessage);
+      try {
+        copiedMessage.time = DateTimeUtils.getChatTimeFromWorldTime(copiedMessage.time);
+      } catch (ParseException e) {
+        e.printStackTrace();
+      }
+      addNewMessage(copiedMessage);
+
+      mDatabase.child(ID_FIREBASE).push().setValue(chatMessage);
+      mEtChat.setText("");
+    }
+  }
+
+  private ChatMessage getChatMessage(DataSnapshot data) {
+    HashMap<String, Object> message = (HashMap<String, Object>) data.getValue();
+    ChatMessage chatMessage = new ChatMessage();
+    chatMessage.id = data.getKey();
+    chatMessage.from = message.get(Constant.SENDER).toString();
+    try {
+      chatMessage.time = DateTimeUtils.getChatTimeFromWorldTime(message.get(Constant.TIME).toString());
+    } catch (ParseException e) {
+      e.printStackTrace();
+    }
+    chatMessage.content = message.get(Constant.CONTENT).toString();
+    chatMessage.deviceId = message.get(Constant.DEVICE_ID).toString();
+
+    if (chatMessage.deviceId.equals(DeviceUtils.getInstance().getDeviceId(this))) {
+      chatMessage.viewType = ChatMessage.MY_MESSAGE;
+    } else {
+      chatMessage.viewType = ChatMessage.THEIR_MESSAGE;
     }
 
-    private void sortMessage(DataSnapshot dataSnapshot) {
-        new AsyncTask<DataSnapshot, Void, Integer>() {
-            @Override
-            protected Integer doInBackground(DataSnapshot... dataSnapshots) {
-                ChatMessage chatMessage = getChatMessage(dataSnapshots[0]);
+    if (message.containsKey(Constant.STATE))
+      chatMessage.state = Integer.parseInt(message.get(Constant.STATE).toString());
+    else
+      chatMessage.state = ChatMessage.STATE_SUCCESS;
 
-                if (chatMessageArrayList.isEmpty()) {
-                    chatMessageArrayList.add(chatMessage);
-                    return 0;
-                }
-                int totalMessages = chatMessageArrayList.size();
-                int insertedIndex = -1;
-                try {
-                    for (int i = 0; i < totalMessages; i++) {
-                        if (DateTimeUtils.compareTwoTime(chatMessage.time, chatMessageArrayList.get(i).time) >= 0) {
-                            insertedIndex = i;
-                            chatMessageArrayList.add(i, chatMessage);
-                            break;
-                        }
-                    }
-                    if (insertedIndex == -1) {
-                        insertedIndex = chatMessageArrayList.size();
-                        chatMessageArrayList.add(chatMessage);
-                    }
-
-                    return insertedIndex;
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                return -1;
-            }
-
-            @Override
-            protected void onPostExecute(Integer position) {
-                super.onPostExecute(position);
-
-                if (position != -1) {
-                    mChatItemDecoration.updateList(chatMessageArrayList);
-                    mAdapterChat.notifyItemInserted(position);
-                    mRecyclerChat.scrollToPosition(0);
-                }
-            }
-        }.execute(dataSnapshot);
+    if (!chatMessageArrayList.isEmpty()) {
+      ChatMessage previousMessage = chatMessageArrayList.get(0);
+      chatMessage.isAdjacent = TextUtils.equals(previousMessage.deviceId, chatMessage.deviceId);
     }
 
-    private ChildEventListener mChildEventListener = new ChildEventListener() {
-        @Override
-        public void onChildAdded(final DataSnapshot dataSnapshot, String previousKey) {
-            ChatMessage chatMessage = getChatMessage(dataSnapshot);
-            if (chatMessage.viewType != ChatMessage.MY_MESSAGE) {
-                addNewMessage(chatMessage);
-            } else {
-                if (chatMessage.state == ChatMessage.STATE_SENDING) {
-                    int totalMessages = chatMessageArrayList.size();
+    return chatMessage;
+  }
 
-                    for (int i = 0; i < totalMessages; i++) {
-                        if (chatMessage.isSame(chatMessageArrayList.get(i))) {
-                            if (mFirebaseConnected) {
-                                chatMessageArrayList.get(i).state = ChatMessage.STATE_SUCCESS;
-                                chatMessage.state = ChatMessage.STATE_SUCCESS;
-                            } else {
-                                chatMessageArrayList.get(i).state = ChatMessage.STATE_ERROR;
-                                chatMessage.state = ChatMessage.STATE_ERROR;
-                            }
+  private ChatMessage copyChatMessage(ChatMessage toCopyMessage) {
+    ChatMessage chatMessage = new ChatMessage();
 
-                            Map<String, Object> childUpdates = new HashMap<>();
-                            childUpdates.put("/" + ID_FIREBASE + "/" + chatMessage.id + "/" + Constant.STATE, chatMessage.state);
-                            mDatabase.updateChildren(childUpdates);
+    chatMessage.copy(toCopyMessage);
 
-                            mAdapterChat.notifyItemChanged(i);
-                            break;
-                        }
-                    }
-                } else if (chatMessage.state == ChatMessage.STATE_SUCCESS) {
-                    addNewMessage(chatMessage);
-                }
-            }
-        }
+    if (!chatMessageArrayList.isEmpty()) {
+      ChatMessage previousMessage = chatMessageArrayList.get(0);
+      chatMessage.isAdjacent = TextUtils.equals(previousMessage.deviceId, chatMessage.deviceId);
+    }
+    return chatMessage;
+  }
 
-        @Override
-        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-            ChatMessage chatMessage = getChatMessage(dataSnapshot);
-            if (chatMessage.state == ChatMessage.STATE_ERROR && mFirebaseConnected) {
-                chatMessage.state = ChatMessage.STATE_SUCCESS;
+  private void addTimeMessage() {
+    // Check if current msg has same date with previous
+    try {
+      if (!chatMessageArrayList.isEmpty() && !DateTimeUtils.isSameDate(chatMessageArrayList.get(0).time, chatMessage.time)) {
+        ChatMessage dateChatMessage = new ChatMessage();
+        dateChatMessage.time = chatMessage.time;
+        dateChatMessage.viewType = ChatMessage.TIME;
 
-                Map<String, Object> childUpdates = new HashMap<>();
-                childUpdates.put("/" + ID_FIREBASE + "/" + chatMessage.id + "/" + Constant.STATE, chatMessage.state);
-                mDatabase.updateChildren(childUpdates);
-
-                int totalMessages = chatMessageArrayList.size();
-                for (int i = 0; i < totalMessages; i++) {
-                    if (chatMessage.isSame(chatMessageArrayList.get(i))) {
-                        chatMessageArrayList.get(i).state = ChatMessage.STATE_SUCCESS;
-                        mAdapterChat.notifyItemChanged(i);
-                        break;
-                    }
-                }
-            }
-        }
-
-        @Override
-        public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-        }
-
-        @Override
-        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-        }
-
-        @Override
-        public void onCancelled(DatabaseError databaseError) {
-
-        }
-    };
-
-    private void addNewMessage(ChatMessage chatMessage) {
-        chatMessageArrayList.add(0, chatMessage);
+        chatMessageArrayList.add(0, dateChatMessage);
         mChatItemDecoration.updateList(chatMessageArrayList);
         mAdapterChat.notifyItemInserted(0);
-        mRecyclerChat.scrollToPosition(0);
+      }
+    } catch (ParseException e) {
+      e.printStackTrace();
     }
+  }
+
+  private void addNewMessage(ChatMessage chatMessage) {
+    chatMessageArrayList.add(0, chatMessage);
+    mChatItemDecoration.updateList(chatMessageArrayList);
+    mAdapterChat.notifyItemInserted(0);
+    mRecyclerChat.scrollToPosition(0);
+  }
+
+  private ChildEventListener mChildEventListener = new ChildEventListener() {
+    @Override
+    public void onChildAdded(final DataSnapshot dataSnapshot, String previousKey) {
+      ChatMessage chatMessage = getChatMessage(dataSnapshot);
+      if (chatMessage.viewType != ChatMessage.MY_MESSAGE) {
+        addNewMessage(chatMessage);
+      } else {
+        if (chatMessage.state == ChatMessage.STATE_SENDING) {
+          int totalMessages = chatMessageArrayList.size();
+
+          for (int i = 0; i < totalMessages; i++) {
+            if (chatMessage.isSame(chatMessageArrayList.get(i))) {
+              if (mFirebaseConnected) {
+                chatMessageArrayList.get(i).state = ChatMessage.STATE_SUCCESS;
+                chatMessage.state = ChatMessage.STATE_SUCCESS;
+              } else {
+                chatMessageArrayList.get(i).state = ChatMessage.STATE_ERROR;
+                chatMessage.state = ChatMessage.STATE_ERROR;
+              }
+
+              Map<String, Object> childUpdates = new HashMap<>();
+              childUpdates.put("/" + ID_FIREBASE + "/" + chatMessage.id + "/" + Constant.STATE, chatMessage.state);
+              mDatabase.updateChildren(childUpdates);
+
+              mAdapterChat.notifyItemChanged(i);
+              break;
+            }
+          }
+        } else {
+          addNewMessage(chatMessage);
+        }
+      }
+    }
+
+    @Override
+    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+      ChatMessage chatMessage = getChatMessage(dataSnapshot);
+      if (chatMessage.state == ChatMessage.STATE_ERROR && mFirebaseConnected) {
+        chatMessage.state = ChatMessage.STATE_SUCCESS;
+
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put("/" + ID_FIREBASE + "/" + chatMessage.id + "/" + Constant.STATE, chatMessage.state);
+        mDatabase.updateChildren(childUpdates);
+
+        int totalMessages = chatMessageArrayList.size();
+        for (int i = 0; i < totalMessages; i++) {
+          if (chatMessage.isSame(chatMessageArrayList.get(i))) {
+            chatMessageArrayList.get(i).state = ChatMessage.STATE_SUCCESS;
+            mAdapterChat.notifyItemChanged(i);
+            break;
+          }
+        }
+      }
+    }
+
+    @Override
+    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+    }
+
+    @Override
+    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+    }
+
+    @Override
+    public void onCancelled(DatabaseError databaseError) {
+
+    }
+  };
+
+  private ValueEventListener mConnectionListener = new ValueEventListener() {
+    @Override
+    public void onDataChange(DataSnapshot dataSnapshot) {
+      mFirebaseConnected = dataSnapshot.getValue(Boolean.class);
+    }
+
+    @Override
+    public void onCancelled(DatabaseError databaseError) {
+
+    }
+  };
 }

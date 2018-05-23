@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,7 +55,7 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                 LinearLayoutManager layoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
 
-                int totalItems = layoutManager.getChildCount();
+                int totalItems = layoutManager.getItemCount();
                 int lastVisibleItem = layoutManager.findLastVisibleItemPosition();
 
                 if (mCanLoadMore && lastVisibleItem + VISIBLE_THRESHOLD >= totalItems && !mIsLoading) {
@@ -81,7 +82,6 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 return new LoadMoreHolder(inflater.inflate(R.layout.item_load_more, parent, false));
             default:
                 return new TimeViewHolder(inflater.inflate(R.layout.item_time_message, parent, false));
-
         }
     }
 

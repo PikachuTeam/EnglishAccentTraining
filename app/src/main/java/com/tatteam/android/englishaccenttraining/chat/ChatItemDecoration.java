@@ -24,21 +24,25 @@ public class ChatItemDecoration extends RecyclerView.ItemDecoration {
 
   @Override
   public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-    int position = parent.getChildAdapterPosition(view);
+    if (view != null) {
+      int position = parent.getChildAdapterPosition(view);
 
-    if (position == 0) {
-      outRect.bottom = mBottom;
-    } else {
-      outRect.bottom = 0;
+      if (position >= 0) {
+        if (position == 0) {
+          outRect.bottom = mBottom;
+        } else {
+          outRect.bottom = 0;
+        }
+
+        if (mMessages != null && mMessages.get(position) != null && mMessages.get(position).isAdjacent) {
+          outRect.top = 0;
+        } else {
+          outRect.top = mTop;
+        }
+
+        outRect.left = mLeft;
+        outRect.right = mRight;
+      }
     }
-
-    if (mMessages != null && mMessages.get(position) != null && mMessages.get(position).isAdjacent) {
-      outRect.top = 0;
-    } else {
-      outRect.top = mTop;
-    }
-
-    outRect.left = mLeft;
-    outRect.right = mRight;
   }
 }
