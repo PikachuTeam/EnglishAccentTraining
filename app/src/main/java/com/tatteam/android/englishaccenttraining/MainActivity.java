@@ -1,5 +1,6 @@
 package com.tatteam.android.englishaccenttraining;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -22,6 +23,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.text.Html;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +41,15 @@ import android.widget.Toast;
 
 import com.google.android.gms.ads.AdSize;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.tatteam.android.englishaccenttraining.chat.RenameDialog;
+import com.tatteam.android.englishaccenttraining.utils.Constant;
+import com.tatteam.android.englishaccenttraining.utils.DeviceUtils;
+import com.tatteam.android.englishaccenttraining.utils.PermissionChecker;
 
 import java.io.File;
 import java.io.IOException;
@@ -56,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
   public static AppConstant.AdsType ADS_TYPE_SMALL;
   public static AppConstant.AdsType ADS_TYPE_BIG;
+  private static final int RC_PERMISSION_READ_PHONE = 661;
 
   private static final int BIG_ADS_SHOWING_INTERVAL = 5;
   private static int BIG_ADS_SHOWING_COUNTER = 1;
@@ -126,6 +138,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
   Dialog customDialog;
   SeekBar seekBar;
 
+  private TextView mTvTotalUnseenMessages;
+
+  private String mLastSeenMessageId;
+  private int mTotalUnseenMessages;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -159,6 +176,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
   }
 
+  @Override
+  protected void onResume() {
+    super.onResume();
+
+    if (PermissionChecker.checkPermission(this, Manifest.permission.READ_PHONE_STATE)) {
+      updateMessageNotification();
+    } else {
+      ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, RC_PERMISSION_READ_PHONE);
+    }
+  }
 
   private void initViews() {
     btnNext = (ImageButton) this.findViewById(R.id.btnNext);
@@ -305,6 +332,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         showDialogRename();
       }
     });
+
+    mTvTotalUnseenMessages = findViewById(R.id.tv_total_unseen_messages);
+    mTvTotalUnseenMessages.setVisibility(View.GONE);
   }
 
   private void showDialogRename() {
@@ -376,6 +406,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     recordStatus = false;
     btnModeListen.setEnabled(true);
     btnModeListen.setBackgroundResource(R.drawable.listen);
+
+    FirebaseDatabase.getInstance().getReference().child(Constant.TABLE_CHAT).removeEventListener(mOnMessageReceived);
   }
 
   @Override
@@ -399,6 +431,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
     super.onDestroy();
   }
+
 
   @Override
   public void onClick(View v) {
@@ -595,6 +628,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else {
           Toast.makeText(MainActivity.this, "Permission Denied,Please allow in App Settings for additional functionality", Toast.LENGTH_SHORT).show();
         }
+      case RC_PERMISSION_READ_PHONE:
+        updateMessageNotification();
+        break;
     }
   }
 
@@ -1104,4 +1140,73 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
       return POSITION_NONE;
     }
   }
+
+  private void updateMessageNotification() {
+    FirebaseDatabase.getInstance().getReference().child(Constant.TABLE_LAST_SEEN)
+            .child(DeviceUtils.getInstance().getDeviceId(this))
+            .addListenerForSingleValueEvent(mOnGetLastSeenMessageListener);
+  }
+
+  private ChildEventListener mOnMessageReceived = new ChildEventListener() {
+    @Override
+    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+      if (TextUtils.isEmpty(mLastSeenMessageId)) {
+        mTotalUnseenMessages++;
+      } else {
+        if (!mLastSeenMessageId.equals(dataSnapshot.getKey())) {
+          mTotalUnseenMessages++;
+        }
+      }
+
+      if (mTotalUnseenMessages == 0) {
+        mTvTotalUnseenMessages.setVisibility(View.GONE);
+      } else {
+        mTvTotalUnseenMessages.setVisibility(View.VISIBLE);
+        if (mTotalUnseenMessages <= 10) {
+          mTvTotalUnseenMessages.setText("" + mTotalUnseenMessages);
+        } else {
+          mTvTotalUnseenMessages.setText("10+");
+        }
+      }
+    }
+
+    @Override
+    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+    }
+
+    @Override
+    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+    }
+
+    @Override
+    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+    }
+
+    @Override
+    public void onCancelled(DatabaseError databaseError) {
+
+    }
+  };
+
+  private ValueEventListener mOnGetLastSeenMessageListener = new ValueEventListener() {
+    @Override
+    public void onDataChange(DataSnapshot dataSnapshot) {
+      if (dataSnapshot.getValue() != null)
+        mLastSeenMessageId = dataSnapshot.getValue().toString();
+      else
+        mLastSeenMessageId = "";
+
+      FirebaseDatabase.getInstance().getReference().child(Constant.TABLE_CHAT)
+              .orderByKey().limitToLast(11).startAt(mLastSeenMessageId)
+              .addChildEventListener(mOnMessageReceived);
+    }
+
+    @Override
+    public void onCancelled(DatabaseError databaseError) {
+
+    }
+  };
 }

@@ -3,6 +3,7 @@ package com.tatteam.android.englishaccenttraining;
 import android.app.Application;
 
 import com.google.firebase.database.FirebaseDatabase;
+
 import tatteam.com.app_common.AppCommon;
 import tatteam.com.app_common.sqlite.DatabaseLoader;
 

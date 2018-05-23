@@ -1,8 +1,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/bg_new">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_new">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -34,7 +35,7 @@
                     android:singleLine="true"
                     android:text="@string/app_name"
                     android:textColor="@color/lesson_name"
-                    android:textSize="@dimen/common_size_20" />
+                    android:textSize="@dimen/common_size_20"/>
             </LinearLayout>
 
 
@@ -48,7 +49,7 @@
                     android:layout_width="@dimen/common_size_40"
                     android:layout_height="@dimen/common_size_40"
                     android:background="@drawable/ic_back"
-                    android:textColor="@color/lesson_name" />
+                    android:textColor="@color/lesson_name"/>
             </LinearLayout>
 
             <LinearLayout
@@ -62,7 +63,7 @@
                     android:layout_width="@dimen/common_size_30"
                     android:layout_height="@dimen/common_size_30"
                     android:background="@drawable/ic_share"
-                    android:textColor="@color/lesson_name" />
+                    android:textColor="@color/lesson_name"/>
             </LinearLayout>
 
             <RelativeLayout
@@ -97,7 +98,7 @@
                         android:id="@+id/view_page_1"
                         android:layout_width="@dimen/small_view_width"
                         android:layout_height="@dimen/small_view_height"
-                        android:background="@color/primary" />
+                        android:background="@color/primary"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -110,7 +111,7 @@
                         android:id="@+id/view_page_2"
                         android:layout_width="@dimen/small_view_width"
                         android:layout_height="@dimen/small_view_height"
-                        android:background="@color/small_view_color" />
+                        android:background="@color/small_view_color"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -123,7 +124,7 @@
                         android:id="@+id/view_page_3"
                         android:layout_width="@dimen/small_view_width"
                         android:layout_height="@dimen/small_view_height"
-                        android:background="@color/small_view_color" />
+                        android:background="@color/small_view_color"/>
                 </LinearLayout>
             </LinearLayout>
         </RelativeLayout>
@@ -139,7 +140,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_view_1"
                 android:text="-- : --"
-                android:textSize="@dimen/common_text_size_12" />
+                android:textSize="@dimen/common_text_size_12"/>
 
             <TextView
                 android:id="@+id/tvDuration"
@@ -148,7 +149,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="@dimen/margin_view_1"
                 android:text="-- : --"
-                android:textSize="@dimen/common_text_size_12" />
+                android:textSize="@dimen/common_text_size_12"/>
         </RelativeLayout>
 
         <LinearLayout
@@ -162,7 +163,7 @@
                 android:layout_height="wrap_content"
                 android:maxHeight="@dimen/view_line_height"
                 android:progressDrawable="@drawable/progress"
-                android:thumb="@drawable/thumb" />
+                android:thumb="@drawable/thumb"/>
         </LinearLayout>
 
 
@@ -192,7 +193,7 @@
                         android:id="@+id/btnModeListen"
                         android:layout_width="@dimen/button_big_size"
                         android:layout_height="@dimen/button_rc_height"
-                        android:background="@drawable/listen" />
+                        android:background="@drawable/listen"/>
                 </LinearLayout>
 
             </tatteam.com.app_common.ui.drawable.RippleEffectDrawable>
@@ -219,7 +220,7 @@
                         android:text="@string/start_record"
                         android:textColor="@color/primary_dark"
                         android:textSize="@dimen/common_text_size_16"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"/>
 
                     <TextView
                         android:layout_width="match_parent"
@@ -229,7 +230,7 @@
                         android:text="Recording"
                         android:textColor="@color/primary_dark"
                         android:textSize="@dimen/common_text_size_16"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"/>
                 </LinearLayout>
 
             </tatteam.com.app_common.ui.drawable.RippleEffectDrawable>
@@ -243,7 +244,7 @@
                 android:text="--:--"
                 android:textColor="@color/primary"
                 android:textSize="@dimen/common_size_18"
-                android:visibility="visible" />
+                android:visibility="visible"/>
 
             <tatteam.com.app_common.ui.drawable.RippleEffectDrawable
                 android:layout_width="0dp"
@@ -265,7 +266,7 @@
                         android:text="@string/play_record"
                         android:textColor="@color/primary_dark"
                         android:textSize="@dimen/common_text_size_17"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"/>
                 </LinearLayout>
             </tatteam.com.app_common.ui.drawable.RippleEffectDrawable>
         </LinearLayout>
@@ -324,7 +325,7 @@
                             android:layout_height="@dimen/button_small_size"
                             android:layout_centerInParent="true"
                             android:layout_marginLeft="@dimen/margin_button"
-                            android:background="@drawable/previous_new" />
+                            android:background="@drawable/previous_new"/>
 
 
                     </tatteam.com.app_common.ui.drawable.RippleEffectDrawable>
@@ -345,7 +346,7 @@
                         android:id="@+id/btnPlayPause"
                         android:layout_width="@dimen/button_rc_height"
                         android:layout_height="@dimen/button_rc_height"
-                        android:background="@drawable/play_new" />
+                        android:background="@drawable/play_new"/>
                 </tatteam.com.app_common.ui.drawable.RippleEffectDrawable>
             </LinearLayout>
 
@@ -392,7 +393,7 @@
                             android:layout_height="@dimen/button_small_size"
                             android:layout_centerInParent="true"
                             android:layout_marginLeft="@dimen/margin_button"
-                            android:background="@drawable/replay_off" />
+                            android:background="@drawable/replay_off"/>
                     </tatteam.com.app_common.ui.drawable.RippleEffectDrawable>
                 </LinearLayout>
 
@@ -402,15 +403,51 @@
 
     </LinearLayout>
 
-    <android.support.design.widget.FloatingActionButton
+    <!--<android.support.design.widget.FloatingActionButton-->
+    <!--android:id="@+id/btn_join_chat"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentBottom="true"-->
+    <!--android:layout_alignParentEnd="true"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:layout_marginBottom="@dimen/common_size_100"-->
+    <!--android:layout_marginRight="10dp"-->
+    <!--android:layout_marginTop="@dimen/common_size_60"-->
+    <!--android:src="@drawable/ic_join_chat_2" />-->
+
+    <android.support.v7.widget.CardView
         android:id="@+id/btn_join_chat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="@dimen/common_size_100"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="@dimen/common_size_60"
-        android:src="@drawable/ic_join_chat_2" />
+        app:cardBackgroundColor="#000000"
+        app:cardCornerRadius="25dp"
+        app:cardPreventCornerOverlap="false">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="15dp"
+                android:src="@drawable/ic_join_chat_2"/>
+
+            <TextView
+                android:id="@+id/tv_total_unseen_messages"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="top|end"
+                android:background="@drawable/bg_unseen_message_total"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="@dimen/common_size_10"
+                tools:text="1"/>
+        </FrameLayout>
+    </android.support.v7.widget.CardView>
 </RelativeLayout>

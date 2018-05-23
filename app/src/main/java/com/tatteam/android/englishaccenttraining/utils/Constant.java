@@ -9,4 +9,7 @@ public class Constant {
   public static final String CONTENT = "content";
   public static final String DEVICE_ID = "deviceId";
   public static final String STATE = "state";
+
+  public static final String TABLE_CHAT = "chat_data";
+  public static final String TABLE_LAST_SEEN = "last_seen";
 }

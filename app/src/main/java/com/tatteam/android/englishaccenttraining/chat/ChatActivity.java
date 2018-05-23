@@ -141,6 +141,8 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
     if (adsSmallBannerHandler1 != null) {
       adsSmallBannerHandler1.destroy();
     }
+
+    updateLastSeen();
     super.onDestroy();
   }
 
@@ -455,6 +457,23 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
     mChatItemDecoration.updateList(chatMessageArrayList);
     mAdapterChat.notifyItemInserted(0);
     mRecyclerChat.scrollToPosition(0);
+  }
+
+  private void updateLastSeen() {
+    String lastSeenId = "";
+    int totalMessages = chatMessageArrayList.size();
+    for (int i = 0; i < totalMessages; i++) {
+      if (!TextUtils.isEmpty(chatMessageArrayList.get(i).id)) {
+        lastSeenId = chatMessageArrayList.get(i).id;
+        break;
+      }
+    }
+
+    if (!TextUtils.isEmpty(lastSeenId)) {
+      Map<String, Object> toUpdate = new HashMap<>();
+      toUpdate.put("/last_seen/" + DeviceUtils.getInstance().getDeviceId(this), lastSeenId);
+      mDatabase.updateChildren(toUpdate);
+    }
   }
 
   private ChildEventListener mChildEventListener = new ChildEventListener() {
