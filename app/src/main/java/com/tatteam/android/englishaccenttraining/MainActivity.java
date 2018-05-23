@@ -24,7 +24,6 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.text.Html;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -334,7 +333,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     });
 
     mTvTotalUnseenMessages = findViewById(R.id.tv_total_unseen_messages);
-    mTvTotalUnseenMessages.setVisibility(View.GONE);
   }
 
   private void showDialogRename() {
@@ -1142,6 +1140,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
   }
 
   private void updateMessageNotification() {
+    mTotalUnseenMessages = 0;
+    mTvTotalUnseenMessages.setVisibility(View.GONE);
     FirebaseDatabase.getInstance().getReference().child(Constant.TABLE_LAST_SEEN)
             .child(DeviceUtils.getInstance().getDeviceId(this))
             .addListenerForSingleValueEvent(mOnGetLastSeenMessageListener);

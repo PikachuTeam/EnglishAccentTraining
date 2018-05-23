@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
 
     <android.support.v7.widget.CardView
         android:layout_width="wrap_content"
@@ -16,7 +16,6 @@
         <android.support.constraint.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:padding="@dimen/common_size_5">
 
             <TextView
@@ -26,7 +25,11 @@
                 android:textColor="@color/primary_light"
                 android:textSize="@dimen/common_text_size_13"
                 android:textStyle="bold"
-                tools:text="Dong occho" />
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Dong occho"/>
 
             <TextView
                 android:id="@+id/tv_content"
@@ -35,9 +38,11 @@
                 android:layout_below="@+id/tv_user_name"
                 android:textColor="#000000"
                 android:textSize="@dimen/common_text_size_13"
-                app:layout_constraintStart_toStartOf="@+id/tv_user_name"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_user_name"
-                tools:text="@tools:sample/avatars" />
+                tools:text="a"/>
 
             <TextView
                 android:id="@+id/tv_time_chat"
@@ -49,10 +54,11 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginStart="8dp"
                 android:textSize="@dimen/common_size_11"
-                app:layout_constraintEnd_toEndOf="@+id/tv_content"
-                app:layout_constraintStart_toEndOf="@+id/tv_user_name"
+                app:layout_constraintHorizontal_bias="1"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_content"
-                tools:text="17:14" />
+                tools:text="17:14"/>
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>
 </LinearLayout>

@@ -415,39 +415,41 @@
     <!--android:layout_marginTop="@dimen/common_size_60"-->
     <!--android:src="@drawable/ic_join_chat_2" />-->
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/btn_join_chat"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+    <FrameLayout
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="@dimen/common_size_100"
-        android:layout_marginRight="10dp"
-        app:cardBackgroundColor="#000000"
-        app:cardCornerRadius="25dp"
-        app:cardPreventCornerOverlap="false">
+        android:layout_marginRight="10dp">
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        <android.support.v7.widget.CardView
+            android:id="@+id/btn_join_chat"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            app:cardBackgroundColor="#000000"
+            app:cardCornerRadius="25dp"
+            app:cardPreventCornerOverlap="false">
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="15dp"
                 android:src="@drawable/ic_join_chat_2"/>
+        </android.support.v7.widget.CardView>
 
-            <TextView
-                android:id="@+id/tv_total_unseen_messages"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="top|end"
-                android:background="@drawable/bg_unseen_message_total"
-                android:gravity="center"
-                android:textColor="@color/white"
-                android:textSize="@dimen/common_size_10"
-                tools:text="1"/>
-        </FrameLayout>
-    </android.support.v7.widget.CardView>
+        <TextView
+            android:id="@+id/tv_total_unseen_messages"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="top|end"
+            android:background="@drawable/bg_unseen_message_total"
+            android:elevation="2dp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/common_size_10"
+            tools:text="10+"/>
+    </FrameLayout>
 </RelativeLayout>
