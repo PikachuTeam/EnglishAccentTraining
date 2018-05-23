@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,16 +52,19 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
       public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
 
-        LinearLayoutManager layoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
+        if (!mMessageList.isEmpty()) {
+          LinearLayoutManager layoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
 
-        int totalItems = layoutManager.getChildCount();
-        int lastVisibleItem = layoutManager.findLastVisibleItemPosition();
+          int totalItems = layoutManager.getItemCount();
+          int lastVisibleItem = layoutManager.findLastVisibleItemPosition();
 
-        if (mCanLoadMore && lastVisibleItem + VISIBLE_THRESHOLD >= totalItems && !mIsLoading) {
-          if (mLoadMoreListener != null) {
-            mIsLoading = true;
-            showLoadMore();
-            mLoadMoreListener.onLoadMore();
+          if (mCanLoadMore && lastVisibleItem + VISIBLE_THRESHOLD >= totalItems && !mIsLoading) {
+
+            if (mLoadMoreListener != null) {
+              mIsLoading = true;
+              showLoadMore();
+              mLoadMoreListener.onLoadMore();
+            }
           }
         }
       }

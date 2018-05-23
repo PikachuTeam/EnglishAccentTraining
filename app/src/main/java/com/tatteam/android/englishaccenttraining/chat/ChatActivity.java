@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -80,9 +79,7 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
   private boolean mFirebaseConnected;
 
   private ChatItemDecoration mChatItemDecoration;
-
   private AdsSmallBannerHandler adsSmallBannerHandler1;
-
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -136,7 +133,11 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
   protected void onDestroy() {
     mKeyboardHeightProvider.close();
     hideSoftKeyboard();
+
     mDatabase.child(ID_FIREBASE).removeEventListener(mChildEventListener);
+    FirebaseDatabase.getInstance().getReference(".info/connected").removeEventListener(mConnectionListener);
+    FirebaseDatabase.getInstance().getReference(ID_FIREBASE).keepSynced(false);
+
     if (adsSmallBannerHandler1 != null) {
       adsSmallBannerHandler1.destroy();
     }
@@ -197,23 +198,11 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
   }
 
   private void initFirebase() {
-    FirebaseDatabase.getInstance().setPersistenceEnabled(true);
     FirebaseDatabase.getInstance().getReference(ID_FIREBASE).keepSynced(true);
 
     mDatabase = FirebaseDatabase.getInstance().getReference();
 
-    FirebaseDatabase.getInstance().getReference(".info/connected")
-            .addValueEventListener(new ValueEventListener() {
-              @Override
-              public void onDataChange(DataSnapshot dataSnapshot) {
-                mFirebaseConnected = dataSnapshot.getValue(Boolean.class);
-              }
-
-              @Override
-              public void onCancelled(DatabaseError databaseError) {
-
-              }
-            });
+    FirebaseDatabase.getInstance().getReference(".info/connected").addValueEventListener(mConnectionListener);
   }
 
   private void findViews() {
@@ -250,6 +239,13 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
         }
 
         hideSoftKeyboard();
+      }
+    });
+
+    mAdapterChat.setOnLoadMoreListener(new ChatMessagesAdapter.OnLoadMoreListener() {
+      @Override
+      public void onLoadMore() {
+        getMoreMessages();
       }
     });
   }
@@ -341,7 +337,7 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
       }
     }
 
-    mDatabase.child(ID_FIREBASE).limitToFirst(PAGE_SIZE).startAt(startChatId)
+    mDatabase.child(ID_FIREBASE).orderByKey().limitToLast(PAGE_SIZE).endAt(startChatId)
             .addListenerForSingleValueEvent(new ValueEventListener() {
               @Override
               public void onDataChange(DataSnapshot dataSnapshot) {
@@ -349,8 +345,9 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
                 mAdapterChat.dismissLoadMore();
                 int startIndex = chatMessageArrayList.size();
                 for (DataSnapshot data : dataSnapshot.getChildren()) {
-                  chatMessageArrayList.add(getChatMessage(data));
+                  chatMessageArrayList.add(startIndex, getChatMessage(data)); // Add item at startIndex because firebase data is sorted by ascending
                 }
+                chatMessageArrayList.remove(startIndex); // Remove the last one because it's the item we get start id
                 mChatItemDecoration.updateList(chatMessageArrayList);
                 mAdapterChat.notifyItemRangeInserted(startIndex, chatMessageArrayList.size() - startIndex);
               }
@@ -442,49 +439,11 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
     }
   }
 
-  private void sortMessage(DataSnapshot dataSnapshot) {
-    new AsyncTask<DataSnapshot, Void, Integer>() {
-      @Override
-      protected Integer doInBackground(DataSnapshot... dataSnapshots) {
-        ChatMessage chatMessage = getChatMessage(dataSnapshots[0]);
-
-        if (chatMessageArrayList.isEmpty()) {
-          chatMessageArrayList.add(chatMessage);
-          return 0;
-        }
-        int totalMessages = chatMessageArrayList.size();
-        int insertedIndex = -1;
-        try {
-          for (int i = 0; i < totalMessages; i++) {
-            if (DateTimeUtils.compareTwoTime(chatMessage.time, chatMessageArrayList.get(i).time) >= 0) {
-              insertedIndex = i;
-              chatMessageArrayList.add(i, chatMessage);
-              break;
-            }
-          }
-          if (insertedIndex == -1) {
-            insertedIndex = chatMessageArrayList.size();
-            chatMessageArrayList.add(chatMessage);
-          }
-
-          return insertedIndex;
-        } catch (ParseException e) {
-          e.printStackTrace();
-        }
-        return -1;
-      }
-
-      @Override
-      protected void onPostExecute(Integer position) {
-        super.onPostExecute(position);
-
-        if (position != -1) {
-          mChatItemDecoration.updateList(chatMessageArrayList);
-          mAdapterChat.notifyItemInserted(position);
-          mRecyclerChat.scrollToPosition(0);
-        }
-      }
-    }.execute(dataSnapshot);
+  private void addNewMessage(ChatMessage chatMessage) {
+    chatMessageArrayList.add(0, chatMessage);
+    mChatItemDecoration.updateList(chatMessageArrayList);
+    mAdapterChat.notifyItemInserted(0);
+    mRecyclerChat.scrollToPosition(0);
   }
 
   private ChildEventListener mChildEventListener = new ChildEventListener() {
@@ -515,7 +474,7 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
               break;
             }
           }
-        } else if (chatMessage.state == ChatMessage.STATE_SUCCESS) {
+        } else {
           addNewMessage(chatMessage);
         }
       }
@@ -558,10 +517,15 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
     }
   };
 
-  private void addNewMessage(ChatMessage chatMessage) {
-    chatMessageArrayList.add(0, chatMessage);
-    mChatItemDecoration.updateList(chatMessageArrayList);
-    mAdapterChat.notifyItemInserted(0);
-    mRecyclerChat.scrollToPosition(0);
-  }
+  private ValueEventListener mConnectionListener = new ValueEventListener() {
+    @Override
+    public void onDataChange(DataSnapshot dataSnapshot) {
+      mFirebaseConnected = dataSnapshot.getValue(Boolean.class);
+    }
+
+    @Override
+    public void onCancelled(DatabaseError databaseError) {
+
+    }
+  };
 }

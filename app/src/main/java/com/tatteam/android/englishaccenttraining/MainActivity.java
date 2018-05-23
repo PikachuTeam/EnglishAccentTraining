@@ -51,7 +51,8 @@ import tatteam.com.app_common.util.AppConstant;
 import tatteam.com.app_common.util.CommonUtil;
 
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, AdapterView.OnItemClickListener, ViewPager.OnPageChangeListener, SeekBar.OnSeekBarChangeListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, MediaPlayer.OnPreparedListener,
+        MediaPlayer.OnCompletionListener, AdapterView.OnItemClickListener, ViewPager.OnPageChangeListener, SeekBar.OnSeekBarChangeListener {
 
   public static AppConstant.AdsType ADS_TYPE_SMALL;
   public static AppConstant.AdsType ADS_TYPE_BIG;
@@ -258,7 +259,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     layoutBtnRecord.setOnClickListener(this);
     btnPlayRecord.setOnClickListener(this);
-    pager.setOnPageChangeListener(this);
+    pager.addOnPageChangeListener(this);
 
     player.setOnPreparedListener(this);
     player.setOnCompletionListener(this);
