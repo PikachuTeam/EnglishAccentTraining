@@ -337,6 +337,7 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
       }
     }
 
+    final String finalStartChatId = startChatId;
     mDatabase.child(ID_FIREBASE).orderByKey().limitToLast(PAGE_SIZE).endAt(startChatId)
             .addListenerForSingleValueEvent(new ValueEventListener() {
               @Override
@@ -345,9 +346,19 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
                 mAdapterChat.dismissLoadMore();
                 int startIndex = chatMessageArrayList.size();
                 for (DataSnapshot data : dataSnapshot.getChildren()) {
-                  chatMessageArrayList.add(startIndex, getChatMessage(data)); // Add item at startIndex because firebase data is sorted by ascending
+                  ChatMessage chatMessage = getChatMessage(data, false);
+                  if (!chatMessage.id.equals(finalStartChatId)) {
+
+                    // Detect adjacent for previous and after current chat message
+                    chatMessageArrayList.get(startIndex - 1).isAdjacent = TextUtils.equals(chatMessageArrayList.get(startIndex - 1).deviceId, chatMessage.deviceId);
+
+                    if (startIndex < chatMessageArrayList.size()) {
+                      chatMessage.isAdjacent = TextUtils.equals(chatMessageArrayList.get(startIndex).deviceId, chatMessage.deviceId);
+                    }
+
+                    chatMessageArrayList.add(startIndex, chatMessage); // Add item at startIndex because firebase data is sorted by ascending
+                  }
                 }
-                chatMessageArrayList.remove(startIndex); // Remove the last one because it's the item we get start id
                 mChatItemDecoration.updateList(chatMessageArrayList);
                 mAdapterChat.notifyItemRangeInserted(startIndex, chatMessageArrayList.size() - startIndex);
               }
@@ -378,7 +389,7 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
     }
   }
 
-  private ChatMessage getChatMessage(DataSnapshot data) {
+  private ChatMessage getChatMessage(DataSnapshot data, boolean detectAdjacent) {
     HashMap<String, Object> message = (HashMap<String, Object>) data.getValue();
     ChatMessage chatMessage = new ChatMessage();
     chatMessage.id = data.getKey();
@@ -402,7 +413,7 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
     else
       chatMessage.state = ChatMessage.STATE_SUCCESS;
 
-    if (!chatMessageArrayList.isEmpty()) {
+    if (!chatMessageArrayList.isEmpty() && detectAdjacent) {
       ChatMessage previousMessage = chatMessageArrayList.get(0);
       chatMessage.isAdjacent = TextUtils.equals(previousMessage.deviceId, chatMessage.deviceId);
     }
@@ -449,7 +460,7 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
   private ChildEventListener mChildEventListener = new ChildEventListener() {
     @Override
     public void onChildAdded(final DataSnapshot dataSnapshot, String previousKey) {
-      ChatMessage chatMessage = getChatMessage(dataSnapshot);
+      ChatMessage chatMessage = getChatMessage(dataSnapshot, true);
       if (chatMessage.viewType != ChatMessage.MY_MESSAGE) {
         addNewMessage(chatMessage);
       } else {
@@ -482,7 +493,7 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
 
     @Override
     public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-      ChatMessage chatMessage = getChatMessage(dataSnapshot);
+      ChatMessage chatMessage = getChatMessage(dataSnapshot, true);
       if (chatMessage.state == ChatMessage.STATE_ERROR && mFirebaseConnected) {
         chatMessage.state = ChatMessage.STATE_SUCCESS;
 
