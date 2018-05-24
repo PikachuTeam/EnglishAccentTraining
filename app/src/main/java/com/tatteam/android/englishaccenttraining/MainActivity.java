@@ -124,6 +124,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
   private final int START_RC_OFF = 5;
   private final int STOP_RC = 6;
 
+  private boolean mIsFirst;
+
   //Request permission
   private final int PERMISSION_REQUEST_CODE = 1;
   //
@@ -145,12 +147,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
   private ObjectAnimator mUnseenMessageBlinkAnimation;
 
   private String mLastSeenMessageId;
+
+  public static String userColor;
 //  private int mTotalUnseenMessages;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+
+    mIsFirst = true;
 
     player = new MediaPlayer();
     recordPlayer = new MediaPlayer();
@@ -439,7 +445,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
     super.onDestroy();
   }
-
 
   @Override
   public void onClick(View v) {
@@ -1157,6 +1162,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
   }
 
   private void updateMessageNotification() {
+    int delayTime = 1000;
+    if (mIsFirst) {
+      mIsFirst = false;
+      delayTime = 0;
+    }
+
     new Handler().postDelayed(new Runnable() {
       @Override
       public void run() {
@@ -1164,7 +1175,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .child(DeviceUtils.getInstance().getDeviceId(MainActivity.this))
                 .addListenerForSingleValueEvent(mOnGetLastSeenMessageListener);
       }
-    }, 1000);
+    }, delayTime);
   }
 
   private ChildEventListener mOnMessageReceived = new ChildEventListener() {

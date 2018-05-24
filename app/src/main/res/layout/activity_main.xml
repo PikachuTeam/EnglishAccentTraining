@@ -445,9 +445,9 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_gravity="top|end"
-            android:alpha="0"
+            android:layout_marginRight="5dp"
+            android:alpha="1"
             android:background="@drawable/bg_unseen_message_total"
-            android:elevation="2dp"
-            tools:text="10+"/>
+            android:elevation="2dp"/>
     </FrameLayout>
 </RelativeLayout>

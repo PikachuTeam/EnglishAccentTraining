@@ -13,6 +13,7 @@ public class ChatMessage {
   public int viewType;
   public String from;
   public String deviceId;
+  public String nameColor;
   @MessageState
   public int state;
   public boolean isAdjacent;

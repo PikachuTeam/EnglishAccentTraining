@@ -28,6 +28,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.tatteam.android.englishaccenttraining.MainActivity;
 import com.tatteam.android.englishaccenttraining.R;
 import com.tatteam.android.englishaccenttraining.utils.Constant;
 import com.tatteam.android.englishaccenttraining.utils.DateTimeUtils;
@@ -377,6 +378,7 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
       chatMessage = new ChatMessage(sender, DateTimeUtils.getCurrentTimeInWorldGMT(),
               mEtChat.getText().toString(), DeviceUtils.getInstance().getDeviceId(this));
       chatMessage.state = ChatMessage.STATE_SENDING;
+      chatMessage.nameColor = MainActivity.userColor;
 
       ChatMessage copiedMessage = copyChatMessage(chatMessage);
       try {
@@ -414,6 +416,9 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
       chatMessage.state = Integer.parseInt(message.get(Constant.STATE).toString());
     else
       chatMessage.state = ChatMessage.STATE_SUCCESS;
+
+    if (message.containsKey(Constant.NAME_COLOR))
+      chatMessage.nameColor = message.get(Constant.NAME_COLOR).toString();
 
     if (!chatMessageArrayList.isEmpty() && detectAdjacent) {
       ChatMessage previousMessage = chatMessageArrayList.get(0);

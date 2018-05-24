@@ -1,6 +1,7 @@
 package com.tatteam.android.englishaccenttraining.chat;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -182,10 +183,14 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
           e.printStackTrace();
         }
       }
-
       if (!chatMessage.isAdjacent) {
         mTextSender.setVisibility(View.VISIBLE);
         mTextSender.setText(chatMessage.from);
+
+        if (!TextUtils.isEmpty(chatMessage.nameColor)) {
+          String[] colors = chatMessage.nameColor.split(",");
+          mTextSender.setTextColor(Color.rgb(Integer.parseInt(colors[0]), Integer.parseInt(colors[1]), Integer.parseInt(colors[2])));
+        }
       } else {
         mTextSender.setVisibility(View.GONE);
       }
