@@ -38,12 +38,17 @@ import java.util.Random;
 import static android.content.Context.MODE_PRIVATE;
 
 public class RenameDialog extends Dialog implements View.OnClickListener {
+  private static final float MIN_BRIGHTNESS = 0.8f;
+
   private TextView mTextOk, mTextCancel;
   private EditText mEditName;
 
   private Context mContext;
   private SharedPreferences pre;
   private Activity mainActivity;
+
+  private String mNickName;
+  private String mDeviceId;
 
   public RenameDialog(@NonNull Activity context) {
     super(context);
@@ -62,6 +67,9 @@ public class RenameDialog extends Dialog implements View.OnClickListener {
     DisplayMetrics metrics = getContext().getResources().getDisplayMetrics();
     int width = metrics.widthPixels;
     getWindow().setLayout((8 * width) / 9, WindowManager.LayoutParams.WRAP_CONTENT);
+
+    mDeviceId = DeviceUtils.getInstance().getDeviceId(mContext);
+
     findViews();
     init();
   }
@@ -81,9 +89,14 @@ public class RenameDialog extends Dialog implements View.OnClickListener {
   public void onClick(View v) {
     switch (v.getId()) {
       case R.id.btn_ok:
-        DialogUtils.showLoadingDialog(mContext);
-        FirebaseDatabase.getInstance().getReference().child(Constant.TABLE_USERS)
-                .addListenerForSingleValueEvent(mGetUserColorListener);
+        if (!mEditName.getText().toString().trim().equals("")) {
+          DialogUtils.showLoadingDialog(mContext);
+          mNickName = mEditName.getText().toString();
+          FirebaseDatabase.getInstance().getReference().child(Constant.TABLE_USERS)
+                  .addListenerForSingleValueEvent(mGetUserColorListener);
+        } else {
+          Toast.makeText(mContext, mContext.getString(R.string.alert_mess), Toast.LENGTH_SHORT).show();
+        }
         break;
     }
   }
@@ -94,44 +107,50 @@ public class RenameDialog extends Dialog implements View.OnClickListener {
       new AsyncTask<Void, Void, String>() {
         @Override
         protected String doInBackground(Void... voids) {
-          String deviceId = DeviceUtils.getInstance().getDeviceId(mContext);
           String color = "";
+
           List<String> usedColors = new ArrayList<>();
 
           for (DataSnapshot data : dataSnapshot.getChildren()) {
-            if (data.getKey().equals(deviceId)) {
-              color = data.getValue().toString();
-              break;
-            } else {
-              usedColors.add(data.getValue().toString());
+            if (data.getValue() != null) {
+              HashMap<String, Object> dataValue = (HashMap<String, Object>) data.getValue();
+              if (data.getKey().equals(mDeviceId)) {
+                color = dataValue.get(Constant.NAME_COLOR).toString();
+                break;
+              } else if (dataValue.get(Constant.NICK_NAME).toString().equals(mNickName)) {
+                Log.e("Check nick name", "existed");
+                usedColors.add(dataValue.get(Constant.NAME_COLOR).toString());
+              }
             }
           }
 
           if (TextUtils.isEmpty(color)) {
             Random random = new Random();
             do {
-              String red = random.nextInt(255) + "";
-              String green = random.nextInt(255) + "";
-              String blue = random.nextInt(255) + "";
+              String hue = random.nextInt(360) + "";
+              String saturation = random.nextFloat() + "";
+              String brightness = (MIN_BRIGHTNESS + ((1f - MIN_BRIGHTNESS) * random.nextFloat())) + "";
+
+              Log.e("Check color", "" + hue + "_" + saturation + "_" + brightness);
 
               boolean existed = false;
 
               for (String usedColor : usedColors) {
-                String[] colors = usedColor.split(",");
+                String[] colors = usedColor.split("_");
 
-                if (red.equals(colors[0].trim()) && green.equals(colors[1].trim()) && blue.equals(colors[2].trim())) {
+                if (hue.equals(colors[0].trim()) && saturation.equals(colors[1].trim()) && brightness.equals(colors[2].trim())) {
                   existed = true;
                   break;
                 }
               }
 
               if (!existed) {
-                color = TextUtils.join(",", new String[]{red, green, blue});
+                color = TextUtils.join("_", new String[]{hue, saturation, brightness});
               }
             } while (TextUtils.isEmpty(color));
 
             Map<String, Object> toUpdateData = new HashMap<>();
-            toUpdateData.put("/" + Constant.TABLE_USERS + "/" + deviceId, color);
+            toUpdateData.put("/" + Constant.TABLE_USERS + "/" + mDeviceId + "/" + Constant.NAME_COLOR, color);
             FirebaseDatabase.getInstance().getReference().updateChildren(toUpdateData);
           }
           return color;
@@ -143,15 +162,15 @@ public class RenameDialog extends Dialog implements View.OnClickListener {
           DialogUtils.dismissLoadingDialog();
           MainActivity.userColor = color;
 
+          Map<String, Object> toUpdateData = new HashMap<>();
+          toUpdateData.put("/" + Constant.TABLE_USERS + "/" + mDeviceId + "/" + Constant.NICK_NAME, mNickName);
+          FirebaseDatabase.getInstance().getReference().updateChildren(toUpdateData);
+
           SharedPreferences.Editor editor = pre.edit();
-          if (!mEditName.getText().toString().trim().equals("")) {
-            editor.putString(Constant.NAME, mEditName.getText().toString());
-            editor.commit();
-            dismiss();
-            mContext.startActivity(new Intent(mainActivity, ChatActivity.class));
-          } else {
-            Toast.makeText(mContext, mContext.getString(R.string.alert_mess), Toast.LENGTH_SHORT).show();
-          }
+          editor.putString(Constant.NAME, mNickName);
+          editor.commit();
+          dismiss();
+          mContext.startActivity(new Intent(mainActivity, ChatActivity.class));
         }
       }.execute();
     }

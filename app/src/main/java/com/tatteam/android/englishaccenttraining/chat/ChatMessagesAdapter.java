@@ -188,8 +188,12 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         mTextSender.setText(chatMessage.from);
 
         if (!TextUtils.isEmpty(chatMessage.nameColor)) {
-          String[] colors = chatMessage.nameColor.split(",");
-          mTextSender.setTextColor(Color.rgb(Integer.parseInt(colors[0]), Integer.parseInt(colors[1]), Integer.parseInt(colors[2])));
+          String[] colors = chatMessage.nameColor.split("_");
+          float[] hsv = new float[3];
+          hsv[0] = Float.parseFloat(colors[0]);
+          hsv[1] = Float.parseFloat(colors[1]);
+          hsv[2] = Float.parseFloat(colors[2]);
+          mTextSender.setTextColor(Color.HSVToColor(hsv));
         }
       } else {
         mTextSender.setVisibility(View.GONE);
