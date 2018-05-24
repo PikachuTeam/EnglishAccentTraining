@@ -488,6 +488,7 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
 
           for (int i = 0; i < totalMessages; i++) {
             if (chatMessage.isSame(chatMessageArrayList.get(i))) {
+              chatMessageArrayList.get(i).id = chatMessage.id;
               if (mFirebaseConnected) {
                 chatMessageArrayList.get(i).state = ChatMessage.STATE_SUCCESS;
                 chatMessage.state = ChatMessage.STATE_SUCCESS;

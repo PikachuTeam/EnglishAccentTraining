@@ -1,6 +1,8 @@
 package com.tatteam.android.englishaccenttraining;
 
 import android.Manifest;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -137,10 +139,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
   Dialog customDialog;
   SeekBar seekBar;
 
-  private TextView mTvTotalUnseenMessages;
+//  private TextView mTvTotalUnseenMessages;
+
+  private View mUnseenMessagesView;
+  private ObjectAnimator mUnseenMessageBlinkAnimation;
 
   private String mLastSeenMessageId;
-  private int mTotalUnseenMessages;
+//  private int mTotalUnseenMessages;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -169,6 +174,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCallStateChanged(state, incomingNumber);
       }
     };
+
+    setUpAnimation();
+
     mgr = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
     if (mgr != null) {
       mgr.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
@@ -332,7 +340,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
       }
     });
 
-    mTvTotalUnseenMessages = findViewById(R.id.tv_total_unseen_messages);
+    mUnseenMessagesView = findViewById(R.id.unseen_messages_view);
   }
 
   private void showDialogRename() {
@@ -406,6 +414,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     btnModeListen.setBackgroundResource(R.drawable.listen);
 
     FirebaseDatabase.getInstance().getReference().child(Constant.TABLE_CHAT).removeEventListener(mOnMessageReceived);
+    mUnseenMessageBlinkAnimation.cancel();
+    mUnseenMessagesView.setAlpha(0f);
   }
 
   @Override
@@ -1139,34 +1149,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
   }
 
+  private void setUpAnimation() {
+    mUnseenMessageBlinkAnimation = ObjectAnimator.ofFloat(mUnseenMessagesView, View.ALPHA, 1f, 0f);
+    mUnseenMessageBlinkAnimation.setRepeatMode(ValueAnimator.REVERSE);
+    mUnseenMessageBlinkAnimation.setRepeatCount(ValueAnimator.INFINITE);
+    mUnseenMessageBlinkAnimation.setDuration(1000);
+  }
+
   private void updateMessageNotification() {
-    mTotalUnseenMessages = 0;
-    mTvTotalUnseenMessages.setVisibility(View.GONE);
-    FirebaseDatabase.getInstance().getReference().child(Constant.TABLE_LAST_SEEN)
-            .child(DeviceUtils.getInstance().getDeviceId(this))
-            .addListenerForSingleValueEvent(mOnGetLastSeenMessageListener);
+    new Handler().postDelayed(new Runnable() {
+      @Override
+      public void run() {
+        FirebaseDatabase.getInstance().getReference().child(Constant.TABLE_LAST_SEEN)
+                .child(DeviceUtils.getInstance().getDeviceId(MainActivity.this))
+                .addListenerForSingleValueEvent(mOnGetLastSeenMessageListener);
+      }
+    }, 1000);
   }
 
   private ChildEventListener mOnMessageReceived = new ChildEventListener() {
     @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-      if (TextUtils.isEmpty(mLastSeenMessageId)) {
-        mTotalUnseenMessages++;
-      } else {
-        if (!mLastSeenMessageId.equals(dataSnapshot.getKey())) {
-          mTotalUnseenMessages++;
-        }
-      }
-
-      if (mTotalUnseenMessages == 0) {
-        mTvTotalUnseenMessages.setVisibility(View.GONE);
-      } else {
-        mTvTotalUnseenMessages.setVisibility(View.VISIBLE);
-        if (mTotalUnseenMessages <= 10) {
-          mTvTotalUnseenMessages.setText("" + mTotalUnseenMessages);
+      if (dataSnapshot.getValue() != null) {
+        if (TextUtils.isEmpty(mLastSeenMessageId) || !mLastSeenMessageId.equals(dataSnapshot.getKey())) {
+          // Start blink animation
+          mUnseenMessageBlinkAnimation.start();
         } else {
-          mTvTotalUnseenMessages.setText("10+");
+          mUnseenMessagesView.setAlpha(0);
         }
+      } else {
+        mUnseenMessagesView.setAlpha(0);
       }
     }
 
@@ -1200,7 +1212,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mLastSeenMessageId = "";
 
       FirebaseDatabase.getInstance().getReference().child(Constant.TABLE_CHAT)
-              .orderByKey().limitToLast(11).startAt(mLastSeenMessageId)
+              .orderByKey().limitToLast(1).startAt(mLastSeenMessageId)
               .addChildEventListener(mOnMessageReceived);
     }
 

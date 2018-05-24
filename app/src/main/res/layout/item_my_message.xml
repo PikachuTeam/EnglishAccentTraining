@@ -52,7 +52,7 @@
                     android:id="@+id/tv_time_chat_my_mess"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/common_size_15"
-                    android:textSize="@dimen/common_size_11"
+                    android:textSize="@dimen/common_size_8"
                     tools:text="17:14"/>
 
                 <ImageView

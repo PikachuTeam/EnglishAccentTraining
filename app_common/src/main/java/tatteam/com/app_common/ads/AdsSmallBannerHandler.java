@@ -48,7 +48,6 @@ public class AdsSmallBannerHandler extends BaseAdsBannerHandler {
   @Override
   protected void buildAds() {
     if (this.adsContainer != null && this.adsType != null) {
-      Log.e("Check ad", "Fuck");
       String unitId = AppLocalSharedPreferences.getInstance().getAdsId(this.adsType);
       if (!unitId.trim().isEmpty()) {
         if (this.adView == null) {

@@ -416,8 +416,8 @@
     <!--android:src="@drawable/ic_join_chat_2" />-->
 
     <FrameLayout
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
@@ -426,11 +426,11 @@
 
         <android.support.v7.widget.CardView
             android:id="@+id/btn_join_chat"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_gravity="center"
-            app:cardBackgroundColor="#000000"
-            app:cardCornerRadius="25dp"
+            app:cardBackgroundColor="#046367"
+            app:cardCornerRadius="30dp"
             app:cardPreventCornerOverlap="false">
 
             <ImageView
@@ -440,16 +440,14 @@
                 android:src="@drawable/ic_join_chat_2"/>
         </android.support.v7.widget.CardView>
 
-        <TextView
-            android:id="@+id/tv_total_unseen_messages"
+        <View
+            android:id="@+id/unseen_messages_view"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_gravity="top|end"
+            android:alpha="0"
             android:background="@drawable/bg_unseen_message_total"
             android:elevation="2dp"
-            android:gravity="center"
-            android:textColor="@color/white"
-            android:textSize="@dimen/common_size_10"
             tools:text="10+"/>
     </FrameLayout>
 </RelativeLayout>
