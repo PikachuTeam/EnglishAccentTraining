@@ -434,6 +434,15 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
       } catch (ParseException e) {
         e.printStackTrace();
       }
+
+      try {
+        if (!DateTimeUtils.isSameDate(chatMessageArrayList.get(0).time, copiedMessage.time)) {
+          addTimeMessage(copiedMessage.time, 0);
+        }
+      } catch (ParseException e) {
+        e.printStackTrace();
+      }
+
       addNewMessage(copiedMessage);
 
       mDatabase.child(ID_FIREBASE).push().setValue(chatMessage);

@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -134,8 +133,8 @@ public class RenameDialog extends Dialog implements View.OnClickListener {
             Random random = new Random();
             do {
               String hue = random.nextInt(360) + "";
-              String saturation = String.format(Locale.ENGLISH, "%.1f", random.nextFloat());
-              String brightness = String.format(Locale.ENGLISH, "%.1f", MIN_BRIGHTNESS + ((1f - MIN_BRIGHTNESS) * random.nextFloat()));
+              String saturation = String.format(Locale.ENGLISH, "%.2f", 0.25f + (1f - 0.25f) * random.nextFloat());
+              String brightness = String.format(Locale.ENGLISH, "%.2f", MIN_BRIGHTNESS + ((1f - MIN_BRIGHTNESS) * random.nextFloat()));
 
               boolean existed = false;
 
