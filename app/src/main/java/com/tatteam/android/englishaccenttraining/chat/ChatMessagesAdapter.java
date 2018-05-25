@@ -46,6 +46,10 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     mCanLoadMore = canLoadMore;
   }
 
+  public void setLoading(boolean loading) {
+    mIsLoading = loading;
+  }
+
   public ChatMessagesAdapter(Context context, ArrayList<ChatMessage> messageList, RecyclerView recyclerView) {
     mContext = context;
     mMessageList = messageList;
@@ -165,7 +169,6 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         notifyItemRemoved(loadMoreIndex);
         notifyItemRangeChanged(loadMoreIndex, getItemCount() - loadMoreIndex);
 
-        mIsLoading = false;
         if (listener != null) {
           listener.onHideLoadMoreSuccess();
         }

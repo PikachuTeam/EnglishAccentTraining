@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.TimeZone;
 
 public class DateTimeUtils {
@@ -30,8 +31,24 @@ public class DateTimeUtils {
 
   public static String getChatDateToShow(String dateTime) throws ParseException {
     DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    Date date = dateFormat.parse(dateTime);
+
+    Calendar today = Calendar.getInstance();
+    Calendar toCompareDate = Calendar.getInstance();
+    toCompareDate.setTime(date);
+
+    if (toCompareDate.get(Calendar.YEAR) == today.get(Calendar.YEAR) &&
+            toCompareDate.get(Calendar.MONTH) == today.get(Calendar.MONTH)) {
+
+      if (toCompareDate.get(Calendar.DATE) == today.get(Calendar.DATE))
+        return "Today";
+
+      if (today.get(Calendar.DATE) - toCompareDate.get(Calendar.DATE) == 1)
+        return "Yesterday";
+    }
+
     DateFormat toShowFormat = new SimpleDateFormat("dd MMM yyyy");
-    return toShowFormat.format(dateFormat.parse(dateTime));
+    return toShowFormat.format(date);
   }
 
   public static boolean isSameDate(String time1, String time2) throws ParseException {

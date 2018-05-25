@@ -341,7 +341,7 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
   private void getMoreMessages() {
     String startChatId = "";
 
-    for (int i = chatMessageArrayList.size() - 1; i >= 0; i++) {
+    for (int i = chatMessageArrayList.size() - 1; i >= 0; i--) {
       if (!TextUtils.isEmpty(chatMessageArrayList.get(i).id)) {
         startChatId = chatMessageArrayList.get(i).id;
         break;
@@ -357,23 +357,57 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
                 mAdapterChat.dismissLoadMore(new ChatMessagesAdapter.OnHideLoadMoreListener() {
                   @Override
                   public void onHideLoadMoreSuccess() {
-                    int startIndex = chatMessageArrayList.size();
+                    int toCompareDateIndex = chatMessageArrayList.size() - 1;
+                    ChatMessage toCompareDateMessage = chatMessageArrayList.get(toCompareDateIndex);
+                    int toInsertIndex = 0;
+
                     for (DataSnapshot data : dataSnapshot.getChildren()) {
                       ChatMessage chatMessage = getChatMessage(data, false);
+
                       if (!chatMessage.id.equals(finalStartChatId)) {
+                        try {
+                          if (DateTimeUtils.isSameDate(toCompareDateMessage.time, chatMessage.time)) {
+                            if (toInsertIndex == 0 || toInsertIndex > toCompareDateIndex) {
+                              toInsertIndex = toCompareDateIndex;
+                            }
+                          } else {
+                            toInsertIndex = toCompareDateIndex + 1;
+                            if (toInsertIndex >= chatMessageArrayList.size() ||
+                                    !DateTimeUtils.isSameDate(chatMessageArrayList.get(toInsertIndex).time, chatMessage.time)) {
+                              ChatMessage dateChatMessage = new ChatMessage();
+                              dateChatMessage.time = chatMessage.time;
+                              dateChatMessage.viewType = ChatMessage.TIME;
+                              chatMessageArrayList.add(toInsertIndex, dateChatMessage);
 
-                        // Detect adjacent for previous and after current chat message
-                        chatMessageArrayList.get(startIndex - 1).isAdjacent = TextUtils.equals(chatMessageArrayList.get(startIndex - 1).deviceId, chatMessage.deviceId);
+                              mChatItemDecoration.updateList(chatMessageArrayList);
+                              mAdapterChat.notifyItemInserted(toInsertIndex);
+                            }
+                          }
 
-                        if (startIndex < chatMessageArrayList.size()) {
-                          chatMessage.isAdjacent = TextUtils.equals(chatMessageArrayList.get(startIndex).deviceId, chatMessage.deviceId);
+                          if (toInsertIndex < toCompareDateIndex) {
+                            toCompareDateIndex++;
+                          }
+
+                          if (!TextUtils.isEmpty(chatMessageArrayList.get(toInsertIndex - 1).deviceId)) {
+                            // Detect adjacent for previous chat message
+                            chatMessageArrayList.get(toInsertIndex - 1).isAdjacent =
+                                    TextUtils.equals(chatMessageArrayList.get(toInsertIndex - 1).deviceId, chatMessage.deviceId);
+                          }
+
+                          if (toInsertIndex < chatMessageArrayList.size()) {
+                            chatMessage.isAdjacent = TextUtils.equals(chatMessageArrayList.get(toInsertIndex).deviceId, chatMessage.deviceId);
+                          }
+
+                          chatMessageArrayList.add(toInsertIndex, chatMessage); // Add item at startIndex because firebase data is sorted by ascending
+                          mChatItemDecoration.updateList(chatMessageArrayList);
+                          mAdapterChat.notifyItemInserted(toInsertIndex);
+                        } catch (ParseException e) {
+                          e.printStackTrace();
                         }
-
-                        chatMessageArrayList.add(startIndex, chatMessage); // Add item at startIndex because firebase data is sorted by ascending
                       }
                     }
-                    mChatItemDecoration.updateList(chatMessageArrayList);
-                    mAdapterChat.notifyItemRangeInserted(startIndex, chatMessageArrayList.size() - startIndex);
+
+                    mAdapterChat.setLoading(false);
                   }
                 });
               }
@@ -452,21 +486,14 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
     return chatMessage;
   }
 
-  private void addTimeMessage() {
-    // Check if current msg has same date with previous
-    try {
-      if (!chatMessageArrayList.isEmpty() && !DateTimeUtils.isSameDate(chatMessageArrayList.get(0).time, chatMessage.time)) {
-        ChatMessage dateChatMessage = new ChatMessage();
-        dateChatMessage.time = chatMessage.time;
-        dateChatMessage.viewType = ChatMessage.TIME;
+  private void addTimeMessage(String dateTime, int addIndex) {
+    ChatMessage dateChatMessage = new ChatMessage();
+    dateChatMessage.time = dateTime;
+    dateChatMessage.viewType = ChatMessage.TIME;
 
-        chatMessageArrayList.add(0, dateChatMessage);
-        mChatItemDecoration.updateList(chatMessageArrayList);
-        mAdapterChat.notifyItemInserted(0);
-      }
-    } catch (ParseException e) {
-      e.printStackTrace();
-    }
+    chatMessageArrayList.add(addIndex, dateChatMessage);
+    mChatItemDecoration.updateList(chatMessageArrayList);
+    mAdapterChat.notifyItemInserted(addIndex);
   }
 
   private void addNewMessage(ChatMessage chatMessage) {
@@ -497,6 +524,17 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
     @Override
     public void onChildAdded(final DataSnapshot dataSnapshot, String previousKey) {
       ChatMessage chatMessage = getChatMessage(dataSnapshot, true);
+      if (chatMessageArrayList.isEmpty()) {
+        addTimeMessage(chatMessage.time, 0);
+      } else {
+        try {
+          if (!DateTimeUtils.isSameDate(chatMessageArrayList.get(0).time, chatMessage.time)) {
+            addTimeMessage(chatMessage.time, 0);
+          }
+        } catch (ParseException e) {
+          e.printStackTrace();
+        }
+      }
       if (chatMessage.viewType != ChatMessage.MY_MESSAGE) {
         addNewMessage(chatMessage);
       } else {
