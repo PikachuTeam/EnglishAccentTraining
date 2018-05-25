@@ -90,6 +90,8 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
 
     setContentView(R.layout.activity_chat_without_emoji_keyboard);
 
+    getWindow().setBackgroundDrawableResource(R.drawable.bg_whatsapp2);
+
     adsSmallBannerHandler1 = new AdsSmallBannerHandler(this, (ViewGroup) findViewById(R.id.ads_container), ADS_TYPE_SMALL, AdSize.BANNER);
     adsSmallBannerHandler1.setup();
 

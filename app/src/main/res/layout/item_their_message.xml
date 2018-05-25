@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
     <android.support.v7.widget.CardView
         android:layout_width="wrap_content"
@@ -17,7 +17,10 @@
             android:id="@+id/message_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="@dimen/common_size_5">
+            android:paddingBottom="@dimen/common_size_3"
+            android:paddingLeft="@dimen/common_size_5"
+            android:paddingRight="@dimen/common_size_5"
+            android:paddingTop="@dimen/common_size_3">
 
             <TextView
                 android:id="@+id/tv_user_name"
@@ -29,7 +32,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="Sender"/>
+                tools:text="Sender" />
 
             <TextView
                 android:id="@+id/tv_content"
@@ -42,7 +45,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_user_name"
-                tools:text="a"/>
+                tools:text="a" />
 
             <TextView
                 android:id="@+id/tv_time_chat"
@@ -53,7 +56,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_content"
-                tools:text="17:14"/>
+                tools:text="17:14" />
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>
 </LinearLayout>

@@ -94,7 +94,7 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             return false;
           }
         });
-        return new MyMessViewHolder(inflater.inflate(R.layout.item_my_message, parent, false));
+        return myMessViewHolder;
       case ChatMessage.THEIR_MESSAGE:
         final TheirMessViewHolder theirMessViewHolder = new TheirMessViewHolder(inflater.inflate(R.layout.item_their_message, parent, false));
 
