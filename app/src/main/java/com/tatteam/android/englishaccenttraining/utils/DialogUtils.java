@@ -2,6 +2,7 @@ package com.tatteam.android.englishaccenttraining.utils;
 
 import android.content.Context;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 
 import com.tatteam.android.englishaccenttraining.R;
 
@@ -14,7 +15,8 @@ public class DialogUtils {
             .setCancelable(false)
             .create();
 
-    sLoadingDialog.show();
+    if (!sLoadingDialog.isShowing())
+      sLoadingDialog.show();
   }
 
   public static void dismissLoadingDialog() {

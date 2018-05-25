@@ -3,6 +3,7 @@ package com.tatteam.android.englishaccenttraining;
 import android.app.Application;
 
 import com.google.firebase.database.FirebaseDatabase;
+import com.tatteam.android.englishaccenttraining.utils.Constant;
 
 import tatteam.com.app_common.AppCommon;
 import tatteam.com.app_common.sqlite.DatabaseLoader;
@@ -18,6 +19,9 @@ public class ClientApp extends Application {
     DatabaseLoader.getInstance().restoreState(getApplicationContext());
 
     FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+    FirebaseDatabase.getInstance().getReference().child(Constant.TABLE_CHAT).keepSynced(true);
+    FirebaseDatabase.getInstance().getReference().child(Constant.TABLE_LAST_SEEN).keepSynced(true);
+    FirebaseDatabase.getInstance().getReference().child(Constant.TABLE_USERS).keepSynced(true);
   }
 
   @Override

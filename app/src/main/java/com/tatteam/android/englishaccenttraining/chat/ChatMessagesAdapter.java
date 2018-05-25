@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,12 +29,17 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   private RecyclerView mRecyclerView;
 
   private OnLoadMoreListener mLoadMoreListener;
+  private OnRecyclerItemInteractListener mOnRecyclerItemInteractListener;
 
   private boolean mIsLoading;
   private boolean mCanLoadMore;
 
   public void setOnLoadMoreListener(OnLoadMoreListener loadMoreListener) {
     mLoadMoreListener = loadMoreListener;
+  }
+
+  public void setOnRecyclerItemInteractListener(OnRecyclerItemInteractListener onRecyclerItemInteractListener) {
+    mOnRecyclerItemInteractListener = onRecyclerItemInteractListener;
   }
 
   public void setCanLoadMore(boolean canLoadMore) {
@@ -75,9 +79,33 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     LayoutInflater inflater = LayoutInflater.from(mContext);
     switch (viewType) {
       case ChatMessage.MY_MESSAGE:
+        final MyMessViewHolder myMessViewHolder = new MyMessViewHolder(inflater.inflate(R.layout.item_my_message, parent, false));
+        myMessViewHolder.mLayoutMessage.setOnLongClickListener(new View.OnLongClickListener() {
+          @Override
+          public boolean onLongClick(View v) {
+            if (mOnRecyclerItemInteractListener != null) {
+              int position = myMessViewHolder.getAdapterPosition();
+              mOnRecyclerItemInteractListener.onItemLongClicked(mMessageList.get(position));
+            }
+            return false;
+          }
+        });
         return new MyMessViewHolder(inflater.inflate(R.layout.item_my_message, parent, false));
       case ChatMessage.THEIR_MESSAGE:
-        return new TheirMessViewHolder(inflater.inflate(R.layout.item_their_message, parent, false));
+        final TheirMessViewHolder theirMessViewHolder = new TheirMessViewHolder(inflater.inflate(R.layout.item_their_message, parent, false));
+
+        theirMessViewHolder.mMessageContainer.setOnLongClickListener(new View.OnLongClickListener() {
+          @Override
+          public boolean onLongClick(View v) {
+            if (mOnRecyclerItemInteractListener != null) {
+              int position = theirMessViewHolder.getAdapterPosition();
+              mOnRecyclerItemInteractListener.onItemLongClicked(mMessageList.get(position));
+            }
+            return false;
+          }
+        });
+
+        return theirMessViewHolder;
       case LOAD_MORE:
         return new LoadMoreHolder(inflater.inflate(R.layout.item_load_more, parent, false));
       default:
@@ -112,7 +140,6 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     mRecyclerView.post(new Runnable() {
       @Override
       public void run() {
-        Log.e("Log", "Check");
         mMessageList.add(null);
         final int loadMoreIndex = mMessageList.size() - 1;
         notifyItemInserted(loadMoreIndex);
@@ -120,24 +147,28 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     });
   }
 
-  public void dismissLoadMore() {
-    int loadMoreIndex = -1;
-    for (int i = mMessageList.size() - 1; i >= 0; i--) {
-      if (mMessageList.get(i) == null) {
-        loadMoreIndex = i;
-        break;
-      }
-    }
-    if (loadMoreIndex != -1) {
-      mMessageList.remove(loadMoreIndex);
-    }
-    final int finalLoadMoreIndex = loadMoreIndex;
-
+  public void dismissLoadMore(final OnHideLoadMoreListener listener) {
     mRecyclerView.post(new Runnable() {
       @Override
       public void run() {
+        int loadMoreIndex = -1;
+        for (int i = mMessageList.size() - 1; i >= 0; i--) {
+          if (mMessageList.get(i) == null) {
+            loadMoreIndex = i;
+            break;
+          }
+        }
+        if (loadMoreIndex != -1) {
+          mMessageList.remove(loadMoreIndex);
+        }
+
+        notifyItemRemoved(loadMoreIndex);
+        notifyItemRangeChanged(loadMoreIndex, getItemCount() - loadMoreIndex);
+
         mIsLoading = false;
-        notifyItemRemoved(finalLoadMoreIndex);
+        if (listener != null) {
+          listener.onHideLoadMoreSuccess();
+        }
       }
     });
   }
@@ -165,11 +196,14 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   public class TheirMessViewHolder extends RecyclerView.ViewHolder {
     TextView mTextContent, mTextTimeSent, mTextSender;
 
+    View mMessageContainer;
+
     public TheirMessViewHolder(View itemView) {
       super(itemView);
       mTextContent = itemView.findViewById(R.id.tv_content);
       mTextTimeSent = itemView.findViewById(R.id.tv_time_chat);
       mTextSender = itemView.findViewById(R.id.tv_user_name);
+      mMessageContainer = itemView.findViewById(R.id.message_container);
     }
 
     public void bindData(ChatMessage chatMessage) {
@@ -251,7 +285,15 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
   }
 
+  interface OnRecyclerItemInteractListener {
+    void onItemLongClicked(ChatMessage item);
+  }
+
   interface OnLoadMoreListener {
     void onLoadMore();
+  }
+
+  interface OnHideLoadMoreListener {
+    void onHideLoadMoreSuccess();
   }
 }

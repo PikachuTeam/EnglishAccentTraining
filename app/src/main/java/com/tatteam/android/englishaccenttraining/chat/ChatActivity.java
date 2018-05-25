@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdSize;
 import com.google.firebase.database.ChildEventListener;
@@ -30,6 +31,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.tatteam.android.englishaccenttraining.MainActivity;
 import com.tatteam.android.englishaccenttraining.R;
+import com.tatteam.android.englishaccenttraining.utils.CommonUtils;
 import com.tatteam.android.englishaccenttraining.utils.Constant;
 import com.tatteam.android.englishaccenttraining.utils.DateTimeUtils;
 import com.tatteam.android.englishaccenttraining.utils.DeviceUtils;
@@ -201,8 +203,6 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
   }
 
   private void initFirebase() {
-    FirebaseDatabase.getInstance().getReference(ID_FIREBASE).keepSynced(true);
-
     mDatabase = FirebaseDatabase.getInstance().getReference();
 
     FirebaseDatabase.getInstance().getReference(".info/connected").addValueEventListener(mConnectionListener);
@@ -249,6 +249,14 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
       @Override
       public void onLoadMore() {
         getMoreMessages();
+      }
+    });
+
+    mAdapterChat.setOnRecyclerItemInteractListener(new ChatMessagesAdapter.OnRecyclerItemInteractListener() {
+      @Override
+      public void onItemLongClicked(ChatMessage item) {
+        CommonUtils.copyText(ChatActivity.this, item.content);
+        Toast.makeText(ChatActivity.this, "Copied", Toast.LENGTH_SHORT).show();
       }
     });
   }
@@ -344,26 +352,30 @@ public class ChatActivity extends AppCompatActivity implements EmojiconsFragment
     mDatabase.child(ID_FIREBASE).orderByKey().limitToLast(PAGE_SIZE).endAt(startChatId)
             .addListenerForSingleValueEvent(new ValueEventListener() {
               @Override
-              public void onDataChange(DataSnapshot dataSnapshot) {
+              public void onDataChange(final DataSnapshot dataSnapshot) {
                 mAdapterChat.setCanLoadMore(dataSnapshot.getChildrenCount() == PAGE_SIZE);
-                mAdapterChat.dismissLoadMore();
-                int startIndex = chatMessageArrayList.size();
-                for (DataSnapshot data : dataSnapshot.getChildren()) {
-                  ChatMessage chatMessage = getChatMessage(data, false);
-                  if (!chatMessage.id.equals(finalStartChatId)) {
+                mAdapterChat.dismissLoadMore(new ChatMessagesAdapter.OnHideLoadMoreListener() {
+                  @Override
+                  public void onHideLoadMoreSuccess() {
+                    int startIndex = chatMessageArrayList.size();
+                    for (DataSnapshot data : dataSnapshot.getChildren()) {
+                      ChatMessage chatMessage = getChatMessage(data, false);
+                      if (!chatMessage.id.equals(finalStartChatId)) {
 
-                    // Detect adjacent for previous and after current chat message
-                    chatMessageArrayList.get(startIndex - 1).isAdjacent = TextUtils.equals(chatMessageArrayList.get(startIndex - 1).deviceId, chatMessage.deviceId);
+                        // Detect adjacent for previous and after current chat message
+                        chatMessageArrayList.get(startIndex - 1).isAdjacent = TextUtils.equals(chatMessageArrayList.get(startIndex - 1).deviceId, chatMessage.deviceId);
 
-                    if (startIndex < chatMessageArrayList.size()) {
-                      chatMessage.isAdjacent = TextUtils.equals(chatMessageArrayList.get(startIndex).deviceId, chatMessage.deviceId);
+                        if (startIndex < chatMessageArrayList.size()) {
+                          chatMessage.isAdjacent = TextUtils.equals(chatMessageArrayList.get(startIndex).deviceId, chatMessage.deviceId);
+                        }
+
+                        chatMessageArrayList.add(startIndex, chatMessage); // Add item at startIndex because firebase data is sorted by ascending
+                      }
                     }
-
-                    chatMessageArrayList.add(startIndex, chatMessage); // Add item at startIndex because firebase data is sorted by ascending
+                    mChatItemDecoration.updateList(chatMessageArrayList);
+                    mAdapterChat.notifyItemRangeInserted(startIndex, chatMessageArrayList.size() - startIndex);
                   }
-                }
-                mChatItemDecoration.updateList(chatMessageArrayList);
-                mAdapterChat.notifyItemRangeInserted(startIndex, chatMessageArrayList.size() - startIndex);
+                });
               }
 
               @Override

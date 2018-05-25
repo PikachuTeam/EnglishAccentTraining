@@ -32,13 +32,14 @@ import com.tatteam.android.englishaccenttraining.utils.DialogUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 
 import static android.content.Context.MODE_PRIVATE;
 
 public class RenameDialog extends Dialog implements View.OnClickListener {
-  private static final float MIN_BRIGHTNESS = 0.8f;
+  private static final float MIN_BRIGHTNESS = 0.7f;
 
   private TextView mTextOk, mTextCancel;
   private EditText mEditName;
@@ -50,11 +51,17 @@ public class RenameDialog extends Dialog implements View.OnClickListener {
   private String mNickName;
   private String mDeviceId;
 
+  private OnGenerateColorListener mOnGenerateColorListener;
+
   public RenameDialog(@NonNull Activity context) {
     super(context);
     mContext = context;
     mainActivity = context;
     pre = mContext.getSharedPreferences(Constant.PREF_NAME, MODE_PRIVATE);
+  }
+
+  public void setOnGenerateColorListener(OnGenerateColorListener onGenerateColorListener) {
+    mOnGenerateColorListener = onGenerateColorListener;
   }
 
   @Override
@@ -118,7 +125,6 @@ public class RenameDialog extends Dialog implements View.OnClickListener {
                 color = dataValue.get(Constant.NAME_COLOR).toString();
                 break;
               } else if (dataValue.get(Constant.NICK_NAME).toString().equals(mNickName)) {
-                Log.e("Check nick name", "existed");
                 usedColors.add(dataValue.get(Constant.NAME_COLOR).toString());
               }
             }
@@ -128,10 +134,8 @@ public class RenameDialog extends Dialog implements View.OnClickListener {
             Random random = new Random();
             do {
               String hue = random.nextInt(360) + "";
-              String saturation = random.nextFloat() + "";
-              String brightness = (MIN_BRIGHTNESS + ((1f - MIN_BRIGHTNESS) * random.nextFloat())) + "";
-
-              Log.e("Check color", "" + hue + "_" + saturation + "_" + brightness);
+              String saturation = String.format(Locale.ENGLISH, "%.1f", random.nextFloat());
+              String brightness = String.format(Locale.ENGLISH, "%.1f", MIN_BRIGHTNESS + ((1f - MIN_BRIGHTNESS) * random.nextFloat()));
 
               boolean existed = false;
 
@@ -180,4 +184,8 @@ public class RenameDialog extends Dialog implements View.OnClickListener {
       DialogUtils.dismissLoadingDialog();
     }
   };
+
+  public interface OnGenerateColorListener {
+    void onGenerateColorCompleted();
+  }
 }

@@ -14,6 +14,7 @@
         app:cardCornerRadius="@dimen/common_size_5">
 
         <android.support.constraint.ConstraintLayout
+            android:id="@+id/message_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/common_size_5">
