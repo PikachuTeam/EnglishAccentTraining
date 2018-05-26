@@ -15,12 +15,24 @@
       },
       "oauth_client": [
         {
+          "client_id": "536629112830-np9ktrj89hql9nklr4s6smghvb4g8jtj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tatteam.android.englishaccenttraining",
+            "certificate_hash": "09f826010a2f20657a0ca43c25612bd8b56e8aa2"
+          }
+        },
+        {
           "client_id": "536629112830-m2clr89dkb9lig84q6tncbgn2ei09pui.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.tatteam.android.englishaccenttraining",
             "certificate_hash": "1f64b7c598549e003bfb21b57bfb2ad3ab99be44"
           }
+        },
+        {
+          "client_id": "536629112830-bma9e3491c87i93llmobjffupj6h5fur.apps.googleusercontent.com",
+          "client_type": 3
         },
         {
           "client_id": "536629112830-bma9e3491c87i93llmobjffupj6h5fur.apps.googleusercontent.com",
